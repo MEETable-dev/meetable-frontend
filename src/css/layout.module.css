@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  height: 100vh;
+  flex-grow: 1;
+  --color-border: #101010;
+  --color-border-highlight: #888484;
+}
+
+.containerResizing {
+  cursor: col-resize;
+  user-select: none;
+  display: flex;
+}
+
+.sidebarWrapper {
+  display: flex;
+  flex: 0 0 200px;
+  position: relative;
+  background-color: pink;
+}
+
+.sidebarContent {
+  padding: 36px;
+}
+
+.sidebarBorder {
+  position: absolute;
+  right: -5px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebarBorder.resizing,
+.sidebarBorder:hover {
+  background-color: var(--color-border-highlight);
+}
+
+.mainWrapper {
+    background-color: rgb(98, 54, 54);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+.headerWrapper {
+  background-color: skyblue;
+}

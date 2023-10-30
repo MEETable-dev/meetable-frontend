@@ -1,0 +1,42 @@
+{
+    "folderList": [
+        {
+            "name":"folder1",
+            "fav":false,
+            "apmtList": [
+                {
+                    "name":"apmt1",
+                    "fav":false
+                },
+                {
+                    "name":"apmt2",
+                    "fav":false
+                }
+            ]
+        },
+        {
+            "name":"folder2",
+            "fav":false,
+            "apmtList": [
+                {
+                    "name":"apmt3",
+                    "fav":false
+                },
+                {
+                    "name":"apmt4",
+                    "fav":false
+                }
+            ]
+        }
+    ],
+    "apmtList": [
+        {
+            "name":"apmt5",
+            "fav":false
+        },
+        {
+            "name":"apmt6",
+            "fav":false
+        }
+    ]
+}

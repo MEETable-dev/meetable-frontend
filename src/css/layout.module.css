@@ -9,6 +9,7 @@
 .containerResizing {
   cursor: col-resize;
   user-select: none;
+  height: 100vh;
   display: flex;
 }
 

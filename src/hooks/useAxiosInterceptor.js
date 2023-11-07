@@ -1,4 +1,3 @@
-// import { useSelector } from 'react-redux';
 import store from "../store";
 import { setToken } from "../store/modules/user";
 import { useAppDispatch } from '../store';
@@ -7,7 +6,6 @@ import axios from 'axios';
 const useAxiosInterceptor = () => {
   const dispatch = useAppDispatch();
   const localStorage = window.localStorage;
-  // const accessToken = useSelector((state) => state.user.accessToken)
 
   axios.interceptors.request.use(
     (config) => {
@@ -31,6 +29,7 @@ const useAxiosInterceptor = () => {
     },
     async (error) => {
       // console.log(error)
+      const tokenOrigin = store.getState().user.accessToken;
       if (error.response?.data.statusCode === 1000) {
         try {
           console.log('access denied')
@@ -40,12 +39,15 @@ const useAxiosInterceptor = () => {
               setToken(''),
             );
           }
-          const resp = await axios.post(`${process.env.REACT_APP_API_URL}/auth/token`, {refreshToken:refreshToken},);
-          dispatch(setToken(resp.data.data.accessToken));
-          localStorage.setItem('refreshToken', resp.data.data.refreshToken,);
+          const resp = await axios.post(`${process.env.REACT_APP_API_URL}/auth/token`, {
+            accessToken:tokenOrigin,
+            refreshToken:refreshToken
+          },);
+          dispatch(setToken(resp.data.accessToken));
+          localStorage.setItem('refreshToken', resp.data.refreshToken,);
           console.log('Token 재발급');
     
-          const accessToken = resp.data.data.accessToken;
+          const accessToken = resp.data.accessToken;
     
           if (error.config.headers['Authorization'] === ``) {
             error.config.headers = {
@@ -59,8 +61,7 @@ const useAxiosInterceptor = () => {
           const douleErrorResponseStatusCode = error2.response?.data.statusCode;
           if (douleErrorResponseStatusCode === 1070 || douleErrorResponseStatusCode === 1080 || douleErrorResponseStatusCode === 1060) {
             localStorage.removeItem('refreshToken');
-            dispatch(setToken(''),
-            );
+            dispatch(setToken(''),);
             return false;
           }
           

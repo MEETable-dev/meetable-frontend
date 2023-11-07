@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
 import styles from '../css/layout.module.css';
 import { useSelector } from "react-redux";
@@ -14,7 +14,6 @@ const Layout = () => {
   const sidebarInitialSize = 300;
   const sidebarMinWidth = 100;
   const sidebarMaxWidth = 500;
-  const navigate = useNavigate();
   const click = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/test`, )
@@ -78,18 +77,12 @@ const Layout = () => {
             dispatch(
               setToken('ABCD')
             );
-            // accessToken 
-            // ? navigate('', {replace:true})
-            // : navigate(`:${accessToken}`, {replace:true})
           }
             }>login:{accessToken}</h2>
             <h2 onClick={()=>{
             dispatch(
               setToken('')
             );
-            // accessToken 
-            // ? navigate('', {replace:true})
-            // : navigate(`:${accessToken}`, {replace:true})
           }
             }>logout:{accessToken}</h2>
           <Outlet />

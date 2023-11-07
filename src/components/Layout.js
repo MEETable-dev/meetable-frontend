@@ -17,7 +17,7 @@ const Layout = () => {
           <h2>Sidebar</h2>
           <ul>
             <li>Item</li>
-            <li>Item</li>
+            <li>item</li>
             <li>Item</li>
             <li>Item</li>
             <li>Item</li>

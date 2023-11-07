@@ -53,7 +53,7 @@
 }
 
 .mainWrapper {
-    background-color: rgb(98, 54, 54);
+    /* background-color: rgb(98, 54, 54); */
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -90,4 +90,8 @@
 /* temporary */
 .check {
   background-color: #fff;
+}
+
+#login:hover, #logout:hover {
+  color: aquamarine;
 }

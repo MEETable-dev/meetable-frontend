@@ -9,26 +9,25 @@ const useAxiosInterceptor = () => {
 
   axios.interceptors.request.use(
     (config) => {
-    const accessToken = store.getState().user.accessToken;
-    console.log(accessToken)
-    if (accessToken !== '' && config.headers['Authorization'] === undefined) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
-      console.log(config.headers['Authorization'])
-    }
-    return config;
+      const accessToken = store.getState().user.accessToken;
+      // console.log(accessToken)
+      if (accessToken !== '' && config.headers['Authorization'] === undefined) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+        // console.log(config.headers['Authorization'])
+      }
+      return config;
     },
     (error) => {
-      console.log(error.data);
+      // console.log(error.data);
       return Promise.reject(error);
     }
-    );
+  );
 
   axios.interceptors.response.use(
     (res) => {
       return res;
     },
     async (error) => {
-      // console.log(error)
       const tokenOrigin = store.getState().user.accessToken;
       if (error.response?.data.statusCode === 1000) {
         try {

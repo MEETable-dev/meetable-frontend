@@ -20,8 +20,7 @@ const Layout = () => {
       console.log(response.data)
     } catch (error) {
       const errorResponse = error.response;
-      console.log(errorResponse);
-      // console.log(error)
+      console.log(errorResponse.data.statusCode);
     }
   };
   const { resizing, size, startResizing, stopResizing, updateSize, reset } = 
@@ -73,18 +72,24 @@ const Layout = () => {
           </div>
         </header>
         <main>
-          <h2 onClick={()=>{
+          <h2 id={styles.login} onClick={()=>{
             dispatch(
               setToken('ABCD')
             );
           }
             }>login:{accessToken}</h2>
-            <h2 onClick={()=>{
+            <h2 id={styles.logout} onClick={()=>{
             dispatch(
               setToken('')
             );
           }
             }>logout:{accessToken}</h2>
+            <h2 id={styles.logout} onClick={()=>{
+            dispatch(
+              setToken('@@-ABCD')
+            );
+          }
+            }>testError:{accessToken}</h2>
           <Outlet />
         </main>
       </div>

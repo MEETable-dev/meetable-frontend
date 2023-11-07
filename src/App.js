@@ -28,7 +28,7 @@ function App() {
         <Route path="/policy" element={<PrivateRoute pub={true}><Policy /></PrivateRoute>} />
         <Route path="/findemail" element={<PrivateRoute pub={true}><FindEmail /></PrivateRoute>} />
         <Route path="/resetpass" element={<PrivateRoute pub={true}><ResetPass /></PrivateRoute>} />
-        <Route path="apmtdetail/:apmtId" element={<PrivateRoute pub={true}><ApmtDetail /></PrivateRoute>} />
+        <Route path="/apmtdetail/:apmtId" element={<PrivateRoute pub={true}><ApmtDetail /></PrivateRoute>} />
         <Route path="/:username">
           <Route index element={<PrivateRoute pub={false}><Home /></PrivateRoute>} />
           <Route path="newapmt" element={<PrivateRoute pub={false}><NewApmt /></PrivateRoute>} />

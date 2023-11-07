@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
-import rootReducer from './reducer';
+import rootReducer from './modules';
+import { persistStore } from 'redux-persist';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -12,6 +13,8 @@ const store = configureStore({
     return getDefaultMiddleware();
   },
 });
+
+export const persistor = persistStore(store);
 
 export default store;
 export const useAppDispatch = () => useDispatch();

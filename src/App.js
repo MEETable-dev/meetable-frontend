@@ -11,25 +11,30 @@ import AllApmt from './pages/AllApmt';
 import ApmtDetail from './pages/ApmtDetail';
 import MyPage from './pages/MyPage';
 import Layout from './components/Layout';
+// import { useSelector } from 'react-redux';
+import useAxiosInterceptor from 'hooks/useAxiosInterceptor';
+import PrivateRoute from 'components/PrivateRoute';
 
 function App() {
+  // const isLoggedIn = useSelector((state) => !!state.accessToken);
+  useAxiosInterceptor();
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<NewApmt />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/emailauth" element={<EmailAuth />} />
-        <Route path="/enterinfo" element={<EnterInfo />} />
-        <Route path="/policy" element={<Policy />} />
-        <Route path="/findemail" element={<FindEmail />} />
-        <Route path="/resetpass" element={<ResetPass />} />
-
+        <Route path="/login" element={<PrivateRoute pub={true}><Login /></PrivateRoute>} />
+        <Route path="/emailauth" element={<PrivateRoute pub={true}><EmailAuth /></PrivateRoute>} />
+        <Route path="/enterinfo" element={<PrivateRoute pub={true}><EnterInfo /></PrivateRoute>} />
+        <Route path="/policy" element={<PrivateRoute pub={true}><Policy /></PrivateRoute>} />
+        <Route path="/findemail" element={<PrivateRoute pub={true}><FindEmail /></PrivateRoute>} />
+        <Route path="/resetpass" element={<PrivateRoute pub={true}><ResetPass /></PrivateRoute>} />
+        <Route path="apmtdetail/:apmtId" element={<PrivateRoute pub={true}><ApmtDetail /></PrivateRoute>} />
         <Route path="/:username">
-          <Route index element={<Home />} />
-          <Route path="newapmt" element={<NewApmt />} />
-          <Route path="allapmt" element={<AllApmt />} />
-          <Route path="apmtdetail/:apmtId" element={<ApmtDetail />} />
-          <Route path="mypage" element={<MyPage />} />
+          <Route index element={<PrivateRoute pub={false}><Home /></PrivateRoute>} />
+          <Route path="newapmt" element={<PrivateRoute pub={false}><NewApmt /></PrivateRoute>} />
+          <Route path="allapmt" element={<PrivateRoute pub={false}><AllApmt /></PrivateRoute>} />
+          <Route path="apmtdetail/:apmtId" element={<PrivateRoute pub={false}><ApmtDetail /></PrivateRoute>} />
+          <Route path="mypage" element={<PrivateRoute pub={false}><MyPage /></PrivateRoute>} />
         </Route>
       </Route>
     </Routes>

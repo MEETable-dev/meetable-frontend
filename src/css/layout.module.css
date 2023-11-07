@@ -9,6 +9,7 @@
 .containerResizing {
   cursor: col-resize;
   user-select: none;
+  height: 100vh;
   display: flex;
 }
 
@@ -20,7 +21,20 @@
 }
 
 .sidebarContent {
-  padding: 36px;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  flex:1;
+}
+
+.sidebarHeader {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.sidebarMain {
+  flex:1;
+  background-color: #fff;
 }
 
 .sidebarBorder {
@@ -47,4 +61,33 @@
 
 .headerWrapper {
   background-color: skyblue;
+  display: flex;
+  padding: 12px 10px;
+  justify-content: space-between;
+}
+
+.headerBtnLeft, .headerBtnRight {
+  width: 96px;
+}
+
+.headerBtnRight {
+  flex-direction: row;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.headerBtnRight svg {
+  margin-left: 16px;
+  background-color: #fff;
+}
+
+.headerCenter {
+  font-weight: 600;
+  font-size: 27px;
+  color: #222222;
+}
+
+/* temporary */
+.check {
+  background-color: #fff;
 }

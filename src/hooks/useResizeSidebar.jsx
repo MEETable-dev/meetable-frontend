@@ -45,7 +45,7 @@ export function useResizeSidebar(
 // LocalStorage Helpers
 
 function saveStoredSize(size) {
-  localStorage.getItem('sidebar-width', size.toString())
+  localStorage.setItem('sidebar-width', size.toString())
   return null;
 }
 

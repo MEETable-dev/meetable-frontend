@@ -2,14 +2,27 @@ import { Outlet } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
 import styles from '../css/layout.module.css';
 import { useSelector } from "react-redux";
+import { setToken } from "../store/modules/user";
 import { useState } from "react";
 import { svgList } from "../assets/svg";
 import React from "react";
+import { useAppDispatch } from "store";
+import axios from "axios";
 
-const Layout = () => {
+const LayoutTest = () => {
+  const dispatch = useAppDispatch();
   const sidebarInitialSize = 300;
   const sidebarMinWidth = 100;
   const sidebarMaxWidth = 500;
+  const click = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/test`, )
+      console.log(response.data)
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data.statusCode);
+    }
+  };
   const { resizing, size, startResizing, stopResizing, updateSize, reset } = 
     useResizeSidebar(sidebarInitialSize, sidebarMinWidth, sidebarMaxWidth)
     const accessToken = useSelector((state) => state.user.accessToken);
@@ -49,7 +62,7 @@ const Layout = () => {
           <div className={styles.headerBtnLeft}>
             {accessToken && !sidebarShown && <div onClick={()=>setsidebarShown(true)}>{svgList.headerIcon.headerShow}</div>}
           </div>
-          <div className={styles.headerCenter}>
+          <div className={styles.headerCenter} onClick={()=>click()}>
             MEETable
           </div>
           <div className={styles.headerBtnRight}>
@@ -59,6 +72,26 @@ const Layout = () => {
           </div>
         </header>
         <main>
+          <div className={styles.check}>
+            <h2 className={styles.check} id={styles.login} onClick={()=>{
+              dispatch(
+                setToken('ABCD')
+              );
+            }
+              }>login:{accessToken}</h2>
+              <h2 className={styles.check} id={styles.logout} onClick={()=>{
+              dispatch(
+                setToken('')
+              );
+            }
+              }>logout:{accessToken}</h2>
+              <h2 className={styles.check} id={styles.logout} onClick={()=>{
+              dispatch(
+                setToken('@@-ABCD')
+              );
+            }
+              }>testError:{accessToken}</h2>
+          </div>
           <Outlet />
         </main>
       </div>
@@ -66,4 +99,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default LayoutTest;

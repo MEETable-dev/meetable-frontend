@@ -56,7 +56,9 @@ const EmailAuth = () => {
           <div className={styles.alertZone}>
             <div className={`${styles.errorMsg} ${emailSubmitted ? '' : styles.hidden}`}>
               {emailSubmitted && ( isValidEmail ?
-                <div></div> : // 메일 db에 전송하기
+              
+                <div></div>
+                 : // 메일 db에 전송 & 인증번호 입력창 띄우기
                 <div className={styles.message}>올바른 이메일 주소가 아니에요.</div> )}
             </div>
           </div>

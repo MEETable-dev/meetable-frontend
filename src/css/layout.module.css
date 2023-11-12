@@ -95,3 +95,13 @@
 #login:hover, #logout:hover {
   color: aquamarine;
 }
+
+/* EmailAuth */
+
+.headerWrapper {
+  display: none;
+}
+
+.container {
+  align-items: center;
+}

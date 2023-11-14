@@ -43,6 +43,14 @@ body {
   padding-top: 20px;
 }
 
+.inputBlock {
+  padding: 0px 30px;
+  width: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 input.inputEmail {
   width: 236px;
   position: relative;
@@ -68,6 +76,7 @@ button.del {
   cursor: pointer;
   outline: none;
   padding: none;
+  padding-top: 5px;
   width: 24px;
   height: 24px;
 }
@@ -98,7 +107,7 @@ button.submitBtn {
 }
 
 button.authBtn {
-  margin-top: 40px;
+  margin-top: 45px;
 }
 
 button.active {
@@ -159,11 +168,4 @@ input.inputAuthCode {
 input.lockEmail {
   pointer-events: none; /* 마우스 클릭 방지 */
   color: #888888;
-}
-
-.inputBlock {
-  padding-left: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
 }

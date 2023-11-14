@@ -1,111 +1,4 @@
 .container {
-  display: flex;
-  height: 100vh;
-  flex-grow: 1;
-  --color-border: #101010;
-  --color-border-highlight: #888484;
-}
-
-.containerResizing {
-  cursor: col-resize;
-  user-select: none;
-  height: 100vh;
-  display: flex;
-}
-
-.sidebarWrapper {
-  display: flex;
-  flex: 0 0 200px;
-  position: relative;
-  background-color: pink;
-}
-
-.sidebarContent {
-  padding: 10px 16px;
-  display: flex;
-  flex-direction: column;
-  flex:1;
-}
-
-.sidebarHeader {
-  justify-content: flex-end;
-  display: flex;
-}
-
-.sidebarMain {
-  flex:1;
-  background-color: #fff;
-}
-
-.sidebarBorder {
-  position: absolute;
-  right: -5px;
-  width: 6px;
-  height: 100%;
-  cursor: col-resize;
-  background-color: transparent;
-  transition: all 0.3s ease-in-out;
-}
-
-.sidebarBorder.resizing,
-.sidebarBorder:hover {
-  background-color: var(--color-border-highlight);
-}
-
-.mainWrapper {
-    /* background-color: rgb(98, 54, 54); */
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-.headerWrapper {
-  background-color: skyblue;
-  display: flex;
-  padding: 12px 10px;
-  justify-content: space-between;
-}
-
-.headerBtnLeft, .headerBtnRight {
-  width: 96px;
-}
-
-.headerBtnRight {
-  flex-direction: row;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.headerBtnRight svg {
-  margin-left: 16px;
-  background-color: #fff;
-}
-
-.headerCenter {
-  font-weight: 600;
-  font-size: 27px;
-  color: #222222;
-}
-
-/* temporary */
-.check {
-  background-color: #e06767;
-}
-
-#login:hover, #logout:hover {
-  color: aquamarine;
-}
-
-/* EmailAuth */
-header {
-  display: none;
-}
-
-.headerWrapper {
-  display: none;
-}
-
-.container {
   align-items: center;
 }
 
@@ -150,7 +43,7 @@ body {
   padding-top: 20px;
 }
 
-input {
+input.inputEmail {
   width: 236px;
   position: relative;
   margin-left: 0px;
@@ -191,7 +84,6 @@ button.del {
   width: 260px;
   height: 40px;
   position: relative;
-  margin: 0px 30px;
 }
 
 button.submitBtn {
@@ -203,6 +95,10 @@ button.submitBtn {
   font-size: 15px;
   border: none;
   border-radius: 5px;
+}
+
+button.authBtn {
+  margin-top: 40px;
 }
 
 button.active {
@@ -221,15 +117,53 @@ div.message {
   font-size: 13px;
   text-align: left;
   color: red;
-  padding-top: 8px;
+  padding: 8px 30px 0px 30px;
 }
 
 p.loginLink {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: #888888;
 }
 
 .hidden {
   display: none;
+}
+
+input.inputAuthCode {
+  width: 196px;
+  position: relative;
+  margin-left: 0px;
+  padding: 5px 0px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #000;
+  outline: none;
+}
+
+.timeCounter {
+  display: inline-block;
+  color: red;
+  width: 30px;
+  position: relative;
+  margin-left: 0px;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  text-align: right;
+}
+
+input.lockEmail {
+  pointer-events: none; /* 마우스 클릭 방지 */
+  color: #888888;
+}
+
+.inputBlock {
+  padding-left: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }

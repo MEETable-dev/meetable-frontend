@@ -218,7 +218,7 @@ const EmailAuth = () => {
         </form>
       </div>
       <div>
-        {/* 무슨 react-router-dom을 써서 링크를 연결하라는데 일단 미래로 넘기기... */}
+        {/* 무슨 react-router-dom을 써서 링크를 연결하라는데 일단 넘기기... */}
         <p className={styles.loginLink}>로그인하기</p>
       </div>
     </div>

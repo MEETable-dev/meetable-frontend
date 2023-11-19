@@ -1,13 +1,10 @@
 import { Outlet } from "react-router-dom";
-import { useResizeSidebar } from "../hooks/useResizeSidebar";
 import styles from '../css/EmailAuth.module.css';
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
 import axios from "axios";
-
-import InputArea from '../components/InputArea';
 
 const EmailAuth = () => {
   const [email, setEmail] = useState('');
@@ -119,10 +116,9 @@ const EmailAuth = () => {
 
   const handleToggleEmailEdit = () => {
     setEmailSubmitted(false);
-    setErrorMessage(false);
+    setErrorMessage(true);
     setAuthCode(''); // Clear the authCode when editing the email
     setIsVaildAuthCode(false); // Reset the auth code validation state
-    setAuthCodeSubmitted(false);
   };
 
   return (
@@ -133,16 +129,31 @@ const EmailAuth = () => {
       <h4>가입하기</h4>
       <div className={styles.content}>
         <form onSubmit={handleEmailSubmit}>
-          <InputArea
-            placeholder="이메일"
-            value={email}
-            onChange={handleEmailChange}
-            onClear={emailSubmitted && !errorMessage ? handleToggleEmailEdit : handleClearEmail}
-            isSubmitted={emailSubmitted}
-            errorMessage={errorMessage}
-          >
-            {emailSubmitted && !errorMessage ? svgList.loginIcon.pencilBtn : svgList.loginIcon.delBtn}
-          </InputArea>
+          <div className={styles.infoArea}>
+            <div className={styles.inputBlock}>
+              <input
+                className={`${styles.inputEmail} ${emailSubmitted && !errorMessage ? styles.lockEmail : ''}`}
+                placeholder="이메일"
+                autoComplete="off"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              <span className={styles.btnRegion}>
+                {email && (
+                  <button
+                    className={styles.del}
+                    type="button"
+                    onClick={emailSubmitted && !errorMessage ? handleToggleEmailEdit : handleClearEmail}
+                  >
+                    <div>
+                      {emailSubmitted && !errorMessage ? svgList.loginIcon.pencilBtn : svgList.loginIcon.delBtn}
+                    </div>
+                  </button>
+                )}
+              </span>
+            </div>
+            <div className={styles.underLine}></div>
+          </div>
           <div className={styles.alertZone}>
             <div className={`${styles.errorMsg} ${emailSubmitted ? '' : styles.hidden}`}>
               { emailSubmitted && ( !errorMessage ?

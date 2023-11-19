@@ -5,8 +5,14 @@ import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
+import PolicyModal from "../components/PolicyModal"
 
 const Policy = () => {
+  const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
+
+  const toggleModal = (modalId) => {
+    setOpenModal(openModal === modalId ? null : modalId);
+  };
 
   const [isCheckedAll, setCheckedAll] = useState(false);
   const [isChecked1, setChecked1] = useState(false);
@@ -66,9 +72,9 @@ const Policy = () => {
                 [필수] 서비스 이용약관
               </div>
             </label>
-            <button type="button"
-              // onClick={}
-              className={styles.policyArrow}>
+            <button type="button" 
+            onClick={() => toggleModal('serviceTerms')} 
+            className={styles.policyArrow}>
               <div>
                 {svgList.policyIcon.arrow}
               </div>
@@ -85,12 +91,12 @@ const Policy = () => {
                 [필수] 개인정보처리방침
               </div>
             </label>
-            <button type="button"
-              // onClick={}
+            <button type="button" 
+              onClick={() => toggleModal('individualInfo')} 
               className={styles.policyArrow}>
-              <div>
-                {svgList.policyIcon.arrow}
-              </div>
+                <div>
+                  {svgList.policyIcon.arrow}
+                </div>
             </button>
           </div>
 
@@ -104,12 +110,12 @@ const Policy = () => {
                 [선택] 마케팅 활용 동의
               </div>
             </label>
-            <button type="button"
-              // onClick={}
+            <button type="button" 
+              onClick={() => toggleModal('marketing')} 
               className={styles.policyArrow}>
-              <div>
-                {svgList.policyIcon.arrow}
-              </div>
+                <div>
+                  {svgList.policyIcon.arrow}
+                </div>
             </button>
           </div>
         </div>
@@ -119,6 +125,19 @@ const Policy = () => {
               동의하기
         </button>
       </div>
+
+      {/* Modals */}
+      {openModal === 'serviceTerms' && <PolicyModal title="서비스 이용약관" onClose={() => toggleModal(null)}>
+        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+      </PolicyModal>}
+      {openModal === 'individualInfo' && <PolicyModal title="개인정보처리방침(필수)" onClose={() => toggleModal(null)}>
+        여긴 개인정보처리방침 관련 세부 조항 입니당~~~
+      </PolicyModal>}
+      {openModal === 'marketing' && <PolicyModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
+        여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
+      </PolicyModal>}
+      {/* ... (other modals for privacy policy, marketing consent, etc.) */}
+
     </div>
   );
 };

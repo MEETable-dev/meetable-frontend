@@ -30,6 +30,8 @@ body {
 }
 
 .content {
+  padding-top: 20px;
+  margin: 0px 30px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -44,7 +46,7 @@ body {
 }
 
 .inputBlock {
-  padding: 0px 30px;
+  padding: 0px;
   width: 260px;
   display: flex;
   align-items: center;
@@ -86,7 +88,6 @@ button.del {
   height: 2px;
   background-color: #D0D0D0;
   position: relative;
-  margin-left: 30px;
 }
 
 .alertZone {
@@ -126,7 +127,7 @@ div.message {
   font-size: 13px;
   text-align: left;
   color: red;
-  padding: 8px 30px 0px 30px;
+  padding-top: 8px;
 }
 
 p.loginLink {

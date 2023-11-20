@@ -1,59 +1,50 @@
 .infoArea {
-    width: 100%; /* 전체 너비 사용 */
-    max-width: 260px; /* 최대 너비 260px로 제한 */
-    position: relative;
-  }
-
-.inputBlock {
-    padding: 0px;
-    width: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  width: 100%; /* 전체 너비 사용 */
+  max-width: 260px; /* 최대 너비 260px로 제한 */
+  position: relative;
 }
 
 .inputBlock {
-    padding: 0px;
-    width: 100%; /* 부모 컨테이너의 너비에 맞춰 조정 */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  padding: 0px;
+  width: 100%; /* 부모 컨테이너의 너비에 맞춰 조정 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-  input.inputEmail {
-    width: calc(100% - 24px); /* 버튼 너비를 제외한 나머지 사용 */
-    position: relative;
-    margin-left: 0px;
-    padding: 5px 0px;
-    background-color: transparent;
-    border: none;
-    font-size: 15px;
-    color: #000;
-    outline: none;
+.inputEmail {
+  width: calc(100% - 24px); /* 버튼 너비를 제외한 나머지 사용 */
+  position: relative;
+  padding: 5px 0px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #000;
+  outline: none;
 }
 
-  input.lockEmail {
-    pointer-events: none; /* 마우스 클릭 방지 */
-    color: #888888;
-  }
+.lockEmail {
+  pointer-events: none; /* 마우스 클릭 방지 */
+  color: #888888;
+}
 
-  .btnRegion {
-    background: none;
-    width: 24px;
-    height: 24px;
-  }
+.btnRegion {
+  background: none;
+  width: 24px;
+  height: 24px;
+}
   
-  button.del {
-    background: none;
-    display: inline;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    padding: none;
-    padding-top: 5px;
-    width: 24px;
-    height: 24px;
-  }
+button.del {
+  background: none;
+  display: inline;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: none;
+  padding-top: 5px;
+  width: 24px;
+  height: 24px;
+}
 
 .underLine {
     width: 100%; /* 부모 컨테이너의 너비에 맞춰 조정 */

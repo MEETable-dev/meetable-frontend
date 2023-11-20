@@ -1,7 +1,7 @@
 import styles from '../css/InputArea.module.css';
 import React from "react";
 
-const InputArea = ({ placeholder, value, onChange, onClear, isSubmitted, errorMessage, children }) => {
+const InputArea = ({ className, placeholder, value, onChange, onClear, children }) => {
   return (
     // 전체 크기는 기본 가로 260px
     // 화면 크기 작아질 땐 가로줄은 그냥 줄어들고 기본적으로 입력 input의 크기가 줄어듦
@@ -12,7 +12,9 @@ const InputArea = ({ placeholder, value, onChange, onClear, isSubmitted, errorMe
     <div className={styles.infoArea}> {/* 전체 요소 (아래 라인 포함) 감싸는 박스*/}
       <div className={styles.inputBlock}>
         <input
-          className={`${styles.inputEmail} ${isSubmitted && !errorMessage ? styles.lockEmail : ''}`}
+          // 이메일 lock 상태로 바꾸려면 css에 input.lockEmail를 페이지 css에 복붙해서 아래 방식과 비슷하게 활용하면 됨
+          // className={`${styles.inputEmail} ${isSubmitted && !errorMessage ? styles.lockEmail : ''}`}
+          className={`${styles.inputEmail} ${className}`}
           placeholder={placeholder}
           autoComplete="off"
           value={value}

@@ -8,6 +8,7 @@ import React from "react";
 import axios from "axios";
 
 import InputArea from '../components/InputArea';
+import SubmitBtn from "../components/SubmitBtn";
 
 const EmailAuth = () => {
   const [email, setEmail] = useState('');
@@ -131,80 +132,82 @@ const EmailAuth = () => {
         <h2>MEETable</h2>
       </div>
       <h4>가입하기</h4>
-      <div className={styles.content}>
-        <form onSubmit={handleEmailSubmit}>
-          <InputArea
-            placeholder="이메일"
-            value={email}
-            onChange={handleEmailChange}
-            onClear={emailSubmitted && !errorMessage ? handleToggleEmailEdit : handleClearEmail}
-            isSubmitted={emailSubmitted}
-            errorMessage={errorMessage}
-          >
-            {emailSubmitted && !errorMessage ? svgList.loginIcon.pencilBtn : svgList.loginIcon.delBtn}
-          </InputArea>
-          <div className={styles.alertZone}>
-            <div className={`${styles.errorMsg} ${emailSubmitted ? '' : styles.hidden}`}>
-              { emailSubmitted && ( !errorMessage ?
-                <div className={styles.infoArea}>
-                  <div className={styles.inputBlock}>
-                    <input
-                      className={styles.inputAuthCode}
-                      placeholder="인증코드"
-                      autoComplete="off"
-                      value={authCode}
-                      onChange={handleAuthCodeChange}
-                    />
-                    <span className={styles.timeCounter}>
-                      {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
-                    </span>
-                    <span className={styles.btnRegion}>
-                      {authCode && (
-                        <button className={styles.del} type="button" onClick={handleClearAuthCode}>
-                          <div>{svgList.loginIcon.delBtn}</div>
-                        </button>
-                      )}
-                    </span>
-                  </div>
-                  <div className={styles.underLine}></div>
+      <form className={styles.content} onSubmit={handleEmailSubmit}>
+        <InputArea
+          className={`${emailSubmitted && !errorMessage ? styles.lockEmail : ''}`}
+          placeholder="이메일"
+          value={email}
+          onChange={handleEmailChange}
+          onClear={emailSubmitted && !errorMessage ? handleToggleEmailEdit : handleClearEmail}
+        >
+          {emailSubmitted && !errorMessage ? svgList.loginIcon.pencilBtn : svgList.loginIcon.delBtn}
+        </InputArea>
+        <div className={styles.alertZone}>
+          <div className={`${styles.errorMsg} ${emailSubmitted ? '' : styles.hidden}`}>
+            { emailSubmitted && ( !errorMessage ?
+              <div className={styles.infoArea}>
+                <div className={styles.inputBlock}>
+                  <input
+                    className={styles.inputAuthCode}
+                    placeholder="인증코드"
+                    autoComplete="off"
+                    value={authCode}
+                    onChange={handleAuthCodeChange}
+                  />
+                  <span className={styles.timeCounter}>
+                    {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+                  </span>
+                  <span className={styles.btnRegion}>
+                    {authCode && (
+                      <button className={styles.del} type="button" onClick={handleClearAuthCode}>
+                        <div>{svgList.loginIcon.delBtn}</div>
+                      </button>
+                    )}
+                  </span>
                 </div>
-                 :
-                <div className={styles.message}>올바른 이메일 주소가 아니에요.</div> )}                
-            </div>
-            <div className={styles.alertZone}>
-              <div className={`${styles.errorMsg} ${emailSubmitted && emailSubmitted ? '' : styles.hidden}`}>
-              {timerExpired && (
-                <div className={styles.message}>인증 시간이 만료되었어요.</div>
-              )}
+                <div className={styles.underLine}></div>
               </div>
-              <div className={`${styles.errorMsg} ${authCodeSubmitted && emailSubmitted ? '' : styles.hidden} ${isVaildAuthCode ? styles.hidden : ''} ${timerExpired ? styles.hidden : ''}`}>
-                <div className={styles.message}>인증 코드가 틀려요.</div>
-              </div>
-            </div>
-
+                :
+              <div className={styles.message}>올바른 이메일 주소가 아니에요.</div> )}                
           </div>
-          <button className={`${styles.submitBtn} ${email ? styles.active : ''} ${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
-          type="submit"
-          onClick={sendVerifyCode}>
-            인증 메일 보내기
-          </button>
-          <button className={`${styles.submitBtn} ${authCode ? styles.hidden : styles.active} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
-          type="submit"
-          onClick={sendVerifyCode}>
-            인증 메일 다시 보내기
-          </button>
-          <button className={`${styles.submitBtn} ${authCode ? styles.active : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
-          type="submit"
-          onClick={handleAuthSubmit}>
-          인증하기
-          </button>
-          <button className={`${styles.submitBtn} ${authCode ? styles.active : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.authBtn}`}
-          type="submit"
-          onClick={sendVerifyCode}>
-            인증 메일 다시 보내기
-          </button>
-        </form>
-      </div>
+          <div className={styles.alertZone}>
+            <div className={`${styles.errorMsg} ${emailSubmitted && emailSubmitted ? '' : styles.hidden}`}>
+            {timerExpired && (
+              <div className={styles.message}>인증 시간이 만료되었어요.</div>
+            )}
+            </div>
+            <div className={`${styles.errorMsg} ${authCodeSubmitted && emailSubmitted ? '' : styles.hidden} ${isVaildAuthCode ? styles.hidden : ''} ${timerExpired ? styles.hidden : ''}`}>
+              <div className={styles.message}>인증 코드가 틀려요.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <SubmitBtn
+          text="인증 메일 보내기"
+          onClick={sendVerifyCode}
+          isActive={email}
+          className={`${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
+        />
+        <SubmitBtn
+          text="인증 메일 다시 보내기"
+          onClick={sendVerifyCode}
+          isActive={authCode}
+          className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
+        />
+        <SubmitBtn
+          text="인증하기"
+          onClick={handleAuthSubmit}
+          isActive={authCode}
+          className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
+        />
+        <SubmitBtn
+          text="인증 메일 다시 보내기"
+          onClick={sendVerifyCode}
+          isActive={authCode}
+          className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.authBtn}`}
+        />
+      </form>
       <div>
         {/* 무슨 react-router-dom을 써서 링크를 연결하라는데 일단 넘기기... */}
         <p className={styles.loginLink}>로그인하기</p>

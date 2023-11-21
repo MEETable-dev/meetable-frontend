@@ -9,32 +9,30 @@ import ResetPass from './pages/ResetPass';
 import NewApmt from './pages/NewApmt';
 import AllApmt from './pages/AllApmt';
 import ApmtDetail from './pages/ApmtDetail';
-import MyPage from './pages/MyPage';
 import Layout from './components/Layout';
-// import { useSelector } from 'react-redux';
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor';
 import PrivateRoute from 'components/PrivateRoute';
 
 function App() {
-  // const isLoggedIn = useSelector((state) => !!state.accessToken);
   useAxiosInterceptor();
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<NewApmt />} />
-        <Route path="/login" element={<PrivateRoute pub={true}><Login /></PrivateRoute>} />
-        <Route path="/emailauth" element={<PrivateRoute pub={true}><EmailAuth /></PrivateRoute>} />
-        <Route path="/enterinfo" element={<PrivateRoute pub={true}><EnterInfo /></PrivateRoute>} />
-        <Route path="/policy" element={<PrivateRoute pub={true}><Policy /></PrivateRoute>} />
-        <Route path="/findemail" element={<PrivateRoute pub={true}><FindEmail /></PrivateRoute>} />
-        <Route path="/resetpass" element={<PrivateRoute pub={true}><ResetPass /></PrivateRoute>} />
-        <Route path="/apmtdetail/:apmtId" element={<PrivateRoute pub={true}><ApmtDetail /></PrivateRoute>} />
+        <Route index element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />
+        <Route path="/login" element={<PrivateRoute member={false} goto={"/:username"}><Login /></PrivateRoute>} />
+        <Route path="/emailauth" element={<PrivateRoute member={false} goto={"/:username"}><EmailAuth /></PrivateRoute>} />
+        <Route path="/enterinfo" element={<PrivateRoute member={false} goto={"/:username"}><EnterInfo /></PrivateRoute>} />
+        <Route path="/policy" element={<PrivateRoute member={false} goto={"/:username"}><Policy /></PrivateRoute>} />
+        <Route path="/findemail" element={<PrivateRoute member={false} goto={"/:username"}><FindEmail /></PrivateRoute>} />
+        <Route path="/resetpass" element={<PrivateRoute member={false} goto={"/:username"}><ResetPass /></PrivateRoute>} />
+        <Route path="/apmtdetail/:apmtId" element={<PrivateRoute member={false} goto={"/:username/apmtdetail/:apmtId"}><ApmtDetail /></PrivateRoute>} />
+        <Route path="/newapmt" element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />
         <Route path="/:username">
-          <Route index element={<PrivateRoute pub={false}><Home /></PrivateRoute>} />
-          <Route path="newapmt" element={<PrivateRoute pub={false}><NewApmt /></PrivateRoute>} />
-          <Route path="allapmt" element={<PrivateRoute pub={false}><AllApmt /></PrivateRoute>} />
-          <Route path="apmtdetail/:apmtId" element={<PrivateRoute pub={false}><ApmtDetail /></PrivateRoute>} />
-          <Route path="mypage" element={<PrivateRoute pub={false}><MyPage /></PrivateRoute>} />
+          <Route index element={<PrivateRoute member={true} goto={"/newapmt"}><Home /></PrivateRoute>} />
+          <Route path="newapmt" element={<PrivateRoute member={true} goto={"/newapmt"}><NewApmt /></PrivateRoute>} />
+          <Route path="allapmt" element={<PrivateRoute member={true} goto={"/newapmt"}><AllApmt /></PrivateRoute>} />
+          <Route path="apmtdetail/:apmtId" element={<PrivateRoute member={true} goto={"/login"}><ApmtDetail /></PrivateRoute>} />
+          <Route path="resetpass" element={<PrivateRoute member={true} goto={"/newapmt"}><ResetPass /></PrivateRoute>} />
         </Route>
       </Route>
     </Routes>

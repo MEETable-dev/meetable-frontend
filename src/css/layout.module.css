@@ -17,7 +17,7 @@
   display: flex;
   flex: 0 0 50px; 
   position: relative;
-  border-right: 1px solid #888484;
+  box-shadow: 3px 0px 6px rgba(34, 34, 34, 0.30);
 }
 
 .sidebarContent {
@@ -25,6 +25,7 @@
   display: flex;
   flex-direction: column;
   flex:1;
+  
 }
 
 .sidebarHeader {
@@ -43,6 +44,7 @@
 }
 
 .sidebarBorder {
+  filter: drop-shadow(3px 0px 6px rgba(34, 34, 34, 0.30));
   position: absolute;
   right: -5px;
   width: 6px;
@@ -58,11 +60,11 @@
 }
 
 .mainWrapper {
-    /* background-color: rgb(98, 54, 54); */
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
+  /* background-color: rgb(98, 54, 54); */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .headerWrapper {
   background-color: skyblue;

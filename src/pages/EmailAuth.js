@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
@@ -171,7 +172,7 @@ const EmailAuth = () => {
               <div className={styles.message}>올바른 이메일 주소가 아니에요.</div> )}                
           </div>
           <div className={styles.alertZone}>
-            <div className={`${styles.errorMsg} ${emailSubmitted && emailSubmitted ? '' : styles.hidden}`}>
+            <div className={`${styles.errorMsg} ${authCodeSubmitted && emailSubmitted ? '' : styles.hidden}`}>
             {timerExpired && (
               <div className={styles.message}>인증 시간이 만료되었어요.</div>
             )}
@@ -188,29 +189,34 @@ const EmailAuth = () => {
           onClick={sendVerifyCode}
           isActive={email}
           className={`${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
+          margin="45px 0px 0px"
         />
         <SubmitBtn
           text="인증 메일 다시 보내기"
           onClick={sendVerifyCode}
           isActive={authCode}
-          className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
+          className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+          margin="45px 0px 0px"
         />
         <SubmitBtn
           text="인증하기"
           onClick={handleAuthSubmit}
           isActive={authCode}
-          className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.authBtn}`}
+          className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+          margin="45px 0px 0px"
         />
         <SubmitBtn
           text="인증 메일 다시 보내기"
           onClick={sendVerifyCode}
           isActive={authCode}
-          className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.authBtn}`}
+          className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden}`}
+          margin="45px 0px 0px"
         />
       </form>
-      <div>
-        {/* 무슨 react-router-dom을 써서 링크를 연결하라는데 일단 넘기기... */}
-        <p className={styles.loginLink}>로그인하기</p>
+      <div className={styles.linkLine}>
+        <Link to="/Login" className={styles.loginLink}>
+          로그인하기
+        </Link>
       </div>
     </div>
   );

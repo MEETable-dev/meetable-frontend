@@ -5,7 +5,10 @@ import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
+import { Link } from 'react-router-dom';
+
 import PolicyModal from "../components/PolicyModal"
+import SubmitBtn from "../components/SubmitBtn";
 
 const Policy = () => {
   const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
@@ -39,7 +42,6 @@ const Policy = () => {
   useEffect(() => {
     setCheckedAll(isChecked1 && isChecked2 && isChecked3);
   }, [isChecked1, isChecked2, isChecked3]);
-
 
   return (
     <div className={styles.loginBox}>
@@ -119,11 +121,13 @@ const Policy = () => {
             </button>
           </div>
         </div>
-
-        <button type="submit"
-        className={`${styles.submitBtn} ${isChecked1 && isChecked2 ? styles.active : ''}`}>
-              동의하기
-        </button>
+        <Link to={isChecked1 && isChecked2 ? "/login" : ''} className={styles.link}>
+          <SubmitBtn
+            text="동의하기"
+            isActive={isChecked1 && isChecked2}
+            className={''}
+          />
+        </Link>
       </div>
 
       {/* Modals */}
@@ -136,7 +140,6 @@ const Policy = () => {
       {openModal === 'marketing' && <PolicyModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
         여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
       </PolicyModal>}
-      {/* ... (other modals for privacy policy, marketing consent, etc.) */}
 
     </div>
   );

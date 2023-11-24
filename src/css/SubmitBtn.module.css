@@ -1,0 +1,28 @@
+.submitBtn {
+  align-self: center;
+  width: 100%;
+  max-width: 260px;
+  height: 48px;
+  background: #D0D0D0;
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+}
+
+.active {
+  align-self: center;
+  width: 100%;
+  max-width: 260px;
+  height: 48px;
+  background: #8E66EE;
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}

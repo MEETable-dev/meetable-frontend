@@ -1,0 +1,137 @@
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80vw;
+  max-width: 320px;
+  min-width: 280px;
+}
+
+.container {
+  align-items: center;
+}
+
+body {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.loginLogo{
+  height: 60px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.loginBox {
+  width: 100%;
+  height: 465px;
+  max-width: 320px;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.content {
+  margin: 0px 30px;
+  width: calc(100% - 60px);
+  max-width: 260px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 260px;
+}
+
+.underLine {
+  /* width: 260px; */
+  width: 100%;
+  height: 2px;
+  background-color: #D0D0D0;
+  position: relative;
+}
+
+/* 체크박스가 선택됐을 때의 스타일 */
+input[type="checkbox"]:checked {
+  background-color: #8E66EE;
+}
+input[type="checkbox"] {
+  border-radius: 3px; /* 원하는 라운딩 정도로 변경 */
+}
+/* 체크박스 체크 표시의 굵기 조절 */
+input[type="checkbox"]::before {
+  font-weight: bold; /* 굵기 조절 */
+}
+
+.policyZone {
+  /* width: 260px; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  color: #222222;
+}
+
+.lineArea {
+  /* width: 260px; */
+  width: 100%;
+  position: relative;
+  padding-top: 11px;
+  padding-bottom: 10px;
+}
+
+div.policyLines {
+  display: inline-block;
+}
+
+.detailPolicy {
+  width: calc(100% - 24px);
+  position: relative;
+  margin-left: 0px;
+  padding: 8px 0px; /* 간격 조절 */
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #222222;
+  outline: none;
+}
+
+.detailPolicy > div {
+  text-align: left;
+}
+
+input.checkBox {
+  margin-right: 7px;
+}
+
+button.policyArrow {
+  background: none;
+  display: inline;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: none;
+  width: 24px;
+  height: 24px;
+  align-self: right;
+}
+
+.inputBlock {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.link {
+  width: 100%;
+  margin-top: 30px;
+  text-decoration: none;
+}

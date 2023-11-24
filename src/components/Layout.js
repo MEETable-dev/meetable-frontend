@@ -15,8 +15,11 @@ import { RiSearchLine } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoMdArrowDropup } from "react-icons/io";
+import { setToken } from "../store/modules/user";
+import { useAppDispatch } from "store";
 
 const Layout = () => {
+  const dispatch = useAppDispatch();
   const sidebarInitialSize = 300;
   const sidebarMinWidth = 100;
   const sidebarMaxWidth = 500;
@@ -208,6 +211,24 @@ const Layout = () => {
           </div>
           <div className={styles.headerCenter}>
             MEETable
+            <button onClick={()=>{
+              dispatch(
+                setToken('ABCD')
+              );
+            }
+              }>login:{accessToken}</button>
+              <button onClick={()=>{
+              dispatch(
+                setToken('')
+              );
+            }
+              }>logout:{accessToken}</button>
+              {/* <button onClick={()=>{
+              dispatch(
+                setToken('@@-ABCD')
+              );
+            }
+              }>testError:{accessToken}</button> */}
           </div>
           <div className={styles.headerBtnRight}>
             <div onClick={()=>{window.location.href = '/:username/allapmt';}}>{accessToken && <BsGrid size={28} color="#888888"/>}</div>

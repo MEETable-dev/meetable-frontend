@@ -1,6 +1,7 @@
 .container {
   display: flex;
   height: 100vh;
+  width: 100vw;
   flex-grow: 1;
   --color-border: #101010;
   --color-border-highlight: #888484;
@@ -284,10 +285,10 @@
 
 /* EmailAuth */
 
-.headerWrapper {
+/* .headerWrapper {
   display: none;
 }
 
 .container {
   align-items: center;
-}
+} */

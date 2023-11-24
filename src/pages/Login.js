@@ -1,9 +1,9 @@
 import styles from 'css/login.module.css';
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import SubmitBtn from "components/common/SubmitBtn";
+import SubmitBtn from "components/SubmitBtn";
 import { useSelector } from "react-redux";
-import InputArea from 'components/common/InputArea';
+import InputArea from 'components/InputArea';
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import axios from "axios";

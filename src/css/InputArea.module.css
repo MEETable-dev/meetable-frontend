@@ -1,0 +1,70 @@
+.infoArea {
+    width: 100%; /* 전체 너비 사용 */
+    max-width: 260px; /* 최대 너비 260px로 제한 */
+    position: relative;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1.5rem;
+    
+  }
+  
+  .inputBlock {
+    padding: 0px;
+    width: 100%; /* 부모 컨테이너의 너비에 맞춰 조정 */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .inputAuth {
+    width: calc(100% - 24px); /* 버튼 너비를 제외한 나머지 사용 */
+    position: relative;
+    padding: 5px 0px;
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    color: #222222;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  
+  .lockEmail {
+    pointer-events: none; /* 마우스 클릭 방지 */
+    color: #888888;
+  }
+  
+  .btnRegion {
+    background: none;
+    width: 26px;
+    height: 24px;
+  }
+
+  input.StyledInput {
+    color: #222222;
+    font-size: 15px;
+    position: relative;
+    border: none;
+
+    outline: none;
+    width: 100%;
+  
+  }
+    
+  button.del {
+    background: none;
+    display: inline;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    /* margin-bottom: 7px;
+    margin-right: 7px; */
+    /* padding-top: 10px; */
+    width: 24px;
+    height: 24px;
+  }
+  
+  .underLine {
+      width: 100%; /* 부모 컨테이너의 너비에 맞춰 조정 */
+      height: 2px;
+      background-color: #D0D0D0;
+      position: relative;
+  }

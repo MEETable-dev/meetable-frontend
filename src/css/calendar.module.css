@@ -1,0 +1,68 @@
+.entire {
+  width: 260px;
+  background-color: skyblue;
+}
+
+.headerContainer {
+  display: flex;
+  position: relative;
+}
+
+.headerLeft, .headerRight {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+}
+
+.headerCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toAnotherMonth {
+  display: flex;
+  align-items: center;
+}
+
+.headerText {
+  color: #222;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.TodayBtn {
+  position: absolute;
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  color: #888;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 3px 5px;
+}
+
+.bodyContainer {
+  padding-top: 10px;
+}
+
+.DaysOfWeek {
+  display: flex;
+}
+
+.colDays {
+  display: flex;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+}
+
+.col{
+  display: flex;
+  flex:1;
+}
+
+.week {
+  display: flex;
+}

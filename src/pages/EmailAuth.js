@@ -49,7 +49,7 @@ const EmailAuth = () => {
         verifyCode: authCode})
       console.log(response.data)
       const emailToken = response.data.emailToken; // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
-      navigate("/test", { state: { emailToken: emailToken , email: email} });
+      navigate("/EnterInfo", { state: { emailToken: emailToken , email: email} });
       setIsVaildAuthCode(true);
       setAuthCodeSubmitted(true);
     } catch (error) {

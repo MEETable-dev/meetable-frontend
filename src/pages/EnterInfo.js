@@ -9,10 +9,13 @@ import { svgList } from "../assets/svg";
 import { SlEye } from "react-icons/sl";
 import { BsEyeSlash } from "react-icons/bs";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import LockedInputArea from "components/LockedInputArea";
+
 
 
 const EnterInfo = () => {
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
@@ -21,9 +24,12 @@ const EnterInfo = () => {
   const [errorMessage, setErrorMessage] = useState(true);
   const [isValidPW, setIsValidPW] = useState(false);
   const [signToken, setSignToken] = useState('');
-  const [emailToken, setEmailToken] = useState('');
+  // const [emailToken, setEmailToken] = useState('');
   const [isValidSignToken, setIsValidSignToken] = useState(false);
-
+  const location = useLocation();
+  const [email, setEmail] = useState('');
+  const [emailToken, setEmailToken] = useState('');
+  console.log(location);
   const [passwordType, setPasswordType] = useState({
       type: 'password',
       visible: false
@@ -32,6 +38,14 @@ const EnterInfo = () => {
       type: 'password',
       visible: false
   });
+
+  useEffect(() => {
+    if (location.state) {
+      setEmail(location.state.email);
+      setEmailToken(location.state.emailToken);
+      console.log(email, emailToken);
+    }
+  }, [location.state]);
 
   //password type 변경하는 함수
   const handlePasswordType = e => {
@@ -52,9 +66,9 @@ const EnterInfo = () => {
     })
 };
 
-  const onChangeEmail = e =>{
-      setEmail(e.target.value);
-  };
+  // const onChangeEmail = e =>{
+  //     setEmail(e.target.value);
+  // };
 
   const onChangeUsername = e =>{
       setUsername(e.target.value);
@@ -70,11 +84,10 @@ const EnterInfo = () => {
       handleIsValidPW();
   };
 
-
-  const handleClearEmail = () =>{
-    setEmail('');
-    isValid = false;
-  };
+  // const handleClearEmail = () =>{
+  //   setEmail('');
+  //   isValid = false;
+  // };
 
   const handleIsValidPW = ()=>{
     if ( 1<= password.length  && password.length< 8){
@@ -85,6 +98,10 @@ const EnterInfo = () => {
       setIsValidPW(true);
       setErrorMessage(false);
     }
+  };
+  
+  const handleEmailEditClick = () =>{
+    window.location.href = '/email';
   };
 
   const getSignToken = async(e) =>{
@@ -130,9 +147,9 @@ return ( <div className={styles.loginBox}>
     <form className={styles.content}>
       <InputArea autocomplete="username" name="name" placeholder="이름" value={username} onChange = {onChangeUsername}>
       </InputArea>
-      <InputArea autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
-      onClear={handleClearEmail}>
-      </InputArea> 
+      <LockedInputArea autoComplete="email" name="email" type="id"  value = {email} 
+      onClick={handleEmailEditClick}>{svgList.loginIcon.pencilBtn}
+      </LockedInputArea> 
       <InputArea autoComplete="new-password" name="password" type={passwordType.type} placeholder="비밀번호" value={password} onChange = {onChangePassword}
       onClear ={handlePasswordType}>
       { passwordType.visible ?  <BsEyeSlash size="24px" color="#888888"></BsEyeSlash> :<SlEye size="24px" color="#888888"></SlEye>}

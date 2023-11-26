@@ -1,11 +1,9 @@
-// import ConfirmedApmt from './ConfirmedApmt';
-// import CustomedSched from './CustomedSched';
 import { useState } from 'react';
-import styles from '../css/Calendar.module.css';
+import styles from '../css/CalendarNewApmt.module.css';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, subDays, addDays, parse, isBefore } from 'date-fns'
 
 
-const Calendar = (props) => {
+const CalendarNewApmt = (props) => {
   const Body = ({currentDate, selectDate, onDateClick}) => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
@@ -132,4 +130,4 @@ const Calendar = (props) => {
   </div>
 };
 
-export default Calendar;
+export default CalendarNewApmt;

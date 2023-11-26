@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
-import styles from '../css/layout.module.css';
+import styles from '../css/Layout.module.css';
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { svgList } from "../assets/svg";

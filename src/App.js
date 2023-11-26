@@ -12,6 +12,8 @@ import ApmtDetail from './pages/ApmtDetail';
 import Layout from './components/Layout';
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor';
 import PrivateRoute from 'components/PrivateRoute';
+import LayoutTest from 'components/Layout test';
+
 
 function App() {
   useAxiosInterceptor();

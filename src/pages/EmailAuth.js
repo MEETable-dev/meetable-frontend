@@ -22,7 +22,7 @@ const EmailAuth = () => {
   const [authCode, setAuthCode] = useState('');
   const [isVaildAuthCode, setIsVaildAuthCode] = useState(false);
   const [authCodeSubmitted, setAuthCodeSubmitted] = useState(false);
-
+  const [emailToken, setEmailToken] = useState('');
   const [timer, setTimer] = useState(180); // 3분 = 180초
   const [timerExpired, setTimerExpired] = useState(false);
   const timerRef = useRef();
@@ -47,11 +47,11 @@ const EmailAuth = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/confirmVerifyCode`, {
         email: email,
         verifyCode: authCode})
-      console.log(response.data)
-      const emailToken = response.data.emailToken; // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
-      navigate("/EnterInfo", { state: { emailToken: emailToken , email: email} });
+      const emailToken = response.data.data.emailToken;
       setIsVaildAuthCode(true);
-      setAuthCodeSubmitted(true);
+      setAuthCodeSubmitted(true); // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
+      navigate("/EnterInfo", { state: { emailToken: emailToken, email: email} });
+
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data.statusCode);

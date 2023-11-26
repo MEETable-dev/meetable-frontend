@@ -1,5 +1,4 @@
 import styles from 'css/EnterInfo.module.css';
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import SubmitBtn from "components/SubmitBtn";
 import { useSelector } from "react-redux";
@@ -9,8 +8,9 @@ import { svgList } from "../assets/svg";
 import { SlEye } from "react-icons/sl";
 import { BsEyeSlash } from "react-icons/bs";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import LockedInputArea from "components/LockedInputArea";
+
 
 
 
@@ -20,7 +20,6 @@ const EnterInfo = () => {
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
   const isPWSame = password === checkPassword &&password !=="" &&checkPassword !=="";
-  let isValid = email !== "" && password !== "" && checkPassword !== "" && username !== "" ;
   const [errorMessage, setErrorMessage] = useState(true);
   const [isValidPW, setIsValidPW] = useState(false);
   const [signToken, setSignToken] = useState('');
@@ -29,6 +28,11 @@ const EnterInfo = () => {
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [emailToken, setEmailToken] = useState('');
+  const navigate = useNavigate();
+
+
+
+  let isValid = email !== "" && password !== "" && checkPassword !== "" && username !== "" ;
   console.log(location);
   const [passwordType, setPasswordType] = useState({
       type: 'password',
@@ -39,11 +43,11 @@ const EnterInfo = () => {
       visible: false
   });
 
+
   useEffect(() => {
     if (location.state) {
       setEmail(location.state.email);
       setEmailToken(location.state.emailToken);
-      console.log(email, emailToken);
     }
   }, [location.state]);
 
@@ -101,7 +105,7 @@ const EnterInfo = () => {
   };
   
   const handleEmailEditClick = () =>{
-    window.location.href = '/email';
+    window.location.href = '/EmailAuth';
   };
 
   const getSignToken = async(e) =>{
@@ -113,9 +117,11 @@ const EnterInfo = () => {
         emailToken: emailToken,
         pwd: password
       })
-      console.log(response.data);
-      setSignToken(response.data.signToken);
+      setSignToken(response.data.data.signToken);
       setIsValidSignToken(true);
+      console.log(response.data);
+      navigate('/Policy', {state: {signToken: signToken}});
+      //policy에서 사인토큰 받을때 useLocation을 이용해서 location.state.signToken 으로 받으면 됩니당!
     } catch(error){
       const errorResponse = error.response;
       console.log(errorResponse.data.statusCode);

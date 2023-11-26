@@ -1,5 +1,4 @@
 import styles from 'css/login.module.css';
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import SubmitBtn from "components/SubmitBtn";
 import { useSelector } from "react-redux";

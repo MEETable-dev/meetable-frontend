@@ -209,7 +209,7 @@ const Layout = () => {
           <div className={styles.headerBtnLeft}>
             {accessToken && !sidebarShown && <div onClick={()=>setsidebarShown(true)}>{svgList.headerIcon.headerShow}</div>}
           </div>
-          <div className={styles.headerCenter}>
+          <div className={styles.headerCenter} onClick={()=>{window.location.href = '/:username'}}>
             MEETable
             <button onClick={()=>{
               dispatch(

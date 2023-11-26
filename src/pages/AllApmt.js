@@ -17,6 +17,9 @@ const AllApmt = () => {
         <button className={styles.syncApmt}>{<IoSyncOutline size={24} />}<div className={styles.btnText}>비회원으로 참여한 약속 불러오기</div></button>
       </div>
       <div className={styles.searchContent}>{<RiSearchLine size="18px" color='#888' className={styles.icon}></RiSearchLine>}<input className={styles.searchContentInput} placeholder='찾기'></input></div>
+      <div className={styles.favoritesContainer}>
+        <div className={styles.folderitem}><div>아이템</div></div>
+      </div>
     </div>
     </div>
 

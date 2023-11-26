@@ -26,7 +26,7 @@ const Layout = () => {
   const { resizing, size, startResizing, stopResizing, updateSize, reset } = 
     useResizeSidebar(sidebarInitialSize, sidebarMinWidth, sidebarMaxWidth);
   const accessToken = useSelector((state) => state.user.accessToken);
-  const [sidebarShown, setsidebarShown] = useState(true);
+  const [sidebarShown, setsidebarShown] = useState(false);
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [writeNameVal, setWriteNameVal] = useState('');
   const [showModal, setShowModal] = useState('');
@@ -88,7 +88,7 @@ const Layout = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  });
 
   // 폴더 토글 함수
   const toggleFolder = (folderName) => {

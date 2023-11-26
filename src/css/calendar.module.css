@@ -1,11 +1,18 @@
 .entire {
-  width: 260px;
-  background-color: skyblue;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 38px;
+  padding-bottom: 36px;
 }
 
 .headerContainer {
   display: flex;
   position: relative;
+  width: 100%;
 }
 
 .headerLeft, .headerRight {
@@ -41,6 +48,7 @@
   font-size: 13px;
   font-weight: 500;
   padding: 3px 5px;
+  left: 4px;
 }
 
 .bodyContainer {
@@ -51,20 +59,68 @@
   display: flex;
 }
 
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .colDays {
   display: flex;
-  flex:1;
   justify-content: center;
   align-items: center;
+  background-color: #fff;
+  margin-bottom: 8px;
 }
 
 .col{
   display: flex;
-  flex:1;
+  justify-content: center;
+}
+
+.day {
+  height: 60px;
+}
+
+.eachDay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.dateHeader {
+  height: 17px;
+  width: 17px;
+  color: #222222;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.dateHeaderToday {
+  height: 17px;
+  width: 17px;
+  border-radius: 10px;
+  background-color: #8E66EE;
+  color: #FFF;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.weekSelected {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #40C06F;
+  box-sizing: content-box;
 }
 
 .week {
   display: flex;
+  flex-direction: column;
 }
 
 .disabled {

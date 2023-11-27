@@ -284,6 +284,12 @@
   color: aquamarine;
 }
 
+.renameInput {
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  padding: 3px 4px;
+}
+
 /* EmailAuth */
 
 /* .headerWrapper {

@@ -1,3 +1,4 @@
 .calendar {
   display:flex;
+  align-items: center;
 }

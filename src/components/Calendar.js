@@ -9,8 +9,8 @@ const Calendar = (props) => {
   const Body = ({currentDate, selectDate, onDateClick}) => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
-    const startDate = addDays(startOfWeek(monthStart), 1);
-    const endDate = addDays(endOfWeek(monthEnd), 1);
+    const startDate = addDays(startOfWeek(monthStart), 0);
+    const endDate = addDays(endOfWeek(monthEnd), 0);
     
     const rows = [];
     let days = [];
@@ -68,7 +68,7 @@ const Calendar = (props) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectDate, setSelectDate] = useState(new Set());
   
-  const days = ['월', '화', '수', '목', '금', '토', '일'];
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
   const DivDates = [];
   
   for (let i = 0; i < 7; i++) {

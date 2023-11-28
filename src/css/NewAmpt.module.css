@@ -142,6 +142,24 @@
     margin-left: 10px;
   }
 
+  .timeCollectInput {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+    align-items: center;
+    font-size: 15px;
+    color: #222222;
+  }
+
+  .timeSelect {
+    color: #8E66EE;
+    border-color: #D0D0D0;
+    border-radius: 5px;
+    width: 40px;
+    height: 25px;
+    margin-right: 3px;
+  }
+
   @media only screen and (max-width: 430px) {
     /* 600px 이하일 때의 스타일을 여기에 작성하세요 */
     .contentArea {

@@ -13,15 +13,22 @@ import CalendarNewApmt from "../components/CalendarNewApmt";
 import InputArea from '../components/InputArea';
 
 
-
 const NewApmt = () => {
 
-  const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
+  // 시간 선택 상태 추가
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(24);
+
+  // 시간 옵션 생성
+  const timeOptions = Array.from({ length: 25 }, (_, i) => (
+    <option key={i} value={i}>{i}</option>
+  ));
+
+  const [openModal, setOpenModal] = useState(null);
 
   const toggleModal = (modalId) => {
     setOpenModal(openModal === modalId ? null : modalId);
   };
-
 
   const [amptName, setAmptName] = useState('약속');
   const [nickname, setNickname] = useState('미터블'); // 회원가입명으로 바꾸기
@@ -40,13 +47,13 @@ const NewApmt = () => {
   };
 
 
-  const elements1 = ['요일 기준', '날짜 기준']; // 여기에 나열할 요소들을 정의합니다.
+  const elements1 = ['요일 기준', '날짜 기준'];
   const [selectedElement1, setSelectedElement1] = useState('요일 기준');
-  const elements2 = ['날짜만 정하기', '-시부터 -시까지']; // 여기에 나열할 요소들을 정의합니다.
+  // const elements2 = ['날짜만 정하기', '시간 정하기'];
   const [selectedElement2, setSelectedElement2] = useState('날짜만 정하기');
-  const elements3 = ['약속에 참여하는 누구나', '나만']; // 여기에 나열할 요소들을 정의합니다.
+  const elements3 = ['약속에 참여하는 누구나', '나만'];
   const [selectedElement3, setSelectedElement3] = useState('약속에 참여하는 누구나');
-  const elements4 = ['약속에 참여하는 누구나']; // 여기에 나열할 요소들을 정의합니다.
+  const elements4 = ['약속에 참여하는 누구나'];
   const [selectedElement4, setSelectedElement4] = useState('약속에 참여하는 누구나');
 
 
@@ -84,7 +91,6 @@ const NewApmt = () => {
           </div>
           <div className={`${styles.contentInput} ${styles.inputPadding}`}>
             <InputArea
-              // className={`${styles.inputPadding}`}
               placeholder="약속"
               value={amptName}
               onChange={handleAmptNameChange}
@@ -120,17 +126,42 @@ const NewApmt = () => {
         {/* 시간 선택 */}
         <div className={styles.contentArea}>
           <div className={styles.contentName}>
-            <p>약속 유형</p>
+            <p>시간 선택</p>
           </div>
           <div className={styles.contentInput}>
-            {elements2.map((element2, index) => (
-              <div key={index} className={styles.items}>
-                <button className={styles.selectBtn} onClick={() => handleSelect2(element2)}>
-                  {selectedElement2 === element2 ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
-                </button>
-                <div className={styles.selectTxt}>{element2}</div>
+            {/* '날짜만 정하기' 라디오 버튼 */}
+            <div className={styles.timeCollectInput}>
+              <button className={styles.selectBtn} onClick={() => setSelectedElement2('날짜만 정하기')}>
+                {selectedElement2 === '날짜만 정하기' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              </button>
+              <div>날짜만 정하기</div>
+            </div>
+
+            <div className={styles.timeCollectInput}>
+              <button className={styles.selectBtn} onClick={() => setSelectedElement2('시간 정하기')}>
+                {selectedElement2 === '시간 정하기' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              </button>
+              {/* 시간 선택 드롭다운 */}
+              <div className={styles.timeSelectContainer}>
+                <select
+                  className={styles.timeSelect}
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                >
+                  {timeOptions}
+                </select>
+                <span>시부터 </span>
+                <select
+                  className={styles.timeSelect}
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                >
+                  {timeOptions}
+                </select>
+                <span>시까지</span>
               </div>
-            ))}
+            </div>
+            
           </div>
         </div>
 
@@ -185,13 +216,19 @@ const NewApmt = () => {
 
         <SubmitBtn
           text="만들기"
-          // onClick={sendVerifyCode}
+          onClick={() => toggleModal('showCode')} // 누르면 정보 백엔드에 발송도 추가
           isActive={amptName}
           className={`${styles.createBtn}`}
           margin="35px 0px 0px"
         />
 
       </div>
+
+      {/* modal 띄우기 */}
+      {/* policymodal 말고 새로 디자인하기 */}
+      {openModal === 'showCode' && <PolicyModal title="약속 공유 링크" onClose={() => toggleModal(null)}>
+        여긴 약속 링크 보여주는 창입니당~~~
+      </PolicyModal>}
 
     </div>
   );

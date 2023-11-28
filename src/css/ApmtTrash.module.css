@@ -1,0 +1,41 @@
+
+.ApmtBox{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 3px;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
+  }
+
+  .ApmtIcon{
+    display: block;
+    border: none;
+    width: 100%;
+  }
+ 
+  
+  .ApmtName{
+    display: flex;
+    flex-direction: row;
+    border-right: 3px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-right: 10px;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: #222;
+    border: none;
+    width: 100%;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+  }

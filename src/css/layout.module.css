@@ -11,6 +11,7 @@
   cursor: col-resize;
   user-select: none;
   height: 100vh;
+  width: 100vw;
   display: flex;
 }
 
@@ -283,6 +284,96 @@
   color: aquamarine;
 }
 
+.renameInput {
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  padding: 3px 4px;
+}
+
+.notionModalBox{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 100;
+  width : 100vw;
+  height : 100vh;
+  top: 0;
+  left: 0;
+  background-color : rgba(0,0,0,0.2);
+
+
+}
+
+.notionModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 320px;
+  height: 222px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid #D0D0D0;
+  background: #FFF;
+  padding: 40px 32px;
+}
+
+.notionModalT1{
+  width: 141px;
+  height: 23px;
+  margin-bottom: 8px;
+  color: #222;
+  text-align: center;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22.5px;
+}
+
+.notionModalT2{
+  width: 256px;
+  height: 45px;
+  margin-bottom: 18px;
+  color: #222;
+  text-align: center;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22.5px;
+}
+
+.notionModalBtnBox{
+  height: 48px;
+  width: 260px;
+  background: none;
+  border:none;
+}
+
+.notionModalNo{
+  background-color: white;
+  color: #8E66EE;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  width: 91px;
+  height: 48px;
+  margin-right: 8px;
+  text-align: center;
+}
+.modalYes{
+  background-color:#8E66EE;
+  color: white;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  width: 161px;
+  height: 48px;
+  text-align: center;
+
+
+}
 /* EmailAuth */
 
 /* .headerWrapper {

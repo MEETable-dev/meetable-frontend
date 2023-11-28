@@ -1,3 +1,5 @@
+/* 약속잡기 버튼 */
+
 .newApmt {
     background-color: #8E66EE;
     width: 259px;
@@ -15,7 +17,8 @@
     box-shadow: 0px 0px 5px 0px rgba(34, 34, 34, 0.30);
     cursor: pointer;
   }
-  
+
+  /* 비회원 약속 잡기 버튼 */
   .syncApmt {
     background-color: #fff;
     width: 259px;
@@ -33,10 +36,11 @@
     cursor: pointer;
   }
 
+  /* 전체 컨테이너 */
   .container{
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     background-color: #fff;
     padding: 1.5rem;
   }
@@ -45,22 +49,20 @@
     background-color: #fff;
     width: 100%;
     height: 100%;
-    flex-grow: 1;
     align-items: flex-start;
-    flex-direction: column;
+    flex-flow: wrap;
     /* margin: 1.5rem; */
-    --color-border: #101010;
-    --color-border-highlight: #888484;
   }
 
   .headBtnContainer{
     display: flex;
     border: none;
-    display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 2rem;
   }
+
+
 
   .searchContent {
     display: flex;
@@ -89,33 +91,48 @@
     color:#222222;
   }
 
-  /*favorites container-> favorites header, folder box */
-  /* folderbox -> folder icon  */
 
   .folderContainer{
+    position:relative;
+    background-color: #FFF;
     display: flex;
     flex-direction: column;
     border: none;
     align-items: flex-start;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     width: 100%;
     height: 100%;
     flex-shrink: 1;
 
   }
+  
+  .ApmtItem{
+    display: flex;
+    align-self: flex-start;
+  }
 
   .folderInnerContainer{
     display: flex;
     flex-direction: row;
-    border: none;
-    align-items: flex-start;
-    flex-flow: wrap;
     justify-content: flex-start;
     width: 100%;
+    height: 100%;
+    margin-bottom: 2.5rem;
+
+    /* position: relative;
+
+    flex-direction: row;
+    border: none; */
+    align-items: flex-start;
+    flex-flow: wrap;
+    /* justify-content: flex-start;
+    width: 100%;
     height: calc(100%-24px);
+    margin-bottom: 2.5rem; */
   }
 
   .folderHeader{
+    position: relative;
     display: flex;
     border: none;
     align-items: center;
@@ -130,7 +147,53 @@
     line-height: normal;
   }
 
-  .folderBox{
+  .folderHeader:last-child{
+    display: flex;
+    justify-self: flex-end;
+    align-self: center;
+  }
+
+  .modal {
+    display: flex;
+    flex-flow: column;
+    border-radius: 10px;
+    border: 1px solid #D0D0D0;
+    background: #FFF;
+    /* padding: 12px 16px; */
+    width: 127px;
+    height: 93px;
+    align-content: space-between;
+    justify-content: center;
+  }
+  
+  .modalBtn {
+    margin-left: 1rem;
+    display: flex;
+    justify-self: center;
+    color: #222;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 24px; /* 160% */
+    cursor: pointer;
+  }
+
+  .x {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  input.changeName{
+    width: 100%;
+    background-color: white;
+    outline: none;
+    border: none;
+    display: flex;
+    font-size: 15px;
+  }
+
+  .ApmtBox{
     display: inline-flexbox;
     flex-direction: column;
     margin-right: 3px;
@@ -141,99 +204,79 @@
     justify-content: center;
     border: none;
     color:#222222;
+    cursor: pointer;
   }
 
-  .folderIcon{
+  .ApmtBoxFocused{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 3px;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
+    background-color: #8E66EE33;
+  }
+
+
+  .ApmtBox:hover{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .ApmtBox::selection{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .ApmtIcon{
     display: block;
     border: none;
-    flex-grow: 1;
+    /* flex-grow: 1; */
   }
-  .folderName{
+
+  .favoritesIcon{
     display: flex;
+    cursor:pointer;
+    /* border: none; */
+    align-items: flex-start;
+    justify-content: center;
+  }
+  
+  .ApmtName{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
     border-right: 3px;
     flex-grow: 1;
+    flex-shrink: 1;
     margin-right: 10px;
-    align-items: center;
-    text-align: center;
+    align-items: stretch;
     justify-content: center;
     color: #222222;
     border: none;
     width: 100%;
+
+    min-height: 24px;
+
+  }
+
+  .favoritesText{
+    display: flex;
     font-size: 15px;
-
-  }
-
-
-  .folderItem {
-    display: flex;
-    display: inline-block;
-    margin-right: 6px;
-    position: relative;
-    background-color: white;
-    color: white;
-    /* top: 2px; */
-  }
-  
-  .folderItem ~ svg {
-    cursor: pointer;
-  }
-  
-  .containerResizing {
-    cursor: col-resize;
-    user-select: none;
-    height: 100vh;
-    display: flex;
-  }
-  
-  .sidebarWrapper {
-    display: flex;
-    flex: 0 0 50px; 
-    position: relative;
-    box-shadow: 3px 0px 6px rgba(34, 34, 34, 0.30);
-  }
-  
-  .sidebarContent {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    flex:1;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
+    align-self: center;
+    padding-right: 6px;
+    height: 100%;
     
   }
   
-  .sidebarHeader {
-    justify-content: flex-end;
-    display: flex;
-    margin-bottom: 31px;
-  }
-  
-  .sidebarHeader svg {
-    cursor: pointer;
-  }
-  
-  .sidebarMain {
-    flex:1;
-    background-color: #fff;
-  }
-  
-  .sidebarBorder {
-    filter: drop-shadow(3px 0px 6px rgba(34, 34, 34, 0.30));
-    position: absolute;
-    right: -5px;
-    width: 6px;
-    height: 100%;
-    cursor: col-resize;
-    background-color: transparent;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .sidebarBorder.resizing,
-  .sidebarBorder:hover {
-    background-color: var(--color-border-highlight);
-  }
-  
   .mainWrapper {
-    /* background-color: rgb(98, 54, 54); */
-    flex-grow: 1;
+    background-color: white;
+    /* flex-grow: 1; */
     display: flex;
     flex-direction: column;
   }
@@ -300,15 +343,8 @@
   
   .icon {
     position: relative;
-  }
-  
-  .x {
-    position: absolute;
-    top: 7px;
-    right: 10px;
     cursor: pointer;
   }
-  
   
 
   .btnText {
@@ -333,7 +369,7 @@
     justify-content: space-between;
     align-items:center;
     border-radius: 5px;
-    background-color: #8E66EE33;
+
     margin: 3px 0;
   }
   
@@ -371,21 +407,6 @@
   
 
   
-  .modal {
-    border-radius: 10px;
-    border: 1px solid #D0D0D0;
-    background: #FFF;
-    padding: 12px 16px;
-  }
-  
-  .modalBtn {
-    color: #222;
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 24px; /* 160% */
-    cursor: pointer;
-  }
-  
   /* temporary */
   .check {
     background-color: #e06767;
@@ -393,6 +414,17 @@
   
   #login:hover, #logout:hover {
     color: aquamarine;
+  }
+
+  .hidden{
+    display:none;
+  }
+  .renameInput {
+    width: 100%;
+    font-size: 15px;
+    border-radius: 5px;
+    border: 1px solid #D0D0D0;
+    padding: 3px 4px;
   }
   
   /* EmailAuth */

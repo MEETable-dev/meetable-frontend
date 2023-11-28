@@ -17,6 +17,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { IoMdArrowDropup } from "react-icons/io";
 import { setToken } from "../store/modules/user";
 import { useAppDispatch } from "store";
+import axios from "axios";
 
 const Layout = () => {
   const dispatch = useAppDispatch();
@@ -26,22 +27,31 @@ const Layout = () => {
   const { resizing, size, startResizing, stopResizing, updateSize, reset } = 
     useResizeSidebar(sidebarInitialSize, sidebarMinWidth, sidebarMaxWidth);
   const accessToken = useSelector((state) => state.user.accessToken);
-  const [sidebarShown, setsidebarShown] = useState(true);
+  const [sidebarShown, setsidebarShown] = useState(false);
+
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [writeNameVal, setWriteNameVal] = useState('');
   const [showModal, setShowModal] = useState('');
   const [showHeaderModal, setShowHeaderModal] = useState('');
   const [modalPosition, setModalPosition] = useState({x:0, y:0});
-  const [selectedItemID, setSelectedItemID] = useState(null);
-  const [openFolders, setOpenFolders] = useState({});
   const [modifyName, setModifyName] = useState(false);
+
+  const [bookmarkData, setBookmarkData] = useState([]);
+  const [promiseData, setPromiseData] = useState([]);
+  const [selectedItemID, setSelectedItemID] = useState(null);
+  const [openBookmark, setOpenBookmark] = useState(true);
+  // const [openFolders, setOpenFolders] = useState({});
+
   const modalRef = useRef();
   const modalHeaderRef = useRef();
+  const inputRef = useRef();
+  const ACCESSTOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiQ2xhaXJlIiwibWVtYmVyX2VtYWlsIjoianVldW5raW0xMTFAZ21haWwuY29tIiwibWVtYmVyX3B3ZCI6IiQyYiQxMCRQZGhZS3dTSzhUTG9wVmxlcGhBQ0plemxwYks2V002RWk1YTVkZUI2ZVRqa2U3R2FVRjZqMiIsImlzX2FjY2VwdF9tYXJrZXRpbmciOiJGIn0sImlhdCI6MTcwMTE5ODM4MywiZXhwIjoxNzAxMjAxOTgzfQ.ZLv_p8ClryZI6u02aVpkX5idaHRc1JLATGpb0GKIG7U";
 
-  const openModal = (itemID, event, type) => {
+  const openModal = (itemID, event, type, name) => {
     event.preventDefault();
     setModalPosition({x:event.pageX, y:event.pageY});
     setSelectedItemID(itemID);
+    setWriteNameVal(name);
     setModifyName(false);
     setShowModal(type);
   };
@@ -81,6 +91,11 @@ const Layout = () => {
     if (modalHeaderRef.current && !modalHeaderRef.current.contains(event.target)) {
       setShowHeaderModal(false);
     }
+    if (inputRef.current && !inputRef.current.contains(event.target)) {
+      setModifyName(false);
+      // 이름 바꾸기 api 호출
+      setWriteNameVal('');
+    }
   };
 
   useEffect(() => {
@@ -88,69 +103,107 @@ const Layout = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  });
+
+  useEffect(()=>{
+    const getData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization: ACCESSTOKEN}});
+        console.log(response.data)
+        setBookmarkData(response.data.bookmark);
+        setPromiseData(response.data.promise)
+      } catch (error) {
+        const errorResponse = error.response;
+        console.log(errorResponse.data)
+      }
+    }
+    getData();
   }, []);
 
   // 폴더 토글 함수
-  const toggleFolder = (folderName) => {
-    setOpenFolders(prevState => ({
-      ...prevState,
-      [folderName]: !prevState[folderName]
-    }));
+  // const toggleFolder = (folderName) => {
+  //   setOpenFolders(prevState => ({
+  //     ...prevState,
+  //     [folderName]: !prevState[folderName]
+  //   }));
+  // };
+
+  const bookmark = async (promiseCode) => {
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
+        isBookmark: 'T',
+        promiseId: promiseCode.split('-')[1].split('_')[0],
+        headers : {Authorization:ACCESSTOKEN}
+      });
+      console.log(response.data);
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data)
+    }
+    console.log('북마크: ', promiseCode.split('-')[1].split('_')[0])
+
   };
 
-  const bookmark = (promiseName) => {
-    console.log('북마크: ', promiseName.split('-')[1])
-  };
-
-  const unBookmark = (promiseName) => {
-    console.log('북마크해제: ', promiseName.split('-')[1])
+  const unBookmark = async (promiseCode) => {
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
+        isBookmark: 'F',
+        promiseId: promiseCode.split('-')[1].split('_')[0],
+        headers : {Authorization: ACCESSTOKEN}
+      });
+      console.log(response.data);
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data)
+    }
+    console.log('북마크해제: ', promiseCode.split('-')[1].split('_')[0])
   };
 
   const PromiseList = ({ data, fav }) => {
     return (
       <div>
         {data.map((item, index) => (
-          <PromiseItem key={item.id} name={item.name} fav={item.fav} id={fav ? 'fav-'+item.id : 'my-'+item.id} />
+          <PromiseItem key={item.promiseCode} name={item.promiseName} fav={item.isBookmark} id={fav ? 'fav-'+item.promiseCode : 'my-'+item.promiseCode} />
         ))}
       </div>
     );
   };
 
-  const FolderList = ({data, name, id}) => {
-    return (
-      <div>
-        <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} onContextMenu={(event)=>{openModal(id, event, 'f')}}>
-          <div className={styles.listItems}>
-            <div className={styles.folderItem}>{svgList.folder.folder}</div>
-            {(selectedItemID === id && modifyName) ? <input value={writeNameVal} name="writeName"
-                onChange={(e) => {setWriteNameVal(e.target.value)}}/> : name}
-            <div onClick={()=> toggleFolder(name)}>{openFolders[name] ? <IoMdArrowDropup color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/> : <IoMdArrowDropdown color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/>}</div>
-          </div>
-          <div className={styles.btnArea} onClick={(event)=>{
-            openModal(id, event, 'f')
-            }
-          }>{svgList.folder.more}</div>
-        </div>
-        {openFolders[name] && data.map((item, index) => (
-          <div style={{marginLeft:28}}>
-            <PromiseItem key={item.id} name={item.name} fav={item.fav} id={'my-'+item.id}/>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  // const FolderList = ({data, name, id}) => {
+  //   return (
+  //     <div>
+  //       <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} onContextMenu={(event)=>{openModal(id, event, 'f')}}>
+  //         <div className={styles.listItems}>
+  //           <div className={styles.folderItem}>{svgList.folder.folder}</div>
+  //           {(selectedItemID === id && modifyName) ? <input value={writeNameVal} name="writeName"
+  //               onChange={(e) => {setWriteNameVal(e.target.value)}}/> : name}
+  //           <div onClick={()=> toggleFolder(name)}>{openFolders[name] ? <IoMdArrowDropup color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/> : <IoMdArrowDropdown color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/>}</div>
+  //         </div>
+  //         <div className={styles.btnArea} onClick={(event)=>{
+  //           openModal(id, event, 'f')
+  //           }
+  //         }>{svgList.folder.more}</div>
+  //       </div>
+  //       {openFolders[name] && data.map((item, index) => (
+  //         <div style={{marginLeft:28}}>
+  //           <PromiseItem key={item.id} name={item.name} fav={item.fav} id={'my-'+item.id}/>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
   
   const PromiseItem = ({ name, fav, id }) => {
     return (
-      <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} onContextMenu={(event)=>{openModal(id, event, 'p')}}>
+      <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} onContextMenu={(event)=>{openModal(id, event, 'p', name)}}>
         <div className={styles.listItems}>
-          {fav && <AiFillStar color="#FFBB0D" size={22} className={styles.listIcon} onClick={()=>{unBookmark(id)}}/>}
-          {!fav && <AiOutlineStar color="#888888" size={22} className={styles.listIcon} onClick={()=>{bookmark(id)}}/>}
-          {(selectedItemID === id && modifyName) ? <input value={writeNameVal} name="writeName"
+          {fav === 'T' && <AiFillStar color="#FFBB0D" size={22} className={styles.listIcon} onClick={()=>{unBookmark(id)}}/>}
+          {!(fav === 'T') && <AiOutlineStar color="#888888" size={22} className={styles.listIcon} onClick={()=>{bookmark(id)}}/>}
+          {(selectedItemID === id && modifyName) ? <input value={writeNameVal} name="writeName" ref={inputRef} className={styles.renameInput}
                 onChange={(e) => {setWriteNameVal(e.target.value)}}/> : name}
         </div>
         <div className={styles.btnArea} onClick={(event)=>{
-            openModal(id, event, 'p')
+            openModal(id, event, 'p', name)
             }
           }>{svgList.folder.more}</div>
       </div>
@@ -183,14 +236,21 @@ const Layout = () => {
                 onChange={(e) => {setSearchApmtVal(e.target.value)}}></input>
               {searchApmtVal && <TiDelete size={20} color="#D9D9D9" className={styles.x} onClick={()=>{setSearchApmtVal('')}}/>}
             </div>
-            <div className={styles.labels}>즐겨찾기</div>
-            <PromiseList data={[{name:'합주일정', id:2, fav:true}, {name:'미터블 개발 일정', id:3, fav:true}]} fav={true}/>
+            <div className={styles.labels}>
+              즐겨찾기
+              <div onClick={()=> setOpenBookmark(!openBookmark)}>
+                {openBookmark
+                ? <IoMdArrowDropup color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/> 
+                : <IoMdArrowDropdown color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/>}
+              </div>
+            </div>
+            {openBookmark && <PromiseList data={bookmarkData} fav={true}/>}
             <div className={styles.labels}>내 약속<div className={styles.btnArea}>
               <div onClick={()=>{window.location.href = '/:username/allapmt';}}>{svgList.folder.grid}</div>
-              <div>{svgList.folder.newFolder}</div>
+              {/* <div>{svgList.folder.newFolder}</div> */}
             </div></div>
-            <PromiseList data={[{name:'합주일정', id:2, fav:true}, {name:'미터블 개발 일정', id:3, fav:true}, {name:'팅클 정기모임', id:4, fav:false}]} fav={false}/>
-            <FolderList data={[{name:'팅클 개발일정', id:10, fav:true}]} name="사이드프로젝트" id="10"/>
+            <PromiseList data={promiseData} fav={false}/>
+            {/* <FolderList data={[{name:'팅클 개발일정', id:10, fav:true}]} name="사이드프로젝트" id="10"/> */}
             <ul>
               <li>{process.env.REACT_APP_API_URL}</li>
               <li>{accessToken}</li>
@@ -209,7 +269,7 @@ const Layout = () => {
           <div className={styles.headerBtnLeft}>
             {accessToken && !sidebarShown && <div onClick={()=>setsidebarShown(true)}>{svgList.headerIcon.headerShow}</div>}
           </div>
-          <div className={styles.headerCenter}>
+          <div className={styles.headerCenter} onClick={()=>{window.location.href = '/:username'}}>
             MEETable
             <button onClick={()=>{
               dispatch(

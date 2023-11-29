@@ -1,7 +1,7 @@
-import styles from 'css/InputArea.module.css';
+import styles from 'css/InputArea2.module.css';
 import React from "react";
 
-const InputArea = ({ className, placeholder, value, onChange, onClear, children , type}) => {
+const InputArea2 = ({ className, placeholder, value, onChange, onClear, children , type}) => {
   return (
     // 전체 크기는 기본 가로 260px
     // 화면 크기 작아질 땐 가로줄은 그냥 줄어들고 기본적으로 입력 input의 크기가 줄어듦
@@ -38,4 +38,4 @@ const InputArea = ({ className, placeholder, value, onChange, onClear, children 
   );
 };
 
-export default InputArea;
+export default InputArea2;

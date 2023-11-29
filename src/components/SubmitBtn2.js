@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from 'css/SubmitBtn.module.css';
+import styles from 'css/SubmitBtn2.module.css';
 
 
 const SubmitBtn2 = ({ text, onClick, isActive, className, disabled }) => {

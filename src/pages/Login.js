@@ -2,7 +2,7 @@ import styles from 'css/login.module.css';
 import { Link } from "react-router-dom";
 import SubmitBtn2 from "components/SubmitBtn2";
 import { useSelector } from "react-redux";
-import InputArea from 'components/InputArea';
+import InputArea2 from 'components/InputArea2';
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import axios from "axios";
@@ -96,14 +96,14 @@ return ( <div className={styles.loginBox}>
   <div className={styles.loginLogo}>
     <h2>MEETable</h2>
     <form className={styles.content}>
-      <InputArea autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
+      <InputArea2 autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
       onClear ={handleClearEmail}>
       {emailSubmitted && pwSubmitted && !errorMessage ? svgList.loginIcon.delBtn : ''}
-      </InputArea>
-      <InputArea autoComplete="password" name="password" type="password" placeholder="비밀번호" value = {password} onChange = {onChangePassword}
+      </InputArea2>
+      <InputArea2 autoComplete="password" name="password" type="password" placeholder="비밀번호" value = {password} onChange = {onChangePassword}
       onClear={handleClearPw}>
       {emailSubmitted && pwSubmitted && !errorMessage ? svgList.loginIcon.delBtn: ''}
-      </InputArea>         
+      </InputArea2>         
 
       <div className={styles.alertZone}>
         <div className={`${styles.errorMsg} ${pwSubmitted && emailSubmitted & !isUser ? '' : styles.hidden}`}>

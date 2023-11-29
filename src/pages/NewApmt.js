@@ -7,6 +7,7 @@ import { svgList } from "../assets/svg";
 import React from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 import PolicyModal from "../components/PolicyModal"
 import SubmitBtn from "../components/SubmitBtn";
@@ -20,16 +21,17 @@ const NewApmt = () => {
     try {
       const formattedStartTime = formatTime(startTime);
       const formattedEndTime = formatTime(endTime);
+
+      // selectDate Set을 배열로 변환하고, 각 날짜를 'yyyy-MM-dd' 포맷으로 변환
+      const formattedDates = Array.from(selectDate).map(date => format(date, 'yyyy-MM-dd'));
   
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
         promise_name: amptName,
         weekvsdate: selectedElement1,
         ampmvstime: "F", // 2차때 수정
-        start_time: formattedStartTime, // Add formatted start time
-        end_time: formattedEndTime, // Add formatted end time
-        date: [
-          2023-11-30
-        ],
+        start_time: formattedStartTime,
+        end_time: formattedEndTime,
+        date: formattedDates,
         canallconfirm: selectedElement3
       });
       console.log(response.data);
@@ -38,6 +40,22 @@ const NewApmt = () => {
       console.log(errorResponse.data.statusCode);
     }
   };
+
+  const [selectDate, setSelectDate] = useState(new Set());
+
+  const handleDateChange = (newDate) => {
+    // selectDate 업데이트 로직
+    setSelectDate(prevSelectDate => {
+      const updatedSelectDate = new Set(prevSelectDate);
+      if (updatedSelectDate.has(newDate)) {
+        updatedSelectDate.delete(newDate);
+      } else {
+        updatedSelectDate.add(newDate);
+      }
+      return updatedSelectDate;
+    });
+    // console.log(selectDate);
+  }
 
   // 시간 선택 상태 추가
   const [startTime, setStartTime] = useState(0);
@@ -49,14 +67,7 @@ const NewApmt = () => {
   ));
 
   const formatTime = (hour) => {
-    // Ensure that the hour is a two-digit string
     return `${hour.toString().padStart(2, '0')}:00:00`;
-  };
-
-  const [openModal, setOpenModal] = useState(null);
-
-  const toggleModal = (modalId) => {
-    setOpenModal(openModal === modalId ? null : modalId);
   };
 
   const [amptName, setAmptName] = useState('약속');
@@ -80,7 +91,7 @@ const NewApmt = () => {
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
 
-  const [isMember, setIsMember] = useState(true);  // 멤버 여부 api 받아와서 판별로 바꾸기
+  const [isMember, setIsMember] = useState(false);  // 멤버 여부 api 받아와서 판별로 바꾸기
 
 
   return (
@@ -132,7 +143,7 @@ const NewApmt = () => {
             </div>
             {selectedElement1 === 'D' ? (
               <div style={{margin: "0px 0px 0px 7px"}}>
-                <CalendarNewApmt spaceX={4} spaceY={4}/>
+                <CalendarNewApmt spaceX={4} spaceY={4} selectedDates={selectDate} onDateChange={handleDateChange}/>
               </div>
             ) : null}
           </div>
@@ -227,7 +238,7 @@ const NewApmt = () => {
 
         <SubmitBtn
           text="만들기"
-          onClick={() => toggleModal('showCode')} // 누르면 정보 백엔드에 발송도 추가
+          onClick={createAmpt} // 누르면 정보 백엔드에 발송도 추가
           isActive={amptName && nickname}
           className={`${styles.createBtn}`}
           margin="35px 0px 0px"

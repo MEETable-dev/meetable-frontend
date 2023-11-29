@@ -3,7 +3,7 @@ import styles from '../css/CalendarNewApmt.module.css';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, subDays, addDays, parse, isBefore } from 'date-fns'
 
 
-const CalendarNewApmt = (props) => {
+const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
   const Body = ({currentDate, selectDate, onDateClick}) => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
@@ -23,7 +23,7 @@ const CalendarNewApmt = (props) => {
         days.push(
           <div
             className={
-              isBefore(day, subDays(new Date(), 0))
+              isBefore(day, subDays(new Date(), 1))
               ? `${styles.col} ${styles.disabled}`
               : selectDate.has(format(day, 'yyyy-MM-dd'))
               ? `${styles.col} ${styles.selected}`
@@ -60,8 +60,8 @@ const CalendarNewApmt = (props) => {
     }
     return <div className={styles.body}>{rows}</div>;
   }
-  const spaceX = props.spaceX;
-  const spaceY = props.spaceY;
+  const spaceX_new = spaceX;
+  const spaceY_new = spaceY;
   
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectDate, setSelectDate] = useState(new Set());
@@ -72,8 +72,8 @@ const CalendarNewApmt = (props) => {
   for (let i = 0; i < 7; i++) {
     DivDates.push(
       <div className={styles.colDays} style={{
-        marginLeft:spaceX/2,
-        marginRight:spaceY/2,
+        marginLeft:spaceX_new/2,
+        marginRight:spaceY_new/2,
         backgroundColor:'white'
       }}>
         {days[i]}
@@ -97,6 +97,7 @@ const CalendarNewApmt = (props) => {
     else {
       setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
     }
+    onDateChange(day);
   }
 
   return <div className={styles.entire}>
@@ -118,7 +119,7 @@ const CalendarNewApmt = (props) => {
         </div>
       </div>
       <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} style={{right:spaceX/2}} onClick={()=>setCurrentDate(new Date())}>오늘</div>
+        <div className={styles.TodayBtn} style={{right:spaceX_new/2}} onClick={()=>setCurrentDate(new Date())}>오늘</div>
       </div>
     </div>
     <div className={styles.bodyContainer}>

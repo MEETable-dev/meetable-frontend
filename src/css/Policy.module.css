@@ -3,13 +3,17 @@
   height: 100vh;
 }
 
+main {
+  align-self: center;
+}
+
 .mainBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80vw;
+  /* width: 80vw;
   max-width: 320px;
-  min-width: 280px;
+  min-width: 280px; */
 }
 
 .container {
@@ -33,9 +37,10 @@ body {
 }
 
 .loginBox {
-  width: 100%;
+  width: 80vw;
   height: 465px;
   max-width: 320px;
+  min-width: 280px;
   background-color: white;
   border-radius: 10px;
   display: flex;

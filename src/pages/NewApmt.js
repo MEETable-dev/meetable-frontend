@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
+import axios from "axios";
 import { Link } from 'react-router-dom';
 
 import PolicyModal from "../components/PolicyModal"
@@ -15,6 +16,29 @@ import InputArea from '../components/InputArea';
 
 const NewApmt = () => {
 
+  const createAmpt = async () => {
+    try {
+      const formattedStartTime = formatTime(startTime);
+      const formattedEndTime = formatTime(endTime);
+  
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
+        promise_name: amptName,
+        weekvsdate: selectedElement1,
+        ampmvstime: "F", // 2차때 수정
+        start_time: formattedStartTime, // Add formatted start time
+        end_time: formattedEndTime, // Add formatted end time
+        date: [
+          2023-11-30
+        ],
+        canallconfirm: selectedElement3
+      });
+      console.log(response.data);
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data.statusCode);
+    }
+  };
+
   // 시간 선택 상태 추가
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(24);
@@ -23,6 +47,11 @@ const NewApmt = () => {
   const timeOptions = Array.from({ length: 25 }, (_, i) => (
     <option key={i} value={i}>{i}</option>
   ));
+
+  const formatTime = (hour) => {
+    // Ensure that the hour is a two-digit string
+    return `${hour.toString().padStart(2, '0')}:00:00`;
+  };
 
   const [openModal, setOpenModal] = useState(null);
 
@@ -47,35 +76,16 @@ const NewApmt = () => {
   };
 
 
-  const elements1 = ['요일 기준', '날짜 기준'];
-  const [selectedElement1, setSelectedElement1] = useState('요일 기준');
-  // const elements2 = ['날짜만 정하기', '시간 정하기'];
-  const [selectedElement2, setSelectedElement2] = useState('날짜만 정하기');
-  const elements3 = ['약속에 참여하는 누구나', '나만'];
-  const [selectedElement3, setSelectedElement3] = useState('약속에 참여하는 누구나');
-  const elements4 = ['약속에 참여하는 누구나'];
-  const [selectedElement4, setSelectedElement4] = useState('약속에 참여하는 누구나');
+  const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
+  const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
+  const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
 
-
-  const handleSelect1 = (element1) => {
-    setSelectedElement1(element1);
-  };
-  const handleSelect2 = (element2) => {
-    setSelectedElement2(element2);
-  };
-  const handleSelect3 = (element3) => {
-    setSelectedElement3(element3);
-  };
-  const handleSelect4 = (element4) => {
-    setSelectedElement4(element4);
-  };
-
-  const [isMember, setIsMember] = useState(false);  // 멤버 여부 api 받아와서 판별로 바꾸기
+  const [isMember, setIsMember] = useState(true);  // 멤버 여부 api 받아와서 판별로 바꾸기
 
 
   return (
     <div className={`${styles.loginBox} ${
-      selectedElement1 === '날짜 기준' 
+      selectedElement1 === 'D' 
         ? isMember ? styles.memberDate : styles.nonmemberDate 
         : isMember ? styles.memberWeek : styles.nonmemberWeek
     }`}>
@@ -107,15 +117,20 @@ const NewApmt = () => {
             <p>약속 유형</p>
           </div>
           <div className={styles.contentInput}>
-            {elements1.map((element1, index) => (
-              <div key={index} className={styles.items}>
-                <button className={styles.selectBtn} onClick={() => handleSelect1(element1)}>
-                  {selectedElement1 === element1 ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
-                </button>
-                <div className={styles.selectTxt}>{element1}</div>
-              </div>
-            ))}
-            {selectedElement1 === '날짜 기준' ? (
+            <div className={styles.timeCollectInput}>
+              <button className={styles.selectBtn} onClick={() => setSelectedElement1('W')}>
+                {selectedElement1 === 'W' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              </button>
+              <div>요일 기준</div>
+            </div>
+
+            <div className={styles.timeCollectInput}>
+              <button className={styles.selectBtn} onClick={() => setSelectedElement1('D')}>
+                {selectedElement1 === 'D' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              </button>
+              <div>날짜 기준</div>
+            </div>
+            {selectedElement1 === 'D' ? (
               <div style={{margin: "0px 0px 0px 7px"}}>
                 <CalendarNewApmt spaceX={4} spaceY={4}/>
               </div>
@@ -131,15 +146,15 @@ const NewApmt = () => {
           <div className={styles.contentInput}>
             {/* '날짜만 정하기' 라디오 버튼 */}
             <div className={styles.timeCollectInput}>
-              <button className={styles.selectBtn} onClick={() => setSelectedElement2('날짜만 정하기')}>
-                {selectedElement2 === '날짜만 정하기' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              <button className={styles.selectBtn} onClick={() => setSelectedElement2('T')}>
+                {selectedElement2 === 'T' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
               </button>
               <div>날짜만 정하기</div>
             </div>
 
             <div className={styles.timeCollectInput}>
-              <button className={styles.selectBtn} onClick={() => setSelectedElement2('시간 정하기')}>
-                {selectedElement2 === '시간 정하기' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              <button className={styles.selectBtn} onClick={() => setSelectedElement2('F')}>
+                {selectedElement2 === 'F' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
               </button>
               {/* 시간 선택 드롭다운 */}
               <div className={styles.timeSelectContainer}>
@@ -165,33 +180,29 @@ const NewApmt = () => {
           </div>
         </div>
 
-        {/* 확정하기 권한 */}
+        {/* 확정하기 권한 new */}
         <div className={styles.contentArea}>
           <div className={styles.contentName}>
-            <p>확정하기 권한</p>
+            <p>약속 유형</p>
           </div>
-          { isMember ? 
-            <div className={styles.contentInput}>
-              {elements3.map((element3, index) => (
-                <div key={index} className={styles.items}>
-                  <button className={styles.selectBtn} onClick={() => handleSelect3(element3)}>
-                    {selectedElement3 === element3 ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
-                  </button>
-                  <div className={styles.selectTxt}>{element3}</div>
-                </div>
-              ))}
-            </div> :
-            <div className={styles.contentInput}>
-              {elements4.map((element4, index) => (
-                <div key={index} className={styles.items}>
-                  <button className={styles.selectBtn} onClick={() => handleSelect4(element4)}>
-                    {selectedElement4 === element4 ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
-                  </button>
-                  <div className={styles.selectTxt}>{element4}</div>
-                </div>
-              ))}
+          <div className={styles.contentInput}>
+            <div className={styles.timeCollectInput}>
+              <button className={styles.selectBtn} onClick={() => setSelectedElement3('T')}>
+                {selectedElement3 === 'T' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+              </button>
+              <div>약속에 참여하는 누구나</div>
             </div>
-          }
+
+            {isMember ?
+              <div className={styles.timeCollectInput}>
+                <button className={styles.selectBtn} onClick={() => setSelectedElement3('F')}>
+                  {selectedElement3 === 'F' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
+                </button>
+                <div>나만</div>
+              </div> :
+              null
+            }
+          </div>
         </div>
 
         {/* 멤버 - 내 별명 */}
@@ -217,18 +228,14 @@ const NewApmt = () => {
         <SubmitBtn
           text="만들기"
           onClick={() => toggleModal('showCode')} // 누르면 정보 백엔드에 발송도 추가
-          isActive={amptName}
+          isActive={amptName && nickname}
           className={`${styles.createBtn}`}
           margin="35px 0px 0px"
         />
 
       </div>
 
-      {/* modal 띄우기 */}
-      {/* policymodal 말고 새로 디자인하기 */}
-      {openModal === 'showCode' && <PolicyModal title="약속 공유 링크" onClose={() => toggleModal(null)}>
-        여긴 약속 링크 보여주는 창입니당~~~
-      </PolicyModal>}
+      {/* 다음으로 넘어가게 만들기 */}
 
     </div>
   );

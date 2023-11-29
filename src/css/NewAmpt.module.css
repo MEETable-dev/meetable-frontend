@@ -2,6 +2,10 @@
     width: 100vw;
     height: 100vh;
   }
+
+  main {
+    align-self: center;
+  }
   
   .mainBox {
     display: flex;
@@ -37,8 +41,8 @@
   }
   
   .loginBox {
-    width: 100%;
-    height: 710px;
+    width: 80vw;
+    /* height: 710px; */
     max-width: 454px;
     background-color: white;
     border-radius: 10px;
@@ -54,7 +58,7 @@
     height: 493px;
   }
   .memberDate {
-    height: 787px;
+    height: 700px;
   }
   .memberWeek {
     height: 573px;
@@ -73,6 +77,7 @@
 
   .contentArea {
     width: 100%;
+    /* min-width: 260px; */
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -84,8 +89,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    /* width: 90px; */
+    width: 80px;
     width: calc(100% - 260px);
+    /* min-width: 75px; */
     font-size: 15px;
     color: #222222;
     text-align: justify;
@@ -94,7 +100,7 @@
     margin: 4px 0px 0px;
   }
   .contentInput {
-    /* width: calc(100% - 90px); */
+    /* width: calc(100% - 80px); */
     width: 260px;
   }
   
@@ -160,7 +166,7 @@
     margin-right: 3px;
   }
 
-  @media only screen and (max-width: 430px) {
+  @media only screen and (max-width: 510px) {
     /* 600px 이하일 때의 스타일을 여기에 작성하세요 */
     .contentArea {
         width: 100%;
@@ -193,14 +199,15 @@
         height: 565px;
       }
       .memberDate {
-        height: 882px;
+        height: 832px;
       }
       .memberWeek {
-        height: 665px;
+        height: 685px;
       }
       .content {
         margin: 0px 30px;
         width: calc(100% - 60px);
+        min-width: 260px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;

@@ -19,6 +19,8 @@ import { setToken } from "../store/modules/user";
 import { useAppDispatch } from "store";
 import axios from "axios";
 
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiMHhzZW8iLCJtZW1iZXJfZW1haWwiOiIweHNlb0B5b25zZWkuYWMua3IiLCJtZW1iZXJfcHdkIjoiJDJiJDEwJGF3VWNRUS5MM085RjZIcm9jNHZXeXVxZ1laZEVBY040cVJpNUszSUNyRFhxcm1TMzFRUnBDIiwiaXNfYWNjZXB0X21hcmtldGluZyI6IlQifSwiaWF0IjoxNzAxMjI3NTEzLCJleHAiOjE3MDEyMzExMTN9.Fsrx7jJY_tshvIHWHaM0JrUD8SQ43ZUy99Fgh_ve_No'
+
 const Layout = () => {
   const dispatch = useAppDispatch();
   const sidebarInitialSize = 300;
@@ -107,7 +109,7 @@ const Layout = () => {
   useEffect(()=>{
     const getData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiMHhzZW8iLCJtZW1iZXJfZW1haWwiOiIweHNlb0B5b25zZWkuYWMua3IiLCJtZW1iZXJfcHdkIjoiJDJiJDEwJGF3VWNRUS5MM085RjZIcm9jNHZXeXVxZ1laZEVBY040cVJpNUszSUNyRFhxcm1TMzFRUnBDIiwiaXNfYWNjZXB0X21hcmtldGluZyI6IlQifSwiaWF0IjoxNzAxMDY2MDc2LCJleHAiOjE3MDEwNjk2NzZ9.-KplfsANJ5XGZVi3XmGtJvjO3rtCXW4eFSlole9o5yo'}})
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization:`Bearer ${token}`}})
         console.log(response.data)
         setBookmarkData(response.data.bookmark);
         setPromiseData(response.data.promise)
@@ -132,7 +134,7 @@ const Layout = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'T',
         promiseId: promiseCode.split('-')[1].split('_')[0],
-        headers : {Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiMHhzZW8iLCJtZW1iZXJfZW1haWwiOiIweHNlb0B5b25zZWkuYWMua3IiLCJtZW1iZXJfcHdkIjoiJDJiJDEwJGF3VWNRUS5MM085RjZIcm9jNHZXeXVxZ1laZEVBY040cVJpNUszSUNyRFhxcm1TMzFRUnBDIiwiaXNfYWNjZXB0X21hcmtldGluZyI6IlQifSwiaWF0IjoxNzAxMDY2MDc2LCJleHAiOjE3MDEwNjk2NzZ9.-KplfsANJ5XGZVi3XmGtJvjO3rtCXW4eFSlole9o5yo'}
+        headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
     } catch (error) {
@@ -148,7 +150,7 @@ const Layout = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'F',
         promiseId: promiseCode.split('-')[1].split('_')[0],
-        headers : {Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiMHhzZW8iLCJtZW1iZXJfZW1haWwiOiIweHNlb0B5b25zZWkuYWMua3IiLCJtZW1iZXJfcHdkIjoiJDJiJDEwJGF3VWNRUS5MM085RjZIcm9jNHZXeXVxZ1laZEVBY040cVJpNUszSUNyRFhxcm1TMzFRUnBDIiwiaXNfYWNjZXB0X21hcmtldGluZyI6IlQifSwiaWF0IjoxNzAxMDY2MDc2LCJleHAiOjE3MDEwNjk2NzZ9.-KplfsANJ5XGZVi3XmGtJvjO3rtCXW4eFSlole9o5yo'}
+        headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
     } catch (error) {
@@ -235,6 +237,12 @@ const Layout = () => {
                 onChange={(e) => {setSearchApmtVal(e.target.value)}}></input>
               {searchApmtVal && <TiDelete size={20} color="#D9D9D9" className={styles.x} onClick={()=>{setSearchApmtVal('')}}/>}
             </div>
+            <div className={styles.btnArea} onClick={()=>{window.location.href = '/:username/allapmt';}} >
+              <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                <BsGrid size={20} color="#888888" />
+              </div>
+              <div>전체 약속 리스트</div>
+            </div>
             <div className={styles.labels}>
               즐겨찾기
               <div onClick={()=> setOpenBookmark(!openBookmark)}>
@@ -244,10 +252,7 @@ const Layout = () => {
               </div>
             </div>
             {openBookmark && <PromiseList data={bookmarkData} fav={true}/>}
-            <div className={styles.labels}>내 약속<div className={styles.btnArea}>
-              <div onClick={()=>{window.location.href = '/:username/allapmt';}}>{svgList.folder.grid}</div>
-              {/* <div>{svgList.folder.newFolder}</div> */}
-            </div></div>
+            <div className={styles.labels}>내 약속</div>
             <PromiseList data={promiseData} fav={false}/>
             {/* <FolderList data={[{name:'팅클 개발일정', id:10, fav:true}]} name="사이드프로젝트" id="10"/> */}
             <ul>
@@ -272,7 +277,7 @@ const Layout = () => {
             MEETable
             <button onClick={()=>{
               dispatch(
-                setToken('ABCD')
+                setToken('a')
               );
             }
               }>login:{accessToken}</button>

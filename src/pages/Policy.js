@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import PolicyModal from "../components/PolicyModal"
-import SubmitBtn from "../components/SubmitBtn";
+import SubmitBtn from "../components/SubmitBtn2";
 
 const Policy = () => {
   const [openModal, setOpenModal] = useState(null); // New state for tracking open modal

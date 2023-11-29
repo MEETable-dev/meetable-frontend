@@ -2,7 +2,7 @@ import React from 'react';
 import styles from 'css/SubmitBtn.module.css';
 
 
-const SubmitBtn = ({ text, onClick, isActive, className, disabled }) => {
+const SubmitBtn2 = ({ text, onClick, isActive, className, disabled }) => {
     // text는 버튼에 쓰일 내용
     // onClick는 눌렀을 때 실행되는 함수
     // isActive는 보라색/회색 및 클릭 가능 여부
@@ -19,4 +19,4 @@ const SubmitBtn = ({ text, onClick, isActive, className, disabled }) => {
   );
 };
 
-export default SubmitBtn;
+export default SubmitBtn2;

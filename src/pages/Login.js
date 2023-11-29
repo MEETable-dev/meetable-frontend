@@ -1,6 +1,6 @@
 import styles from 'css/login.module.css';
 import { Link } from "react-router-dom";
-import SubmitBtn from "components/SubmitBtn";
+import SubmitBtn2 from "components/SubmitBtn2";
 import { useSelector } from "react-redux";
 import InputArea from 'components/InputArea';
 import { useState, useEffect, useRef } from 'react';
@@ -116,7 +116,7 @@ return ( <div className={styles.loginBox}>
           <span >로그인유지</span>
         </label>
       </div>
-      <SubmitBtn text="로그인" isActive={ExistInput} onClick={handleLoginSubmit}></SubmitBtn>
+      <SubmitBtn2 text="로그인" isActive={ExistInput} onClick={handleLoginSubmit}></SubmitBtn2>
       <div className ={styles.footerBlock}>
         <Link to="/FindEmail" className={styles.footerLink}>이메일 찾기</Link>
         <span className={styles.footerLink}>|</span>

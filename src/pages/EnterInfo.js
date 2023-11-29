@@ -1,6 +1,6 @@
 import styles from 'css/EnterInfo.module.css';
 import { Link } from "react-router-dom";
-import SubmitBtn from "components/SubmitBtn";
+import SubmitBtn from "components/SubmitBtn2";
 import { useSelector } from "react-redux";
 import InputArea from 'components/InputArea';
 import { useState, useEffect, useRef } from 'react';

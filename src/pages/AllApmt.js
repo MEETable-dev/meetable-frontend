@@ -1,11 +1,11 @@
-import ApmtBox from '../components/ApmtBox';
+// import ApmtBox from '../components/ApmtBox';
 import styles from 'css/AllApmt.module.css';
 import { IoSyncOutline, IoCheckboxOutline } from "react-icons/io5";
 import { AiOutlineFileAdd , AiFillStar , AiOutlineStar} from "react-icons/ai";
 import { RiSearchLine } from "react-icons/ri";
 import { svgList } from 'assets/svg';
 import {useState, useEffect, useRef} from 'react';
-import ApmtTrash from '../components/ApmtTrash';
+// import ApmtTrash from '../components/ApmtTrash';
 import { useSelector } from "react-redux";
 import React from "react";
 import { GoChevronUp , GoChevronDown } from "react-icons/go";

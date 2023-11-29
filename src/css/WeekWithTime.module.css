@@ -57,6 +57,7 @@
 
 .DaysOfWeek {
   display: flex;
+  padding: 0 30px;
 }
 
 .body {
@@ -69,23 +70,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
+  background-color: #ffffff;
   margin-bottom: 8px;
 }
 
 .col{
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  position: relative;
 }
 
 .day {
-  height: 60px;
+  height: 13px;
+  margin: 2px 0;
 }
 
 .day:hover {
   box-shadow: 0 0 0 3px #40C06F inset;
+}
+
+.wholeday {
+  height: 720px;
 }
 
 .eachDay {
@@ -93,6 +98,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 1px;
 }
 
 .dateHeader {
@@ -124,6 +130,16 @@
   box-sizing: content-box;
 }
 
+.time {
+  position: absolute;
+  color: #222;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 29.8px;
+  top:-11px;
+  left:2px;
+}
+
 .week {
   display: flex;
   flex-direction: column;
@@ -147,4 +163,16 @@
 
 .txtSelectedDate {
   color: #FFFFFF;
+}
+
+.emptycalendar {
+  width: 10px;
+  height: 10px;
+}
+
+.howmany {
+  color: #FFF;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
 }

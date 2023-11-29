@@ -11,6 +11,7 @@
   cursor: col-resize;
   user-select: none;
   height: 100vh;
+  width: 100vw;
   display: flex;
 }
 
@@ -175,6 +176,7 @@
 .searchContent {
   display: flex;
   margin-top: 20px;
+  margin-bottom: 30px;
   position: relative;
 }
 
@@ -232,20 +234,24 @@
   color: #888;
   font-size: 13px;
   font-weight: 400;
-  margin-top: 20px;
+  margin-top: 18px;
   margin-bottom: 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .btnArea {
   display: flex;
   align-items: center;
+  /* margin-top: 30px; */
+  color: #222;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .btnArea svg {
-  margin-left: 8px;
-  cursor: pointer;
+  margin-right: 4px;
 }
 
 .folderItem {
@@ -281,6 +287,12 @@
 
 #login:hover, #logout:hover {
   color: aquamarine;
+}
+
+.renameInput {
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  padding: 3px 4px;
 }
 
 /* EmailAuth */

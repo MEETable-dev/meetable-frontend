@@ -1,77 +1,101 @@
 // import ConfirmedApmt from './ConfirmedApmt';
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
-import styles from '../css/Calendar.module.css';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns'
+import styles from '../css/WeekWithTime.module.css';
+import { format, addMonths, subMonths, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
 const not = '2023-11-25';
 
-const Calendar = (props) => {
+const WeekWithTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
   const Body = ({currentDate, selectDate}) => {
-    const monthStart = startOfMonth(currentDate);
-    const monthEnd = endOfMonth(currentDate);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
-    // const [selectWeek, setSelectWeek] = useState(currentDate);
+    const startDate = startOfWeek(selectWeek);
+    const endDate = endOfWeek(selectWeek);
     
-    const rows = [];
+    const cols = [];
+    let times = [];
     let days = [];
     let dayHeaders = [];
-    let day = startDate;
+    let day = startOfDay(startDate);
     let formattedDate = '';
 
-    
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        formattedDate = format(day, 'd');
-        const cloneDay = day;
-        days.push(
-        <div className={styles.eachDay}>
-          <div
-          // 범위에 포함 안되면 disabled 추가
-          // 일정 있으면
-          // 확정된 약속 있으면
-          className={
-            selectDate.has(format(day, 'yyyy-MM-dd'))
-            ? `${styles.col} ${styles.day} ${styles.selected}`
-            : format(day, 'yyyy-MM-dd') !== not
-            ? `${styles.col} ${styles.day} ${styles.valid}`
-            : `${styles.col} ${styles.day} ${styles.disabled}`
-          }
-          style={getStyles()}
-          key={day}
-          onClick={() => {
-            setSelectWeek(cloneDay);
-          }}
-          >
-            {format(day, 'yyyy-MM-dd') !== not && <AiOutlineCalendar size={24} color='#FFFFFF' style={{position:'absolute', left:0, top:0}}/>}
-            {format(day, 'yyyy-MM-dd') !== not && <div>3</div>}
-          </div>
+    times.push(
+      <div style={{width:'30px', position:'relative'}}>
+        <div className={styles.time}>
+          0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
         </div>
-        );
-        dayHeaders.push(
-          <div className={styles.col} style={getStyles()}>
-            <div className={styles[format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
-          </div>
-        );
-        day = addDays(day, 1);
+      </div>
+    );
+    
+    for (let i = 0; i < 7; i++) {
+      formattedDate = format(day, 'd');
+      if (format(day, 'yyyy-MM-dd') !== not) {
+        for (let j = 0; j < 48; j++) {
+          // const cloneDay = startOfDay(day);
+          days.push(
+            <div
+            // 범위에 포함 안되면 disabled 추가
+            // 일정 있으면
+            // 확정된 약속 있으면
+            className={
+              selectDate.has(format(day, 'yyyy-MM-dd'))
+              ? `${styles.col} ${styles.day} ${styles.selected}`
+              : `${styles.col} ${styles.day} ${styles.valid}`
+            }
+            style={getStyles()}
+            key={day}
+            onClick={() => {
+              // setSelectWeek(cloneDay);
+            }}
+            >
+              <AiOutlineCalendar size={10} color='#FFFFFF'/>
+              <div className={styles.howmany}>3</div>
+              <div className={styles.emptycalendar}></div>
+            </div>
+          );
+          day = addMinutes(day, 30);
+        }
       }
-      rows.push(
-        <div
-          style={{marginBottom:'7px'}}
-          key={'Week'+day}
-          >
-            <div style={{display:'flex', flexDirection:'row'}}>{dayHeaders}</div>
-            <div className={isSameWeek(selectWeek, subDays(day, 1)) ? styles.weekSelected : styles.week} style={{display:'flex', flexDirection:'row'}}>{days}</div>
+      else {
+        days.push(<div className={`${styles.col} ${styles.wholeday} ${styles.disabled}`} style={getStyles()}>
+          <svg width="60" height="719" viewBox="0 0 60 719" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M59 0.993042L1 718.007" stroke="#A8A8A8" stroke-linecap="round"/>
+            <path d="M1 0.993042L59 718.007" stroke="#A8A8A8" stroke-linecap="round"/>
+          </svg>
+        </div>);
+        day = addDays(day, 1);  
+      }
+      times.push(
+        <div style={{flexDirection:'row'}}>
+          <div>{days}</div>
         </div>
       );
+      dayHeaders.push(
+        <div className={styles.col} style={getStyles()}>
+          <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
+        </div>  
+      );
       days = [];
-      dayHeaders = [];
     }
-    return <div className={styles.body}>{rows}</div>;
+    times.push(
+      <div style={{width:'30px', position:'relative'}}>
+        <div className={styles.time}>
+          0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
+        </div>
+      </div>
+    );
+    cols.push(
+      <div
+        style={{marginBottom:'7px', justifyContent:'center', alignItems:'center'}}
+        key={'Week'+day}
+        >
+          <div style={{display:'flex', flexDirection:'row', margin:'0 30px'}}>{dayHeaders}</div>
+          <div className={styles.week} style={{display:'flex', flexDirection:'row'}}>{times}</div>
+      </div>
+    );
+    return <div className={styles.body}>{cols}</div>;
   }
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -143,9 +167,9 @@ const Calendar = (props) => {
 
   return <div className={styles.entire} style={
     windowWidth < 580 
-    ? {marginLeft:'10px', marginRight:'10px', width:'280px'}
+    ? {marginLeft:'10px', marginRight:'10px', width:'300px'}
     : (windowWidth >= 580 && windowWidth <= 1200)
-    ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'43vw'}
+    ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'48vw'}
     : {width:'580px'}
   }>
     <div className={styles.headerContainer}>
@@ -166,7 +190,7 @@ const Calendar = (props) => {
         </div>
       </div>
       <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} onClick={()=>{setCurrentDate(new Date()); setSelectWeek(new Date())}}>오늘</div>
+        <div className={styles.TodayBtn} onClick={()=>{setCurrentDate(new Date()); setSelectWeek(new Date());}}>오늘</div>
       </div>
     </div>
     <div className={styles.bodyContainer}>
@@ -190,4 +214,4 @@ const Calendar = (props) => {
   </div>
 };
 
-export default Calendar;
+export default WeekWithTime;

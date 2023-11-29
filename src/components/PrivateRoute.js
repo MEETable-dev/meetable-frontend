@@ -11,13 +11,14 @@ const PrivateRoute = (props) => {
     if (localStorage.getItem('originURL')) {
       const url = localStorage.getItem('originURL').split('3000')[1]
       localStorage.removeItem('originURL')
-      console.log(url)
-      return <Navigate to={url} />
+      window.location.href = url;
+      return;
     }
     if (goto.includes('login')) {
       localStorage.setItem('originURL', window.location);
     }
-    return <Navigate to={goto} />
+    window.location.href = goto;
+    return;
   }
   return props.children;
 }

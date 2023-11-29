@@ -27,10 +27,10 @@ function App() {
         <Route path="/findemail" element={<PrivateRoute member={false} goto={"/:username"}><FindEmail /></PrivateRoute>} />
         <Route path="/resetpass" element={<PrivateRoute member={false} goto={"/:username"}><ResetPass /></PrivateRoute>} />
         <Route path="/apmtdetail/:apmtId" element={<PrivateRoute member={false} goto={"/:username/apmtdetail/:apmtId"}><ApmtDetail /></PrivateRoute>} />
-        <Route path="/newapmt" element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />
+        <Route path="/newapmt" element={<PrivateRoute member={false} goto={"/:username/newapmt"}><NewApmt /></PrivateRoute>} />
         <Route path="/:username">
           <Route index element={<PrivateRoute member={true} goto={"/newapmt"}><Home /></PrivateRoute>} />
-          <Route path="newapmt" element={<PrivateRoute member={true} goto={"/newapmt"}><NewApmt /></PrivateRoute>} />
+          <Route path="newapmt" element={<PrivateRoute member={true} goto={"/login"}><NewApmt /></PrivateRoute>} />
           <Route path="allapmt" element={<PrivateRoute member={true} goto={"/newapmt"}><AllApmt /></PrivateRoute>} />
           <Route path="apmtdetail/:apmtId" element={<PrivateRoute member={true} goto={"/login"}><ApmtDetail /></PrivateRoute>} />
           <Route path="resetpass" element={<PrivateRoute member={true} goto={"/newapmt"}><ResetPass /></PrivateRoute>} />

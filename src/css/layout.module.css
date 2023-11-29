@@ -174,7 +174,8 @@
   
   .searchContent {
     display: flex;
-    margin-top: 20px;
+    margin-top: 20px;  
+    margin-bottom: 30px;
     position: relative;
   }
   
@@ -235,12 +236,16 @@
     margin-top: 20px;
     margin-bottom: 8px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
   
   .btnArea {
     display: flex;
-    align-items: center;
+    align-items: center;  
+    color: #222;  
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
   }
   
   .btnArea svg {
@@ -282,6 +287,13 @@
   #login:hover, #logout:hover {
     color: aquamarine;
   }
+
+.renameInput {
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  padding: 3px 4px;
+  }
+
   
   /* EmailAuth */
   
@@ -292,3 +304,4 @@
   .container {
     align-items: center;
   } */
+

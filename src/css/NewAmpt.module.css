@@ -1,0 +1,228 @@
+#root {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  main {
+    align-self: center;
+  }
+  
+  .mainBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80vw;
+    max-width: 454px;
+    min-width: 300px;
+  }
+  
+  .container {
+    align-items: center;
+  }
+  
+  body {
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    align-content: space-between;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .loginLogo{
+    height: 60px;
+    width: 100%;
+    margin-top: 35px;
+  }
+
+  .loginLogo > p {
+    font-size: 18px;
+  }
+  
+  .loginBox {
+    width: 80vw;
+    /* height: 710px; */
+    max-width: 454px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .nonmemberDate {
+    height: 640px;
+  }
+  .nonmemberWeek {
+    height: 493px;
+  }
+  .memberDate {
+    height: 700px;
+  }
+  .memberWeek {
+    height: 573px;
+  }
+  .content {
+    margin: 0px 30px;
+    width: calc(100% - 82px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .contentArea:first-child {
+    margin-top: 15px;
+  }
+
+  .contentArea {
+    width: 100%;
+    /* min-width: 260px; */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+
+  .contentName {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 80px;
+    width: calc(100% - 260px);
+    /* min-width: 75px; */
+    font-size: 15px;
+    color: #222222;
+    text-align: justify;
+  }
+  .contentName > p {
+    margin: 4px 0px 0px;
+  }
+  .contentInput {
+    /* width: calc(100% - 80px); */
+    width: 260px;
+  }
+  
+  .selectBtn {
+    background: none;
+    display: inline;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .selectTxt {
+    padding: 1px 0px 0px;
+    color: #222222;
+    font-size: 15px;
+  }
+  
+  .items {
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    width: 250px;
+  }
+
+  .createBtn {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .link {
+    width: 100%;
+    margin-top: 30px;
+    text-decoration: none;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .inputPadding {
+    margin-left: 10px;
+  }
+
+  .timeCollectInput {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+    align-items: center;
+    font-size: 15px;
+    color: #222222;
+  }
+
+  .timeSelect {
+    color: #8E66EE;
+    border-color: #D0D0D0;
+    border-radius: 5px;
+    width: 40px;
+    height: 25px;
+    margin-right: 3px;
+  }
+
+  @media only screen and (max-width: 510px) {
+    /* 600px 이하일 때의 스타일을 여기에 작성하세요 */
+    .contentArea {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: 25px;
+    }
+    .loginLogo{
+        height: 60px;
+        width: 100%;
+        margin-top: 20px;
+      }
+    .loginBox {
+        width: 100%;
+        height: 665px;
+        max-width: 320px;
+        background-color: white;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .nonmemberDate {
+        height: 720px;
+      }
+      .nonmemberWeek {
+        height: 565px;
+      }
+      .memberDate {
+        height: 832px;
+      }
+      .memberWeek {
+        height: 685px;
+      }
+      .content {
+        margin: 0px 30px;
+        width: calc(100% - 60px);
+        min-width: 260px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .contentName {
+        width: 100%;
+      }
+      .contentInput {
+        /* width: calc(100% - 90px); */
+        width: 100%;
+        margin: -5px;
+        margin-top: 10px;
+      }
+      .inputPadding {
+        margin-left: 0px;
+      }
+  }

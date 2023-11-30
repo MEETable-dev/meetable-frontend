@@ -232,18 +232,20 @@ const AllApmt = () => {
 
   const ApmtItem = ({ name, fav, id }) => {
 
+    const truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
+
     return (
       <div className={selectedItemID === id ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event)=>{openModal(id, event, 'p', name)}}>
         <div className={styles.ApmtIcon}>
         {svgList.folder.Apmt}
         </div>
         <div className={styles.ApmtName}>
-          {(fav === 'T')&& <AiFillStar color="#FFBB0D" size={24} className={styles.listIcon} onClick={()=>{unBookmark(id)}}/>}
-          {!(fav === 'T') && <AiOutlineStar color="#888888" size={24} className={styles.listIcon} onClick={()=>{bookmark(id)}}/>}
+          {(fav === 'T')&& <AiFillStar color="#FFBB0D" size={22} className={styles.favoritesIcon}  onClick={()=>{unBookmark(id)}}/>}
+          {!(fav === 'T') && <AiOutlineStar color="#888888" size={22} className={styles.favoritesIcon} onClick={()=>{bookmark(id)}}/>}
           <div className={styles.favoritesText}>
                 {(selectedItemID === id && modifyName) ? <input value={writeNameVal} ref={inputRef} name="writeName" className={styles.renameInput}
                 onKeyDown={handleChangeName}
-                 /> : name}
+                 /> : truncatedName}
           </div>
         </div>
       </div>

@@ -117,7 +117,7 @@ const EnterInfo = () => {
         emailToken: emailToken,
         pwd: password
       })
-      setSignToken(response.data.data.signToken);
+      setSignToken(response.data.signToken);
       setIsValidSignToken(true);
       console.log(response.data);
       navigate('/Policy', {state: {signToken: signToken}});

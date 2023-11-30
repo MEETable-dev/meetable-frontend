@@ -47,7 +47,7 @@ const EmailAuth = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/confirmVerifyCode`, {
         email: email,
         verifyCode: authCode})
-      const emailToken = response.data.data.emailToken;
+      const emailToken = response.data.emailToken;
       setIsVaildAuthCode(true);
       setAuthCodeSubmitted(true); // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
       navigate("/EnterInfo", { state: { emailToken: emailToken, email: email} });

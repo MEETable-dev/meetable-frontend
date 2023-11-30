@@ -58,8 +58,9 @@ const AllApmt = () => {
   //약속 삭제(휴지통으로 이동)
   const moveApmtToTrash = async (promiseCode)=>{
     try{
-      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, {
-        headers : {Authorization: ACCESSTOKEN}},
+      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
+      // {
+        // headers : {Authorization: ACCESSTOKEN}},
         {promiseId: promiseCode.split('-')[1].split('_')[0]});
       await getData();
       console.log(promiseCode);
@@ -75,8 +76,9 @@ const AllApmt = () => {
 
   const backoutApmt = async (promiseCode) =>{
     try{
-      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/backoutpromise`, {
-        headers : {Authorization: ACCESSTOKEN}},
+      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
+      // {
+      //   headers : {Authorization: ACCESSTOKEN}},
         {promiseId: promiseCode.split('-')[1].split('_')[0]});
       console.log(response.data);
       await getData();
@@ -197,8 +199,9 @@ const AllApmt = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'T',
         promiseId: promiseCode.split('-')[1].split('_')[0]},
-        {headers : {Authorization:ACCESSTOKEN}
-      });
+      //   {headers : {Authorization:ACCESSTOKEN}
+      // }
+      );
       console.log(response.data);
       await getData();
     } catch (error) {
@@ -214,8 +217,9 @@ const AllApmt = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'F',
         promiseId: promiseCode.split('-')[1].split('_')[0]},
-        {headers : {Authorization:ACCESSTOKEN}
-      });
+      //   {headers : {Authorization:ACCESSTOKEN}
+      // }
+      );
       console.log(response.data);
       await getData();
     } catch (error) {
@@ -272,8 +276,9 @@ const AllApmt = () => {
           const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/promisename`, {
             promiseName: writeNameVal,
             promiseId: promiseCode.split('-')[1].split('_')[0]},
-            {headers : {Authorization:ACCESSTOKEN}
-          });
+          //   {headers : {Authorization:ACCESSTOKEN}
+          // }
+          );
           console.log(response.data);
           await getData();
         } catch (error) {
@@ -303,7 +308,9 @@ const AllApmt = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization: ACCESSTOKEN}});
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
+      // {headers : {Authorization: ACCESSTOKEN}}
+      );
       console.log(response.data)
       setBookmarkData(response.data.bookmark);
       setApmtData(response.data.promise)
@@ -316,7 +323,9 @@ const AllApmt = () => {
   useEffect(()=>{
     const getData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization: ACCESSTOKEN}});
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
+        // {headers : {Authorization: ACCESSTOKEN}}
+        );
         console.log(response.data)
         setBookmarkData(response.data.bookmark);
         setApmtData(response.data.promise)

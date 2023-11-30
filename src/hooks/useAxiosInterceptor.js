@@ -10,10 +10,8 @@ const useAxiosInterceptor = () => {
   axios.interceptors.request.use(
     (config) => {
       const accessToken = store.getState().user.accessToken;
-      // console.log(accessToken)
       if (accessToken !== '' && config.headers['Authorization'] === undefined) {
         config.headers['Authorization'] = `Bearer ${accessToken}`;
-        // console.log(config.headers['Authorization'])
       }
       return config;
     },
@@ -37,6 +35,7 @@ const useAxiosInterceptor = () => {
             dispatch(
               setToken(''),
             );
+            return false;
           }
           const resp = await axios.post(`${process.env.REACT_APP_API_URL}/auth/token`, {
             accessToken:tokenOrigin,
@@ -46,13 +45,9 @@ const useAxiosInterceptor = () => {
           localStorage.setItem('refreshToken', resp.data.refreshToken,);
           console.log('Token 재발급');
     
-          const accessToken = resp.data.accessToken;
-    
-          if (error.config.headers['Authorization'] === ``) {
-            error.config.headers = {
-              Authorization: `Bearer ${accessToken}`,
-            };
-          }
+          error.config.headers = {
+            Authorization: `Bearer ${resp.data.accessToken}`,
+          };
     
           const response = await axios.request(error.config);
           return response;
@@ -63,8 +58,6 @@ const useAxiosInterceptor = () => {
             dispatch(setToken(''),);
             return false;
           }
-          
-  
           return Promise.reject(error2);
         }
       }

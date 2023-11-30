@@ -93,11 +93,33 @@
   .headerBtnRight svg, .headerBtnLeft svg {
     cursor: pointer;
   }
+
+  .headerBtnRightNONMEMBER {
+    display: flex;
+    position: relative;
+    color: #222;
+    text-align: right;
+    font-size: 15px;
+    font-weight: 500;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .headerBtnRightNONMEMBER > div {
+    margin-left: 10px;
+  }
   
+#bar {
+    color: #D0D0D0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
   .headerCenter {
     font-weight: 600;
     font-size: 27px;
     color: #222222;
+    cursor: pointer;
   }
   
   .headermodal {

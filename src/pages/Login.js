@@ -68,15 +68,23 @@ const Login = () => {
         //이전에 있던 url 링크 받아오기
         const redirectUrl = searchParams.get("redirectUrl");
         console.log(response.data);
+        dispatch(setToken(response.data.accessToken));
+        if (keepLogin) {
+          localStorage.setItem('refreshToken', response.data.refreshToken)
+          console.log('refreshToken saved')
+        }
+        else {
+          console.log('no keep login')
+        }
 
         //특정 시간이 지나면 redirected url로 돌아가기
-        setTimeout(()=> {
-          if (redirectUrl) {
-            navigate(redirectUrl);
-          } else {
-            navigate("/");
-          }
-        }, 2000);
+        // setTimeout(()=> {
+        //   if (redirectUrl) {
+        //     navigate(redirectUrl);
+        //   } else {
+        //     navigate("/");
+        //   }
+        // }, 2000);
 
     } catch(error){
 

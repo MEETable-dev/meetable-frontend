@@ -19,9 +19,8 @@ import { setToken } from "../store/modules/user";
 import { useAppDispatch } from "store";
 import axios from "axios";
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl9uYW1lIjoiMHhzZW8iLCJtZW1iZXJfZW1haWwiOiIweHNlb0B5b25zZWkuYWMua3IiLCJtZW1iZXJfcHdkIjoiJDJiJDEwJGF3VWNRUS5MM085RjZIcm9jNHZXeXVxZ1laZEVBY040cVJpNUszSUNyRFhxcm1TMzFRUnBDIiwiaXNfYWNjZXB0X21hcmtldGluZyI6IlQifSwiaWF0IjoxNzAxMjI3NTEzLCJleHAiOjE3MDEyMzExMTN9.Fsrx7jJY_tshvIHWHaM0JrUD8SQ43ZUy99Fgh_ve_No'
-
-const Layout = () => {
+const Layout = (props) => {
+  const head = props.head;
   const dispatch = useAppDispatch();
   const sidebarInitialSize = 300;
   const sidebarMinWidth = 100;
@@ -109,7 +108,9 @@ const Layout = () => {
   useEffect(()=>{
     const getData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, {headers : {Authorization:`Bearer ${token}`}})
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
+        // {headers : {Authorization:`Bearer ${token}`}}
+        )
         console.log(response.data)
         setBookmarkData(response.data.bookmark);
         setPromiseData(response.data.promise)
@@ -118,7 +119,7 @@ const Layout = () => {
         console.log(errorResponse.data)
       }
     }
-    getData();
+    if (accessToken) getData();
   }, []);
 
   // 폴더 토글 함수
@@ -134,7 +135,7 @@ const Layout = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'T',
         promiseId: promiseCode.split('-')[1].split('_')[0],
-        headers : {Authorization:`Bearer ${token}`}
+        // headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
     } catch (error) {
@@ -150,7 +151,7 @@ const Layout = () => {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'F',
         promiseId: promiseCode.split('-')[1].split('_')[0],
-        headers : {Authorization:`Bearer ${token}`}
+        // headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
     } catch (error) {
@@ -211,6 +212,23 @@ const Layout = () => {
     );
   };
 
+  const logout = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`);
+      console.log(response.data)
+      localStorage.removeItem('refreshToken');
+      console.log('logout success');
+      dispatch(setToken(''))
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data);
+      if (errorResponse.data.statusCode === 1130) {
+        dispatch(setToken(''));
+        console.log('already logout')
+      }
+    }
+  }
+
   return (
     <div className={resizing ? styles.containerResizing : styles.container} 
       onPointerMove={updateSize} onPointerUp={stopResizing}
@@ -255,11 +273,11 @@ const Layout = () => {
             <div className={styles.labels}>내 약속</div>
             <PromiseList data={promiseData} fav={false}/>
             {/* <FolderList data={[{name:'팅클 개발일정', id:10, fav:true}]} name="사이드프로젝트" id="10"/> */}
-            <ul>
+            {/* <ul>
               <li>{process.env.REACT_APP_API_URL}</li>
               <li>{accessToken}</li>
               <li>{searchApmtVal}</li>
-            </ul>
+            </ul> */}
           </div>
         </div>
         <div 
@@ -269,37 +287,23 @@ const Layout = () => {
         </div>
       </div>}
       <div className={styles.mainWrapper}>
-        <header className={styles.headerWrapper}>
+        {head && <header className={styles.headerWrapper}>
           <div className={styles.headerBtnLeft}>
             {accessToken && !sidebarShown && <div onClick={()=>setsidebarShown(true)}>{svgList.headerIcon.headerShow}</div>}
           </div>
           <div className={styles.headerCenter} onClick={()=>{window.location.href = '/:username'}}>
             MEETable
-            <button onClick={()=>{
-              dispatch(
-                setToken('a')
-              );
-            }
-              }>login:{accessToken}</button>
-              <button onClick={()=>{
-              dispatch(
-                setToken('')
-              );
-            }
-              }>logout:{accessToken}</button>
-              {/* <button onClick={()=>{
-              dispatch(
-                setToken('@@-ABCD')
-              );
-            }
-              }>testError:{accessToken}</button> */}
           </div>
-          <div className={styles.headerBtnRight}>
-            <div onClick={()=>{window.location.href = '/:username/allapmt';}}>{accessToken && <BsGrid size={28} color="#888888"/>}</div>
+          {accessToken && <div className={styles.headerBtnRight}>
+            <div onClick={()=>{window.location.href = '/:username/allapmt';}}> <BsGrid size={28} color="#888888"/></div>
             <div onClick={()=>{setShowHeaderModal(true)}}><CgProfile size={28} color="#888888"/></div>
-
-          </div>
-        </header>
+          </div>}
+          {!accessToken && <div className={styles.headerBtnRightNONMEMBER}>
+            <div onClick={()=>{window.location.href = '/login'}}>로그인</div>
+            <div id={styles.bar}>|</div>
+            <div onClick={()=>{window.location.href = '/emailauth'}}>가입하기</div>
+          </div>}
+        </header>}
         <main>
           <Outlet />
         </main>
@@ -309,7 +313,7 @@ const Layout = () => {
       </div>}
       {showHeaderModal && <div ref={modalHeaderRef} className={styles.headermodal}>
         <div className={styles.modalBtn}>내 정보</div>
-        <div className={styles.modalBtn}>로그아웃</div>
+        <div className={styles.modalBtn} onClick={logout}>로그아웃</div>
       </div>}
     </div>
   );

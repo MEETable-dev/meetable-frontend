@@ -33,7 +33,7 @@ const EnterInfo = () => {
 
 
   let isValid = email !== "" && password !== "" && checkPassword !== "" && username !== "" ;
-  console.log(location);
+
   const [passwordType, setPasswordType] = useState({
       type: 'password',
       visible: false
@@ -118,7 +118,6 @@ const EnterInfo = () => {
         pwd: password
       })
       setIsValidSignToken(true);
-      console.log(response.data);
       navigate('/Policy', {state: {signToken: response.data.signToken}});
       //policy에서 사인토큰 받을때 useLocation을 이용해서 location.state.signToken 으로 받으면 됩니당!
     } catch(error){
@@ -163,7 +162,7 @@ return ( <div className={styles.loginBox}>
       onClear={handleCheckPasswordType}>{ checkPasswordType.visible ?  <BsEyeSlash size="24px" color="#888888"></BsEyeSlash> :<SlEye size="24px" color="#888888"></SlEye>}
       </InputArea2> 
       <div className={styles.alertZone}>
-        <div className={`${styles.errorMsg} ${ isPWSame && !isValidPW && isValid ? '' : styles.hidden}`}>
+        <div className={`${styles.errorMsg} ${ !isValidPW && password !=='' ? '' : styles.hidden}`}>
           <div className = {styles.message}>비밀번호는 8자 이상이어야 해요.</div>
         </div>
         <div className={`${styles.errorMsg} ${ ! isPWSame && isValidPW && isValid ? '' : styles.hidden}`}>

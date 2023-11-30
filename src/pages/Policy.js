@@ -7,7 +7,7 @@ import { svgList } from "../assets/svg";
 import React from "react";
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-
+import axios from "axios";
 import PolicyModal from "../components/PolicyModal"
 import SubmitBtn from "../components/SubmitBtn";
 
@@ -41,10 +41,27 @@ const Policy = () => {
     setChecked3(!isChecked3);
   };
 
+  const signup = async () => {
+    var policyval = 'T';
+    if (!isChecked3) {policyval = 'F';}
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, {
+        signToken:signToken,
+        marketingPolicy:policyval,
+      });
+      console.log(response.data)
+      window.location.href = '/login';
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data);
+    }
+  }
+
   //여기서 signtoken을 받습니다!!
   useEffect(() => {
     if (location.state) {
       setSignToken(location.state.signToken);
+      console.log(location.state.signToken)
     }
   }, [location.state]);
 
@@ -131,13 +148,16 @@ const Policy = () => {
             </button>
           </div>
         </div>
-        <Link to={isChecked1 && isChecked2 ? "/login" : ''} className={styles.link}>
+        {/* <Link to={isChecked1 && isChecked2 ? "/login" : ''} className={styles.link}> */}
+        <div className={styles.link} 
+            onClick={()=>{signup();}}>
           <SubmitBtn
             text="동의하기"
             isActive={isChecked1 && isChecked2}
             className={''}
           />
-        </Link>
+        </div>
+        {/* </Link> */}
       </div>
 
       {/* Modals */}

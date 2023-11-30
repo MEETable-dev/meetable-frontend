@@ -117,10 +117,9 @@ const EnterInfo = () => {
         emailToken: emailToken,
         pwd: password
       })
-      setSignToken(response.data.signToken);
       setIsValidSignToken(true);
       console.log(response.data);
-      navigate('/Policy', {state: {signToken: signToken}});
+      navigate('/Policy', {state: {signToken: response.data.signToken}});
       //policy에서 사인토큰 받을때 useLocation을 이용해서 location.state.signToken 으로 받으면 됩니당!
     } catch(error){
       const errorResponse = error.response;

@@ -24,7 +24,8 @@ const NewApmt = () => {
 
       // selectDate Set을 배열로 변환하고, 각 날짜를 'yyyy-MM-dd' 포맷으로 변환
       const formattedDates = Array.from(selectDate).map(date => format(date, 'yyyy-MM-dd'));
-  
+      console.log(formattedDates)
+      
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
         promise_name: amptName,
         weekvsdate: selectedElement1,

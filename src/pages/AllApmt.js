@@ -55,41 +55,7 @@ const AllApmt = () => {
 
   };
   
-  //약속 삭제(휴지통으로 이동)
-  const moveApmtToTrash = async (promiseCode)=>{
-    try{
-      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
-      // {
-        // headers : {Authorization: ACCESSTOKEN}},
-        {promiseId: promiseCode.split('-')[1].split('_')[0]});
-      await getData();
-      console.log(promiseCode);
 
-    } catch(error){
-      const errorResponse= error.response;
-      console.log(errorResponse.data);
-    }
-
-  };
-
-  //약속에서 빠지기
-
-  const backoutApmt = async (promiseCode) =>{
-    try{
-      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
-      // {
-      //   headers : {Authorization: ACCESSTOKEN}},
-        {promiseId: promiseCode.split('-')[1].split('_')[0]});
-      console.log(response.data);
-      await getData();
-      console.log(promiseCode);
-
-    } catch(error){
-      const errorResponse= error.response;
-      console.log(errorResponse.data);
-    }
-
-  };
 
   const handleSelectAll = ()=>{
     if (checkAll===true){
@@ -104,6 +70,7 @@ const AllApmt = () => {
   }
 
   const openNotionModal = ( type) =>{
+
     setShowNotionModal(type);
     console.log(showNotionModal, "what");
   };
@@ -115,28 +82,66 @@ const AllApmt = () => {
   };
   
   const NotionModal = (onClose, type)=>{
+      //약속 삭제(휴지통으로 이동)
+    const moveApmtToTrash = async (promiseCode)=>{
+      try{
+        const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
+        // {
+          // headers : {Authorization: ACCESSTOKEN}},
+          {promiseId: promiseCode.split('-')[1].split('_')[0]});
+        await getData();
+        console.log(response);
+
+      } catch(error){
+        const errorResponse= error.response;
+        console.log(errorResponse.data);
+      }
+
+    };
+
+    //약속에서 빠지기
+
+    const backoutApmt = async (promiseCode) =>{
+      try{
+        const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
+        // {
+        //   headers : {Authorization: ACCESSTOKEN}},
+          {promiseId: promiseCode.split('-')[1].split('_')[0]});
+        console.log(response.data);
+        await getData();
+        console.log(promiseCode);
+
+      } catch(error){
+        const errorResponse= error.response;
+        console.log(errorResponse.data);
+      }
+
+    };
+      console.log(type);
+
     return (
+
       type=== 'B'
       ? <div className={styles.notionModalBox}>
-        <div className={styles.notionModal}>
-          <div className={styles.notionModalT1}>약속에서 빠지시겠어요?</div>
-          <div className={styles.notionModalT2}>내가 이 약속에 남아있는 마지막 사람이에요.<br></br>내가 빠지면 약속 파일이 영구 삭제됩니다.</div>
-          <div className ={styles.notionModalBtnBox}>
-            <div className={styles.notionModalNo} onClick={()=>{setShowNotionModal('')}}>아니요.</div>
-            <div className={styles.notionModalYes} onClick={()=>{backoutApmt(selectedItemID); setShowNotionModal('');}} >네,빠질게요.</div>
+          <div className={styles.notionModal}>
+            <div className={styles.notionModalT1}>약속에서 빠지시겠어요?</div>
+            <div className={styles.notionModalT2}>내가 이 약속에 남아있는 마지막 사람이에요.<br></br>내가 빠지면 약속 파일이 영구 삭제됩니다.</div>
+            <div className ={styles.notionModalBtnBox}>
+              <div className={styles.notionModalNo} onClick={()=>{setShowNotionModal('')}}>아니요.</div>
+              <div className={styles.notionModalYes} onClick={()=>{backoutApmt(selectedItemID); setShowNotionModal('');}} >네,빠질게요.</div>
+            </div>
           </div>
-        </div>
       </div>
 
       :<div className={styles.notionModalBox} >
-      <div className={styles.notionModal} style={{width:320, height: 198}}>
-        <div className={styles.notionModalT1} style={{width:141, height: 23 , marginBottom:8}}>휴지통을 비우시겠어요?</div>
-        <div className={styles.notionModalT2} style={{width:286, height: 23, marginBottom:16 }} >휴지통에 있는 모든 약속에서 내가 빠지게 됩니다.</div>
-        <div className ={styles.notionModalBtnBox}>
-          <div className={styles.notionModalNo} onClick={setShowNotionModal('')} >아니요.</div>
-          <div className={styles.notionModalYes} onClick={()=>{moveApmtToTrash(selectedItemID); setShowNotionModal('');}}>네,비울게요.</div>
+        <div className={styles.notionModal} style={{width:320, height: 198}}>
+          <div className={styles.notionModalT1} style={{width:141, height: 23 , marginBottom:8}}>휴지통을 비우시겠어요?</div>
+          <div className={styles.notionModalT2} style={{width:286, height: 23, marginBottom:16 }} >휴지통에 있는 모든 약속에서 내가 빠지게 됩니다.</div>
+          <div className ={styles.notionModalBtnBox}>
+            <div className={styles.notionModalNo} onClick={setShowNotionModal('')} >아니요.</div>
+            <div className={styles.notionModalYes} onClick={()=>{moveApmtToTrash(selectedItemID); setShowNotionModal('');}}>네,비울게요.</div>
+          </div>
         </div>
-      </div>
     </div>
 
     )
@@ -180,12 +185,13 @@ const AllApmt = () => {
   };
 
   const ContextMenuModal = ({ onClose, style, type }) => {
+    console.log(type);
     return (
       type === 'p'
       ? <div style={style}>
         <div className={styles.modalBtn} onClick={()=>{setModifyName(true); setShowModal(''); }}>이름 변경하기</div>  
-        <div className={styles.modalBtn} onClick = {()=>{setShowModal('');  openNotionModal("B") ; }} >약속에서 빠지기</div>  
-        <div className={styles.modalBtn} onClick = {()=>{setShowModal('');  openNotionModal("T"); }}>약속 삭제하기</div>  
+        <div className={styles.modalBtn} onClick = {()=>{setShowModal('');  openNotionModal(type='B') ; }} >약속에서 빠지기</div>  
+        <div className={styles.modalBtn} onClick = {()=>{setShowModal('');  openNotionModal(type='T'); }}>약속 삭제하기</div>  
 
       </div>
       : <div style={style}>
@@ -366,7 +372,7 @@ const AllApmt = () => {
       {showModal && <div ref={modalRef} style={modalStyle} className={styles.modal}>
         <ContextMenuModal onClose={closeModal} type={showModal} />
       </div>}
-      {showNotionModal && <div ref={notionModalRef}>
+      {showNotionModal !=='' && <div ref={notionModalRef}>
         <NotionModal onClose={closeNotionModal} type={showNotionModal}/>
       </div>}
     </div>

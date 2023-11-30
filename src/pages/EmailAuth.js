@@ -7,9 +7,12 @@ import { svgList } from "../assets/svg";
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const EmailAuth = () => {
   const [email, setEmail] = useState('');
@@ -19,10 +22,11 @@ const EmailAuth = () => {
   const [authCode, setAuthCode] = useState('');
   const [isVaildAuthCode, setIsVaildAuthCode] = useState(false);
   const [authCodeSubmitted, setAuthCodeSubmitted] = useState(false);
-
+  const [emailToken, setEmailToken] = useState('');
   const [timer, setTimer] = useState(180); // 3분 = 180초
   const [timerExpired, setTimerExpired] = useState(false);
   const timerRef = useRef();
+  const navigate = useNavigate();
 
   const sendVerifyCode = async () => {
     resetTimer();
@@ -43,10 +47,11 @@ const EmailAuth = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/confirmVerifyCode`, {
         email: email,
         verifyCode: authCode})
-      console.log(response.data)
-      const emailToken = response.data.emailToken; // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
+      const emailToken = response.data.data.emailToken;
       setIsVaildAuthCode(true);
-      setAuthCodeSubmitted(true);
+      setAuthCodeSubmitted(true); // 언젠가 쓰겠지...? -> 다음 페이지로 넘길 때 토큰 보내주기?
+      navigate("/EnterInfo", { state: { emailToken: emailToken, email: email} });
+
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data.statusCode);

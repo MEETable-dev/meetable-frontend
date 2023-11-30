@@ -1,0 +1,273 @@
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80vw;
+  max-width: 320px;
+  min-width: 280px;
+}
+
+.container {
+  align-items: center;
+}
+
+body {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.loginBox {
+  width: 100%;
+  height: 465px;
+  max-width: 320px;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.content {
+  padding-top: 20px;
+  margin: 0px 30px;
+  width: calc(100% - 60px);
+  max-width: 260px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 465px;
+}
+
+.loginLogo{
+  height: 60px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.infoArea {
+  width: 100%;
+  max-width: 260px;
+  position: relative;
+  padding-top: 20px;
+}
+
+.inputBlock {
+  color:#222222;
+  font-size: 13px;
+  /* edit */
+  padding-bottom: 0.1rem;
+  padding-top: 0.5rem;
+  /* edit */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+}
+
+.footerBlock{
+  /* background-color: aqua; */
+  width: 100%;
+  margin-top: 1rem;
+  color: #888888;
+  font-size: 13px;
+  /* margin-top: 2rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+
+}
+
+.footerLink{
+  display: inline;
+  flex-wrap : wrap;
+  color: #888888;
+}
+.footerLink a {
+  color: #888888;
+}
+
+.footerLink:not(:last-child)::after {
+  padding: 7px;
+  content: "|";
+}
+
+input.CheckBox{
+  margin: 10px;
+  accent-color:#8E66EE
+}
+
+input.StyledInput {
+  color: #222222;
+  font-size: 15px;
+  position: relative;
+  border: none;
+  border-bottom: 2px solid #D0D0D0;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1.5rem;
+  outline: none;
+  width: 100%;
+  &:focus {
+      border-bottom: 2px solid #D0D0D0;
+  }
+
+}
+
+
+input.inputEmail {
+  color: #222222;
+  width: 100%;
+  position: relative;
+  /* margin-left: 0px;
+  padding: 5px 0px; */
+  padding-bottom: 0.3rem;
+  margin-bottom: 1.5rem;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #D0D0D0;
+  font-size: 15px;
+
+  &:focus {
+    border-bottom: 2px solid #D0D0D0;
+}
+
+
+}
+
+.btnRegion {
+  background: none;
+  width: 24px;
+  height: 24px;
+}
+
+
+button.del {
+  background: none;
+  display: inline;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: none;
+  padding-top: 5px;
+  width: 24px;
+  height: 24px;
+}
+
+.underLine {
+  width: 100%;
+  height: 2px;
+  background-color: #D0D0D0;
+  position: relative;
+}
+
+.alertZone {
+  width: 100%;
+  max-width: 260px;
+  position: relative;
+}
+
+.submitBtn {
+  align-self: center;
+  width: 260px;
+  height: 48px;
+  background: #D0D0D0;
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+}
+
+.active {
+  align-self: center;
+  width: 260px;
+  height: 48px;
+  background: #8E66EE;
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+div.message {
+  font-size: 13px;
+  text-align: left;
+  color: red;
+  padding-top: 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+.inputAuthCode {
+  width: calc(100% - 54px); /* 버튼 너비를 제외한 나머지 사용 */
+  position: relative;
+  margin-left: 0px;
+  padding: 5px 0px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #222222;
+  outline: none;
+}
+
+.timeCounter {
+  display: inline-block;
+  color: red;
+  width: 30px;
+  position: relative;
+  margin-left: 0px;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  text-align: right;
+}
+
+.checkboxRegion{
+  display: flex;
+  position: relative;
+  text-align: reight;
+  width: 30px;
+  margin-left: 0px;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  justify-content: flex-end;
+
+}
+
+input.lockEmail {
+  pointer-events: none; /* 마우스 클릭 방지 */
+  color: #888888;
+}
+
+.loginLink {
+  margin: 0;
+  font-size: 12px;
+  color: #888888;
+  text-decoration: none;
+}
+
+.linkLine {
+  display: inline;
+}
+
+.linkLine span {
+  color: #D0D0D0;
+  margin: 0 5px;
+  font-size: 13px;
+}

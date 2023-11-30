@@ -6,12 +6,15 @@ import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import PolicyModal from "../components/PolicyModal"
 import SubmitBtn from "../components/SubmitBtn";
 
 const Policy = () => {
   const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
+  const location = useLocation();
+  const [signToken, setSignToken] = useState('');
 
   const toggleModal = (modalId) => {
     setOpenModal(openModal === modalId ? null : modalId);
@@ -37,6 +40,13 @@ const Policy = () => {
   const handleCheckboxChange3 = () => {
     setChecked3(!isChecked3);
   };
+
+  //여기서 signtoken을 받습니다!!
+  useEffect(() => {
+    if (location.state) {
+      setSignToken(location.state.signToken);
+    }
+  }, [location.state]);
 
   // 모든 체크박스의 상태를 감시하여 전체 선택 체크박스 상태 업데이트
   useEffect(() => {
@@ -132,18 +142,7 @@ const Policy = () => {
 
       {/* Modals */}
       {openModal === 'serviceTerms' && <PolicyModal title="서비스 이용약관" onClose={() => toggleModal(null)}>
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!!<br/><br/>
-        제1조. 목적<br/>
-        본 약관은 미터블의 모든 서비스의 이용과 관련하여 미터블과 회원의 권리와 의무, 책임 등을 규정하는 것을 목적으로 합니다. 회원은 미터블 서비스를 이용함으로써 본 약관의 적용을 받는 것에 동의합니다.
-        <br/><br/>
-        제1조. 목적<br/>
-        본 약관은 미터블의 모든 서비스의 이용과 관련하여 미터블과 회원의 권리와 의무, 책임 등을 규정하는 것을 목적으로 합니다. 회원은 미터블 서비스를 이용함으로써 본 약관의 적용을 받는 것에 동의합니다.
-        <br/><br/>
-        제1조. 목적<br/>
-        본 약관은 미터블의 모든 서비스의 이용과 관련하여 미터블과 회원의 권리와 의무, 책임 등을 규정하는 것을 목적으로 합니다. 회원은 미터블 서비스를 이용함으로써 본 약관의 적용을 받는 것에 동의합니다.
-        <br/><br/>
-        제1조. 목적<br/>
-        본 약관은 미터블의 모든 서비스의 이용과 관련하여 미터블과 회원의 권리와 의무, 책임 등을 규정하는 것을 목적으로 합니다. 회원은 미터블 서비스를 이용함으로써 본 약관의 적용을 받는 것에 동의합니다.
+        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
       </PolicyModal>}
       {openModal === 'individualInfo' && <PolicyModal title="개인정보처리방침(필수)" onClose={() => toggleModal(null)}>
         여긴 개인정보처리방침 관련 세부 조항 입니당~~~

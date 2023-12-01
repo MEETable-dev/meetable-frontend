@@ -17,24 +17,35 @@ import InputArea from '../components/InputArea';
 
 const NewApmt = () => {
 
+  const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
+  const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
+  const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
+  const [isMember, setIsMember] = useState(false);  // 멤버 여부 api 받아와서 판별로 바꾸기
+
   const createAmpt = async () => {
     try {
       const formattedStartTime = formatTime(startTime);
       const formattedEndTime = formatTime(endTime);
-
-      // selectDate Set을 배열로 변환하고, 각 날짜를 'yyyy-MM-dd' 포맷으로 변환
       const formattedDates = Array.from(selectDate).map(date => format(date, 'yyyy-MM-dd'));
-      console.log(formattedDates)
-      
+      console.log(formattedDates);
+  
+      // header
+      const config = {
+        headers: {
+          'Authorization': '@'
+        }
+      };
+
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
         promise_name: amptName,
         weekvsdate: selectedElement1,
-        ampmvstime: "F", // 2차때 수정
+        ampmvstime: selectedElement2,
         start_time: formattedStartTime,
         end_time: formattedEndTime,
         date: formattedDates,
         canallconfirm: selectedElement3
-      });
+      }, config); // config 객체를 요청과 함께 전달
+  
       console.log(response.data);
     } catch (error) {
       const errorResponse = error.response;
@@ -44,33 +55,51 @@ const NewApmt = () => {
 
   const [selectDate, setSelectDate] = useState(new Set());
 
+  // 날짜 변경 핸들러
   const handleDateChange = (newDate) => {
-    // selectDate 업데이트 로직
     setSelectDate(prevSelectDate => {
+      const dateString = format(newDate, 'yyyy-MM-dd');
       const updatedSelectDate = new Set(prevSelectDate);
-      if (updatedSelectDate.has(newDate)) {
+
+      // 현재 선택된 날짜들을 문자열로 변환하여 비교
+      const formattedDates = Array.from(updatedSelectDate).map(date => format(date, 'yyyy-MM-dd'));
+
+      if (formattedDates.includes(dateString)) { // 이미 선택된 날짜면 삭제
         updatedSelectDate.delete(newDate);
-      } else {
+      } else { // 새로운 날짜면 추가
         updatedSelectDate.add(newDate);
       }
       return updatedSelectDate;
     });
-    // console.log(selectDate);
   }
 
   // 시간 선택 상태 추가
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(24);
 
-  // 시간 옵션 생성
-  const timeOptions = Array.from({ length: 25 }, (_, i) => (
-    <option key={i} value={i}>{i}</option>
+  const handleStartTimeChange = (e) => {
+    setStartTime(parseInt(e.target.value, 10));
+  };
+  const handleEndTimeChange = (e) => {
+    setEndTime(parseInt(e.target.value, 10));
+  };
+
+  // 시간 옵션 제한
+  const startTimeOptions = Array.from({ length: 24 }, (_, i) => (
+    <option key={i} value={i} disabled={i >= endTime}>{i}</option>
+  ));
+  const endTimeOptions = Array.from({ length: 24 }, (_, i) => (
+    <option key={i} value={i} disabled={i <= startTime}>{i}</option>
   ));
 
   const formatTime = (hour) => {
-    return `${hour.toString().padStart(2, '0')}:00:00`;
+    if (hour === 24) {
+      return '23:59:59';
+    } else {
+      return `${hour.toString().padStart(2, '0')}:00:00`;
+    }
   };
-
+  
   const [amptName, setAmptName] = useState('약속');
   const [nickname, setNickname] = useState('미터블'); // 회원가입명으로 바꾸기
 
@@ -87,13 +116,12 @@ const NewApmt = () => {
     setNickname('');
   };
 
-
-  const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
-  const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
-  const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
-
-  const [isMember, setIsMember] = useState(false);  // 멤버 여부 api 받아와서 판별로 바꾸기
-
+  // selectedElement1 값이 변경될 때 selectDate를 초기화
+  useEffect(() => {
+    if (selectedElement1 === 'W') {
+      setSelectDate(new Set());
+    }
+  }, [selectedElement1]);
 
   return (
     <div className={`${styles.loginBox} ${
@@ -173,17 +201,17 @@ const NewApmt = () => {
                 <select
                   className={styles.timeSelect}
                   value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  onChange={handleStartTimeChange}
                 >
-                  {timeOptions}
+                  {startTimeOptions}
                 </select>
                 <span>시부터 </span>
                 <select
                   className={styles.timeSelect}
                   value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
+                  onChange={handleEndTimeChange}
                 >
-                  {timeOptions}
+                  {endTimeOptions}
                 </select>
                 <span>시까지</span>
               </div>
@@ -192,7 +220,7 @@ const NewApmt = () => {
           </div>
         </div>
 
-        {/* 확정하기 권한 new */}
+        {/* 확정하기 권한 */}
         <div className={styles.contentArea}>
           <div className={styles.contentName}>
             <p>약속 유형</p>

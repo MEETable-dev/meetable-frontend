@@ -60,18 +60,23 @@ const NewApmt = () => {
     setSelectDate(prevSelectDate => {
       const dateString = format(newDate, 'yyyy-MM-dd');
       const updatedSelectDate = new Set(prevSelectDate);
-
-      // 현재 선택된 날짜들을 문자열로 변환하여 비교
+  
+      // 이미 선택된 날짜들을 문자열로 변환하여 비교
       const formattedDates = Array.from(updatedSelectDate).map(date => format(date, 'yyyy-MM-dd'));
-
+  
       if (formattedDates.includes(dateString)) { // 이미 선택된 날짜면 삭제
-        updatedSelectDate.delete(newDate);
+        updatedSelectDate.forEach(date => {
+          if (format(date, 'yyyy-MM-dd') === dateString) {
+            updatedSelectDate.delete(date);
+          }
+        });
       } else { // 새로운 날짜면 추가
         updatedSelectDate.add(newDate);
       }
       return updatedSelectDate;
     });
   }
+  
 
   // 시간 선택 상태 추가
   const [startTime, setStartTime] = useState(0);
@@ -85,10 +90,10 @@ const NewApmt = () => {
   };
 
   // 시간 옵션 제한
-  const startTimeOptions = Array.from({ length: 24 }, (_, i) => (
+  const startTimeOptions = Array.from({ length: 25 }, (_, i) => (
     <option key={i} value={i} disabled={i >= endTime}>{i}</option>
   ));
-  const endTimeOptions = Array.from({ length: 24 }, (_, i) => (
+  const endTimeOptions = Array.from({ length: 25 }, (_, i) => (
     <option key={i} value={i} disabled={i <= startTime}>{i}</option>
   ));
 

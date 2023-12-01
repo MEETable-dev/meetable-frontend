@@ -37,13 +37,23 @@ const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
               }
             }}
           >
-            <span
+            {/* <div
               className={styles[selectDate.has(format(day, 'yyyy-MM-dd'))
               ? 'txtSelectedDate'
               : 'txtDate']}
             >
               {formattedDate}
-            </span>
+            </div> */}
+            
+            <div className={styles.dateBlock}>
+              <div
+                className={styles[selectDate.has(format(day, 'yyyy-MM-dd'))
+                ? 'txtSelectedDate'
+                : 'txtDate']}
+              >
+                {formattedDate}
+              </div>
+            </div>
           </div>
         );
         day = addDays(day, 1);
@@ -100,35 +110,40 @@ const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
     onDateChange(day);
   }
 
-  return <div className={styles.entire}>
-    <div className={styles.headerContainer}>
-      <div className={styles.headerLeft}></div>
-      <div className={styles.headerCenter}>
-        <div className={styles.toAnotherMonth} onClick={prevMonth}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.9883 16.2403L13.0527 15.1759L6.87677 8.99989L13.0527 2.82392L11.9883 1.75952L4.74796 8.99989L11.9883 16.2403Z" fill="#888888"/>
-          </svg>
+  return (
+    <div className={styles.entire}>
+      <div className={styles.content}>
+        <div className={styles.headerContainer}>
+          <div className={styles.headerLeft}></div>
+          <div className={styles.headerCenter}>
+            <div className={styles.toAnotherMonth} onClick={prevMonth}>
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.9883 16.2403L13.0527 15.1759L6.87677 8.99989L13.0527 2.82392L11.9883 1.75952L4.74796 8.99989L11.9883 16.2403Z" fill="#888888"/>
+              </svg>
+            </div>
+            <div className={styles.headerText}>
+              {format(currentDate, 'yy')}년 {format(currentDate, 'M')}월
+            </div>
+            <div className={styles.toAnotherMonth} onClick={nextMonth}>
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.01167 16.2403L4.94727 15.1759L11.1232 8.99989L4.94727 2.82392L6.01167 1.75952L13.252 8.99989L6.01167 16.2403Z" fill="#888888"/>
+              </svg>
+            </div>
+          </div>
+          <div className={styles.headerRight}>
+            <div className={styles.TodayBtn} style={{right:spaceX_new/2}} onClick={()=>setCurrentDate(new Date())}>오늘</div>
+          </div>
         </div>
-        <div className={styles.headerText}>
-          {format(currentDate, 'yy')}년 {format(currentDate, 'M')}월
+        
+        <div className={styles.bodyContainer}>
+          <div className={styles.DaysOfWeek}>{DivDates}</div>
+          <div className={styles.body}><Body currentDate={currentDate} selectDate={selectDate} onDateClick={onDateClick} /></div>
         </div>
-        <div className={styles.toAnotherMonth} onClick={nextMonth}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.01167 16.2403L4.94727 15.1759L11.1232 8.99989L4.94727 2.82392L6.01167 1.75952L13.252 8.99989L6.01167 16.2403Z" fill="#888888"/>
-          </svg>
-        </div>
-      </div>
-      <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} style={{right:spaceX_new/2}} onClick={()=>setCurrentDate(new Date())}>오늘</div>
+        {/* <ConfirmedApmt />
+        <CustomedSched /> */}
       </div>
     </div>
-    <div className={styles.bodyContainer}>
-      <div className={styles.DaysOfWeek}>{DivDates}</div>
-      <div className={styles.body}><Body currentDate={currentDate} selectDate={selectDate} onDateClick={onDateClick} /></div>
-    </div>
-    {/* <ConfirmedApmt />
-    <CustomedSched /> */}
-  </div>
+  );
 };
 
 export default CalendarNewApmt;

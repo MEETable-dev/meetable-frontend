@@ -122,27 +122,47 @@
     flex-flow: wrap;
   }
 
+  .ApmtListContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-flow: wrap;
+  }
+
   .folderHeader{
     position: relative;
     display: flex;
     border: none;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     margin-bottom: 13px;
+    margin-left: 5px;
     width: 100%;
     height: 24px;
     color: #888;
-    font-size: 15px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
   }
 
-  .folderHeader:last-child{
+  .selectAllContainer{
     display: flex;
-    justify-self: flex-end;
-    align-self: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 15px;
   }
+
+  .selectAll svg{
+    cursor: pointer;
+    align-items: center;
+    display: block;
+    margin-right: 0.3rem;
+  }
+
+
 
   .modal {
     display: flex;
@@ -187,8 +207,8 @@
   .ApmtBox{
     display: inline-flexbox;
     flex-direction: column;
-    margin-right: 3px;
-    margin-left: 3px;
+    margin-right: 1rem;
+    /* margin-left: 3px; */
     width: 120px;
     min-height: 152px; 
     flex-flow:column;
@@ -201,8 +221,7 @@
   .ApmtBoxFocused{
     display: inline-flexbox;
     flex-direction: column;
-    margin-right: 3px;
-    margin-left: 3px;
+    margin-right: 1rem;
     width: 120px;
     min-height: 152px; 
     flex-flow:column;
@@ -412,21 +431,90 @@
 
   .hidden{
     display:none;
-  }
-  .renameInput {
+  } 
+  input.renameInput {
     width: 100%;
     font-size: 15px;
     border-radius: 5px;
     border: 1px solid #D0D0D0;
     padding: 3px 4px;
+    outline: none;
   }
+
+  /*Trash Area*/
   
-  /* EmailAuth */
-  
-  /* .headerWrapper {
-    display: none;
+  .TrashBox{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 1rem;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
   }
-  
-  .container {
-    align-items: center;
-  } */
+
+  .TrashBoxFocused{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 3px;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
+    background-color: #8E66EE33;
+  }
+
+
+  .TrashBox:hover{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .TrashBox::selection{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .TrashIcon{
+    display: block;
+    border: none;
+    /* flex-grow: 1; */
+  }
+
+  .TrashName{
+    display: flex;
+    flex-direction: row;
+    /* align-items: stretch; */
+    flex-grow: 1;
+    /* flex-shrink: 1; */
+    margin-right: 10px;
+    justify-content: center;
+    color: #222222;
+    border: none;
+    width: 100%;
+
+    min-height: 24px;
+
+  }
+
+  .TrashText{
+    display: flex;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
+    align-self: center;
+    padding-right: 6px;
+    height: 100%;
+    
+  }
+
+  .TrashOutIcon{
+    cursor: pointer;
+    margin-right: 1rem;
+  }

@@ -6,21 +6,22 @@ import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
 import React from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Link, useNavigate } from 'react-router-dom';
 
-import PolicyModal from "../components/PolicyModal"
 import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewApmt from "../components/CalendarNewApmt";
 import InputArea from '../components/InputArea';
 
 
 const NewApmt = () => {
+  const accessToken = useSelector((state) => state.user.accessToken);
+  const navigate = useNavigate();
 
   const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
-  const [isMember, setIsMember] = useState(true);  // 멤버 여부 api 받아와서 판별로 바꾸기
+  const [isMember, setIsMember] = useState(accessToken);  // 멤버 여부 api 받아와서 판별로 바꾸기 -> ok
 
   const createAmpt = async () => {
     try {
@@ -35,6 +36,9 @@ const NewApmt = () => {
           'Authorization': '@'
         }
       };
+      if (isMember) {
+        const config = null;
+      }
 
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
         promise_name: amptName,
@@ -45,8 +49,12 @@ const NewApmt = () => {
         date: formattedDates,
         canallconfirm: selectedElement3
       }, config); // config 객체를 요청과 함께 전달
-  
       console.log(response.data);
+
+      // 여기에서 새로운 링크로 리디렉션하는 로직을 추가합니다.
+      const promiseCode = response.data.promiseCode;
+      navigate(`/AmptDetail:${promiseCode}`, {state: {promiseCode: promiseCode}});  // 링크가 이게 아닌 것 같음. 수정 필요...?
+
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data.statusCode);
@@ -77,7 +85,6 @@ const NewApmt = () => {
     });
   }
   
-
   // 시간 선택 상태 추가
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(24);

@@ -179,7 +179,7 @@ const Policy = () => {
           <SubmitBtn
             text="동의하기"
             isActive={isChecked1 && isChecked2}
-            className={''}
+            className={styles.submitBtn}
             margin={"20px 0px 0px"}
           />
         </div>

@@ -179,3 +179,9 @@ button.policyArrow {
 /* .texts {
   text-align: top;
 } */
+
+.submitBtn {
+  max-width: 260px;
+  margin-right: 30px;
+  padding-inline: 0px;
+}

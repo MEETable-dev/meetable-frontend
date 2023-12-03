@@ -113,6 +113,21 @@ div.policyLines {
   outline: none;
 }
 
+.detailArea {
+  width: calc(100% - 24px);
+  margin-left: 0px;
+  padding: 8px 0px; /* 간격 조절 */
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #222222;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .detailPolicy > div {
   text-align: left;
 }
@@ -131,6 +146,7 @@ button.policyArrow {
   width: 24px;
   height: 24px;
   align-self: right;
+  padding-top: 3px;
 }
 
 .inputBlock {
@@ -145,3 +161,21 @@ button.policyArrow {
   margin-top: 30px;
   text-decoration: none;
 }
+
+.policyCheckBox {
+  background: none;
+  display: inline;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: none;
+  align-self: right;
+  width: 20px;
+  height: 20px;
+  margin-left: -5px;
+  padding-top: 3px;  /* 체크박스와 글자 높이 조절 */
+}
+
+/* .texts {
+  text-align: top;
+} */

@@ -20,7 +20,7 @@ const NewApmt = () => {
   const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
-  const [isMember, setIsMember] = useState(false);  // 멤버 여부 api 받아와서 판별로 바꾸기
+  const [isMember, setIsMember] = useState(true);  // 멤버 여부 api 받아와서 판별로 바꾸기
 
   const createAmpt = async () => {
     try {
@@ -144,15 +144,17 @@ const NewApmt = () => {
           <div className={styles.contentName}>
             <p>약속 이름</p>
           </div>
-          <div className={`${styles.contentInput} ${styles.inputPadding}`}>
-            <InputArea
-              placeholder="약속"
-              value={amptName}
-              onChange={handleAmptNameChange}
-              onClear={handleClearAmptName}
-            >
-              {svgList.loginIcon.delBtn}
-            </InputArea>
+          <div className={styles.contentInput}>
+            <div className={`${styles.timeCollectInput} ${styles.inputPadding}`}>
+              <InputArea
+                placeholder="약속"
+                value={amptName}
+                onChange={handleAmptNameChange}
+                onClear={handleClearAmptName}
+              >
+                {svgList.loginIcon.delBtn}
+              </InputArea>
+            </div>
           </div>
         </div>
 
@@ -176,7 +178,7 @@ const NewApmt = () => {
               <div>날짜 기준</div>
             </div>
             {selectedElement1 === 'D' ? (
-              <div style={{margin: "0px 0px 0px 7px"}}>
+              <div className={styles.calendar}>
                 <CalendarNewApmt spaceX={4} spaceY={4} selectedDates={selectDate} onDateChange={handleDateChange}/>
               </div>
             ) : null}
@@ -256,15 +258,17 @@ const NewApmt = () => {
             <div className={styles.contentName}>
               <p>내 별명</p>
             </div>
-            <div className={`${styles.contentInput} ${styles.inputPadding}`}>
-              <InputArea
-                placeholder="미터블" // 회원가입명으로 디폴트 처리
-                value={nickname}
-                onChange={handleNicknameChange}
-                onClear={handleClearNickname}
-              >
-                {svgList.loginIcon.delBtn}
-              </InputArea>
+            <div className={styles.contentInput}>
+              <div className={`${styles.timeCollectInput} ${styles.inputPadding}`}>
+                <InputArea tArea
+                  placeholder="미터블" // 회원가입명으로 디폴트 처리
+                  value={nickname}
+                  onChange={handleNicknameChange}
+                  onClear={handleClearNickname}
+                >
+                  {svgList.loginIcon.delBtn}
+                </InputArea>
+              </div>
             </div>
           </div> :
           null
@@ -275,7 +279,6 @@ const NewApmt = () => {
           onClick={createAmpt} // 누르면 정보 백엔드에 발송도 추가
           isActive={amptName && nickname}
           className={`${styles.createBtn}`}
-          margin="35px 0px 0px"
         />
 
       </div>

@@ -1,7 +1,9 @@
 .submitBtn {
   align-self: center;
-  width: calc(100% - 12px);
-  max-width: calc(260px - 12px);
+  width: 100%;
+  /* width: calc(100% - 12px); */
+  max-width: 260px;
+  /* max-width: calc(260px - 12px); */
   height: 48px;
   background: #D0D0D0;
   color: #fff;
@@ -12,8 +14,10 @@
 
 .active {
   align-self: center;
-  width: calc(100% - 12px);
-  max-width: calc(260px - 12px);
+  width: 100%;
+  /* width: calc(100% - 12px); */
+  max-width: 260px;
+  /* max-width: calc(260px - 12px); */
   height: 48px;
   background: #8E66EE;
   color: #fff;

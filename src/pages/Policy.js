@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import PolicyModal from "../components/PolicyModal"
-import MyInfoModal from "../components/MyInfoModal"
 import SubmitBtn from "../components/SubmitBtn";
 
 const Policy = () => {
@@ -188,15 +187,15 @@ const Policy = () => {
       </div>
 
       {/* Modals */}
-      {openModal === 'serviceTerms' && <MyInfoModal title="내 정보" onClose={() => toggleModal(null)}>
+      {openModal === 'serviceTerms' && <PolicyModal title="서비스 이용약관" onClose={() => toggleModal(null)}>
         여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-      </MyInfoModal>}
-      {openModal === 'individualInfo' && <MyInfoModal title="개인정보처리방침(필수)" onClose={() => toggleModal(null)}>
+      </PolicyModal>}
+      {openModal === 'individualInfo' && <PolicyModal title="개인정보처리방침(필수)" onClose={() => toggleModal(null)}>
         여긴 개인정보처리방침 관련 세부 조항 입니당~~~
-      </MyInfoModal>}
-      {openModal === 'marketing' && <MyInfoModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
+      </PolicyModal>}
+      {openModal === 'marketing' && <PolicyModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
         여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
-      </MyInfoModal>}
+      </PolicyModal>}
 
     </div>
   );

@@ -12,17 +12,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewApmt from "../components/CalendarNewApmt";
 import InputArea from '../components/InputArea';
-import MyInfoModal from "../components/MyInfoModal"
-import PWChangeModal from "../components/PWChangeModal"
 
 
 const NewApmt = () => {
-  // 모달 실험용
-  const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
-  const toggleModal = (modalId) => {
-    setOpenModal(openModal === modalId ? null : modalId);
-  };
-
   const accessToken = useSelector((state) => state.user.accessToken);
   const navigate = useNavigate();
 
@@ -288,41 +280,6 @@ const NewApmt = () => {
           </div> :
           null
         }
-
-
-        {/* 모달 실험용 */}
-        <div className={styles.contentArea}>
-            <div className={styles.contentName}>
-              <p>내 정보 / 비밀번호 변경</p>
-            </div>
-            <div className={styles.contentInput}>
-              <button type="button" 
-                onClick={() => toggleModal('serviceTerms')} 
-                className={styles.policyArrow}>
-                  <div>
-                    {svgList.policyIcon.arrow}
-                  </div>
-              </button>
-
-              <button type="button" 
-                onClick={() => toggleModal('marketing')} 
-                className={styles.policyArrow}>
-                  <div>
-                    {svgList.policyIcon.arrow}
-                  </div>
-              </button>
-            </div>
-          </div>
-          {/* Modals */}
-          {openModal === 'serviceTerms' && <MyInfoModal title="내 정보" onClose={() => toggleModal(null)}>
-            여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-          </MyInfoModal>}
-          {openModal === 'marketing' && <PWChangeModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
-            여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
-          </PWChangeModal>}
-
-
-
 
         <SubmitBtn
           text="만들기"

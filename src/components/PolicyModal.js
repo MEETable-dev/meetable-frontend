@@ -7,12 +7,15 @@ const PolicyModal = ({ title, onClose, children }, ref) => {
     <div ref={ref}>
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
-          <button className={styles.closeButton} onClick={onClose}>
-            <div className={styles.closeX}>
-              {svgList.policyIcon.closeBtn}
-            </div>
-          </button>
-          <h2>{title}</h2>
+          <div className={styles.modalHead}>
+            <div className={styles.title}><b>{title}</b></div>
+            <button className={styles.closeButton} onClick={onClose}>
+              <div className={styles.closeX}>
+                {svgList.policyIcon.closeBtn}
+              </div>
+            </button>
+          </div>
+
           <div className={styles.modalBody}>
             {children}
           </div>

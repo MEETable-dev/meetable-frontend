@@ -45,7 +45,6 @@ const NewApmt = () => {
     }
   };
 
-  // 여기에 useEffect를 추가합니다.
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -78,7 +77,7 @@ const NewApmt = () => {
       }, config); // config 객체를 요청과 함께 전달
       console.log(response.data);
 
-      // 여기에서 새로운 링크로 리디렉션하는 로직을 추가합니다.
+      // 새로운 링크로 리디렉션
       const promiseCode = response.data.promiseCode;
       navigate(`/AmptDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
 

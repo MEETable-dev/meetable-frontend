@@ -192,7 +192,7 @@ const NewApmt = () => {
             <div className={styles.contentInput}>
               <div className={`${styles.timeCollectInput} ${styles.inputPadding}`}>
                 <InputArea tArea
-                  placeholder="미터블" // 회원가입명으로 디폴트 처리
+                  placeholder="멤버입니다" // 회원가입명으로 디폴트 처리
                   value={userName}
                   onChange={handleNicknameChange}
                   onClear={handleClearNickname}
@@ -232,9 +232,6 @@ const NewApmt = () => {
           {openModal === 'marketing' && <PWChangeModal title="" onClose={() => toggleModal(null)}>
             여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
           </PWChangeModal>}
-
-
-
 
         <SubmitBtn
           text="만들기"

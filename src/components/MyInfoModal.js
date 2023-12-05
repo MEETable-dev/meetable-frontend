@@ -23,7 +23,7 @@ const MyInfoModal = ({ onClose }, ref) => {
           console.log(response.data);
           setUserName(response.data.name);
           setEmail(response.data.email);
-          
+
         } catch (error) {
           const errorResponse = error.response;
           console.log(errorResponse.data.statusCode);
@@ -35,7 +35,6 @@ const MyInfoModal = ({ onClose }, ref) => {
     }, []);
 
     const saveUserName = async () => {
-        // 백앤드로 바뀐 유저네임 넘기기 -> 오류. 왜...?ㅠㅠㅠㅠ
         try {
             const response = await axios.patch(`${process.env.REACT_APP_API_URL}/member/resetname`, {
                 name: userName

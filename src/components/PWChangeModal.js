@@ -18,14 +18,34 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
     const [isVisible2, setIsVisible2] = useState(false);
     const [isVisible3, setIsVisible3] = useState(false);
     const [currentPWDSubmitted, setCurrentPWDSubmitted] = useState(false);
+    const [newPWDSubmitted, setNewPWDSubmitted] = useState(false);
     const [isValidCurrentPWD, setIsValidCurrentPWD] = useState(false);
     const [isValidNewPWD, setIsValidNewPWD] = useState(false);
+    const [isLongPWD, setIsLongPWD] = useState(true);
+    const [isSamePWD, setIsSamePWD] = useState(true);
+
+    useEffect(() => {
+        if (PWD2 && PWD3) {
+            if (PWD2 === PWD3) {
+                setIsSamePWD(true);
+            } else {
+                setIsSamePWD(false);
+            }
+        }
+    }, [PWD2, PWD3]); // PWD2 또는 PWD3가 변경될 때마다 이 효과를 실행
 
     const handlePWD1Change = (e) => {
         setPWD1(e.target.value);
     };
     const handlePWD2Change = (e) => {
         setPWD2(e.target.value);
+
+        // PWD2의 값 길이가 8자 이상인지 확인
+        if (e.target.value.length >= 8) {
+            setIsLongPWD(true);
+        } else {
+            setIsLongPWD(false);
+        }
     };
     const handlePWD3Change = (e) => {
         setPWD3(e.target.value);
@@ -50,12 +70,14 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
         // currentPWDSubmitted -> true
     }
 
-    const handleIsSameNewPWD = () => {
-        // 두 비밀번호 일치하나 확인
-    }
-
     const handleChangePWDInfo = () => {
         // 백앤드로 넘겨서 비밀번호 업데이트
+        setNewPWDSubmitted(true);
+        if (isSamePWD) {
+            // 정보 넘기기
+        } else {
+            // 경고 나오게
+        }
     }
 
     return (
@@ -111,6 +133,21 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
                                 >
                                     {isVisible3 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
                                 </InputArea>
+                                {/* alertzone 추가 */}
+                                { !isLongPWD ?
+                                <div className={styles.alertZone}>
+                                    <div className={``}>
+                                        <div className={styles.message}>비밀번호는 8자 이상이어야 해요.</div>
+                                    </div>
+                                </div> : null
+                                }
+                                { isLongPWD && !isSamePWD ?
+                                <div className={styles.alertZone}>
+                                    <div className={``}>
+                                        <div className={styles.message}>비밀번호가 서로 일치하지 않아요.</div>
+                                    </div>
+                                </div> : null
+                                }
                             </div>
                         }
                     </div>
@@ -126,7 +163,7 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
                         <SubmitBtn
                         text="완료하기"
                         onClick={handleChangePWDInfo}
-                        isActive={isValidNewPWD}
+                        isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
                         // className={`${''}`}
                         margin={`10px 0px 0px`}
                         />

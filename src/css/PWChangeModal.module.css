@@ -96,3 +96,13 @@
     color: #888888;
     text-decoration: none;
   }
+
+  .inputHeight {
+    width: 100%;
+    height: 150px;
+    /* background-color: skyblue; */
+  }
+  
+  .spaceBetween {
+    margin-top: 30px;
+  }

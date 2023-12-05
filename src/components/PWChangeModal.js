@@ -7,21 +7,54 @@ import axios from "axios";
 
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
-import { isVisible } from '@testing-library/user-event/dist/utils';
 
 const PWChangeModal = ({ title, onClose, children }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
     const [PWD1, setPWD1] = useState('');
+    const [PWD2, setPWD2] = useState('');
+    const [PWD3, setPWD3] = useState('');
     const [isVisible1, setIsVisible1] = useState(false);
+    const [isVisible2, setIsVisible2] = useState(false);
+    const [isVisible3, setIsVisible3] = useState(false);
+    const [isValidCurrentPWD, setIsValidCurrentPWD] = useState(false);
+    const [isValidNewPWD, setIsValidNewPWD] = useState(false);
 
     const handlePWD1Change = (e) => {
         setPWD1(e.target.value);
     };
+    const handlePWD2Change = (e) => {
+        setPWD2(e.target.value);
+    };
+    const handlePWD3Change = (e) => {
+        setPWD3(e.target.value);
+    };
 
     const handleIsVisible1 = () => {
-        setIsVisible1(!isVisible1); // isVisible1의 현재 값을 반전시켜 업데이트
+        setIsVisible1(!isVisible1);
     };
+    const handleIsVisible2 = () => {
+        setIsVisible2(!isVisible2);
+    };
+    const handleIsVisible3 = () => {
+        setIsVisible3(!isVisible3);
+    };
+
+    const handleIsValidCurrentPWD = () => {
+        // 백앤드로 넘겨서 기존 비밀번호와 일치하는지 확인
+        // 맞으면 true로 바꾸기
+        setIsValidCurrentPWD(true);
+
+        // 틀리면 경고문구 띄우기
+    }
+
+    const handleIsSameNewPWD = () => {
+        // 두 비밀번호 일치하나 확인
+    }
+
+    const handleChangePWDInfo = () => {
+        // 백앤드로 넘겨서 비밀번호 업데이트
+    }
 
     return (
     <div ref={ref}>
@@ -32,28 +65,64 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
                         {svgList.policyIcon.closeBtn}
                     </div>
                 </button>
-                <h2>내 정보</h2>
+                <h2>비밀번호 바꾸기</h2>
                 <div className={styles.modalBody}>
                     <div className={styles.inputBox}>
-                        <InputArea
-                            className={`${isVisible1 ? styles.visible : styles.invisible}`}
-                            placeholder="현재 비밀번호"
-                            value={PWD1}
-                            type={isVisible1 ? "text" : "password"}
-                            onChange={handlePWD1Change}
-                            onClear={handleIsVisible1}
-                        >
-                            {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-                        </InputArea>
+                        { !isValidCurrentPWD ?
+                            <div className={styles.inputHeight}>
+                                <InputArea
+                                    className={`${isVisible1 ? styles.visible : styles.invisible}`}
+                                    placeholder="현재 비밀번호"
+                                    value={PWD1}
+                                    type={isVisible1 ? "text" : "password"}
+                                    onChange={handlePWD1Change}
+                                    onClear={handleIsVisible1}
+                                >
+                                    {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
+                            </div> :
+                            <div className={styles.inputHeight}>
+                                <InputArea
+                                    className={`${isVisible2 ? styles.visible : styles.invisible}`}
+                                    placeholder="새 비밀번호"
+                                    value={PWD2}
+                                    type={isVisible2 ? "text" : "password"}
+                                    onChange={handlePWD2Change}
+                                    onClear={handleIsVisible2}
+                                >
+                                    {isVisible2 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
+                                <div className={styles.spaceBetween}></div>
+                                <InputArea
+                                    className={`${isVisible3 ? styles.visible : styles.invisible}`}
+                                    placeholder="새 비밀번호 확인"
+                                    value={PWD3}
+                                    type={isVisible3 ? "text" : "password"}
+                                    onChange={handlePWD3Change}
+                                    onClear={handleIsVisible3}
+                                >
+                                    {isVisible3 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
+                            </div>
+                        }
                     </div>
 
-                    {isVisible1 ?
-                    null :
-                    <SubmitBtn
-                        text="저장하기"
-                        className={`${isVisible1 ? styles.hidden : ''}`}
-                        margin={`30px 0px 0px`}
-                    />}
+                    { !isValidCurrentPWD ?
+                        <SubmitBtn
+                        text="다음"
+                        onClick={handleIsValidCurrentPWD}
+                        isActive={PWD1}
+                        // className={`${''}`}
+                        margin={`10px 0px 0px`}
+                        /> :
+                        <SubmitBtn
+                        text="완료하기"
+                        onClick={handleChangePWDInfo}
+                        isActive={isValidNewPWD}
+                        // className={`${''}`}
+                        margin={`10px 0px 0px`}
+                        />
+                    }
 
                 </div>
             </div>

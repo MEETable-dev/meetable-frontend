@@ -8,43 +8,44 @@ import axios from "axios";
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
 
-const MyInfoModal = ({ useName1, email1, onClose }, ref) => {
+const MyInfoModal = ({ onClose }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
     const [userNameLocked, setUserNameLocked] = useState(true);
 
-    // 얘도 마이페이지 홈(?)에 기본 변수로 추가하기
-    const [userName, setUserName] = useState('주다윤');  // 백에서 토큰 가져와서 디폴트값 설정
-    const [email, setEmail] = useState('ellyjoo0707@naver.com');  // 백에서 토큰 가져와서 디폴트값 설정
+    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
 
-    // 이 함수를 내 정보 버튼 눌렀을 때 모달 뜸과 함께 실행되게 하기
     const getUserInfo = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/member/info`, {
           });
           console.log(response.data);
-
-          setUserName(response.data.userName); // userName 받아서 기본값으로 설정하기
-          setEmail(response.data.Email);
-
+          setUserName(response.data.name);
+          setEmail(response.data.email);
+          
         } catch (error) {
           const errorResponse = error.response;
           console.log(errorResponse.data.statusCode);
         }
     };
 
+    useEffect(() => {
+        getUserInfo();
+    }, []);
+
     const saveUserName = async () => {
-        // 백앤드로 바뀐 유저네임 넘기기
+        // 백앤드로 바뀐 유저네임 넘기기 -> 오류. 왜...?ㅠㅠㅠㅠ
         try {
             const response = await axios.patch(`${process.env.REACT_APP_API_URL}/member/resetname`, {
                 name: userName
             });
             console.log(response.data);
+            setUserNameLocked(true);
         } catch (error) {
             const errorResponse = error.response;
             console.log(errorResponse.data.statusCode);
         }
-        setUserNameLocked(true);
     }
 
     const handleUserNameChange = (e) => {

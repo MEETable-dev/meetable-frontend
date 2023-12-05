@@ -53,7 +53,7 @@ const NewApmt = () => {
 
       // 여기에서 새로운 링크로 리디렉션하는 로직을 추가합니다.
       const promiseCode = response.data.promiseCode;
-      navigate(`/AmptDetail:${promiseCode}`, {state: {promiseCode: promiseCode}});  // 링크가 이게 아닌 것 같음. 수정 필요...?
+      navigate(`/AmptDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
 
     } catch (error) {
       const errorResponse = error.response;
@@ -289,9 +289,7 @@ const NewApmt = () => {
         />
 
       </div>
-
-      {/* 다음으로 넘어가게 만들기 */}
-
+      
     </div>
   );
 };

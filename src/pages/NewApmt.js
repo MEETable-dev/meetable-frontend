@@ -61,7 +61,7 @@ const NewApmt = () => {
 
       // 여기에서 새로운 링크로 리디렉션하는 로직을 추가합니다.
       const promiseCode = response.data.promiseCode;
-      navigate(`/AmptDetail:${promiseCode}`, {state: {promiseCode: promiseCode}});  // 링크가 이게 아닌 것 같음. 수정 필요...?
+      navigate(`/AmptDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
 
     } catch (error) {
       const errorResponse = error.response;
@@ -314,10 +314,10 @@ const NewApmt = () => {
             </div>
           </div>
           {/* Modals */}
-          {openModal === 'serviceTerms' && <MyInfoModal title="내 정보" onClose={() => toggleModal(null)}>
+          {openModal === 'serviceTerms' && <MyInfoModal title="" onClose={() => toggleModal(null)}>
             여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
           </MyInfoModal>}
-          {openModal === 'marketing' && <PWChangeModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
+          {openModal === 'marketing' && <PWChangeModal title="" onClose={() => toggleModal(null)}>
             여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
           </PWChangeModal>}
 
@@ -332,8 +332,6 @@ const NewApmt = () => {
         />
 
       </div>
-
-      {/* 다음으로 넘어가게 만들기 */}
 
     </div>
   );

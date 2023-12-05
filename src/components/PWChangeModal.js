@@ -1,73 +1,59 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import styles from '../css/MyInfoModal.module.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from "react-redux";
+import styles from '../css/PWChangeModal.module.css';
 import { svgList } from "../assets/svg";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import InputArea from '../components/InputArea';
+import SubmitBtn from "../components/SubmitBtn";
+import { isVisible } from '@testing-library/user-event/dist/utils';
 
-const MyInfoModal = ({ title, onClose, children }, ref) => {
-    const [userName, setUserName] = useState('주다윤');  // 현 state에서 토큰 가져와서 디폴트값 설정
-    const [userNameLocked, setUserNameLocked] = useState(true);
-    const [email, setEmail] = useState('ellyjoo0707@naver.com');  // 현 state에서 토큰 가져와서 디폴트값 설정
+const PWChangeModal = ({ title, onClose, children }, ref) => {
+    const accessToken = useSelector((state) => state.user.accessToken);
 
-    const handleUserNameChange = (e) => {
-        setUserName(e.target.value);
-      };
+    const [PWD1, setPWD1] = useState('');
+    const [isVisible1, setIsVisible1] = useState(false);
 
-    const handleToggleUserNameEdit = () => {
-        // 사용자 이름 변경
-        setUserNameLocked(false);
-        };
+    const handlePWD1Change = (e) => {
+        setPWD1(e.target.value);
+    };
 
-    const handleClearUserName = () => {
-        setUserName('');
-        };
+    const handleIsVisible1 = () => {
+        setIsVisible1(!isVisible1); // isVisible1의 현재 값을 반전시켜 업데이트
+    };
 
     return (
     <div ref={ref}>
         <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
+            <div className={styles.modalContentLong}>
                 <button className={styles.closeButton} onClick={onClose}>
                     <div className={styles.closeX}>
-                    {svgList.policyIcon.closeBtn}
+                        {svgList.policyIcon.closeBtn}
                     </div>
                 </button>
-                <h2>비밀번호 바꾸기</h2>
+                <h2>내 정보</h2>
                 <div className={styles.modalBody}>
                     <div className={styles.inputBox}>
                         <InputArea
-                            className={`${userNameLocked ? styles.lockEmail : ''}`}
-                            placeholder="이름"
-                            value={userName}
-                            onChange={handleUserNameChange}
-                            onClear={userNameLocked ? handleToggleUserNameEdit : handleClearUserName} // 보이게 안보이게
+                            className={`${isVisible1 ? styles.visible : styles.invisible}`}
+                            placeholder="현재 비밀번호"
+                            value={PWD1}
+                            type={isVisible1 ? "text" : "password"}
+                            onChange={handlePWD1Change}
+                            onClear={handleIsVisible1}
                         >
-                            {userNameLocked ? svgList.ModalIcon.eyeOpen : svgList.ModalIcon.eyeSlash}
-                        </InputArea>
-                        {/* delBtn 대신 이름 수정 후 저장하는 체크 아이콘? 있으면 좋을듯! */}
-                    </div>
-
-                    <div className={styles.inputBox}>
-                        <InputArea
-                            className={styles.lockEmail}
-                            value={email}
-                        >
+                            {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
                         </InputArea>
                     </div>
 
-                    {/* 링크 알맞게 달아주기 */}
-                    <div className={styles.links}>
-                        <div className={styles.linkLine}>
-                            <Link to="/Login" className={styles.loginLink}>
-                                비밀번호 바꾸기
-                            </Link>
-                            <span> | </span>
-                            <Link to="/Login" className={styles.loginLink}>
-                                탈퇴하기
-                            </Link>
-                        </div>
-                    </div>
+                    {isVisible1 ?
+                    null :
+                    <SubmitBtn
+                        text="저장하기"
+                        className={`${isVisible1 ? styles.hidden : ''}`}
+                        margin={`30px 0px 0px`}
+                    />}
 
                 </div>
             </div>
@@ -76,5 +62,4 @@ const MyInfoModal = ({ title, onClose, children }, ref) => {
   );
 };
 
-// export default PolicyModal;
-export default React.forwardRef(MyInfoModal);
+export default React.forwardRef(PWChangeModal);

@@ -11,44 +11,54 @@ import SubmitBtn from "../components/SubmitBtn";
 const MyInfoModal = ({ title, onClose, children }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
-    const [userName, setUserName] = useState('주다윤');  // 현 state에서 토큰 가져와서 디폴트값 설정
     const [userNameLocked, setUserNameLocked] = useState(true);
-    const [email, setEmail] = useState('ellyjoo0707@naver.com');  // 현 state에서 토큰 가져와서 디폴트값 설정
 
-    useEffect(() => {
-        // IIFE (즉시 실행 함수 표현) 사용
-        (async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/promise/username`, {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                });
-                console.log(response.data);
-                setUserName(response.data.userName); // 여기서 userName을 업데이트
-            } catch (error) {
-                const errorResponse = error.response;
-                console.log(errorResponse.data.statusCode);
+    // 얘도 마이페이지 홈(?)에 기본 변수로 추가하기
+    const [userName, setUserName] = useState('주다윤');  // 백에서 토큰 가져와서 디폴트값 설정
+    const [email, setEmail] = useState('ellyjoo0707@naver.com');  // 백에서 토큰 가져와서 디폴트값 설정
+
+    // 이 함수를 내 정보 버튼 눌렀을 때 모달 뜸과 함께 실행되게 하기
+    const getUserInfo = async () => {
+        // header
+        const config = {
+            headers: {
+            accessToken: accessToken
             }
-        })();
-    }, []); // 빈 의존성 배열을 사용해 컴포넌트 마운트 시 한 번만 실행되도록 함
+        };
 
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/member/info`, {
+          }, config);
+          console.log(response.data);
 
-    // const getUserName = async () => {
-    //     try {
-    //       const response = await axios.get(`${process.env.REACT_APP_API_URL}/promise/username`, {
-    //         accessToken: accessToken
-    //       });
-    //       console.log(response.data);
+          setUserName(response.data.userName); // userName 받아서 기본값으로 설정하기
+          setEmail(response.data.Email);
 
-    //       setUserName(response.data.userName); // userName 받아서 기본값으로 설정하기    
-    //     } catch (error) {
-    //       const errorResponse = error.response;
-    //       console.log(errorResponse.data.statusCode);
-    //     }
-    //   };
+        } catch (error) {
+          const errorResponse = error.response;
+          console.log(errorResponse.data.statusCode);
+        }
+    };
 
-
-
-
+    const saveUserName = async () => {
+        // header
+        const config = {
+            headers: {
+            accessToken: accessToken
+            }
+        };
+        // 백앤드로 바뀐 유저네임 넘기기
+        try {
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/member/resetname`, {
+                name: userName
+            }, config);
+            console.log(response.data);
+        } catch (error) {
+            const errorResponse = error.response;
+            console.log(errorResponse.data.statusCode);
+        }
+        setUserNameLocked(true);
+    }
 
     const handleUserNameChange = (e) => {
         setUserName(e.target.value);
@@ -61,11 +71,6 @@ const MyInfoModal = ({ title, onClose, children }, ref) => {
     const handleClearUserName = () => {
         setUserName('');
         };
-
-    const saveUserName = () => {
-        // 백앤드로 바뀐 유저네임 넘기기
-        setUserNameLocked(true);
-    }
 
     return (
     <div ref={ref}>

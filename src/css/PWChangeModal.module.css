@@ -21,6 +21,18 @@
     position: relative; /* For positioning the close button */
     text-align: center;
   }
+  
+  .modalContentLong {
+    width: 80%; /* Adjust size as necessary */
+    max-width: 320px;
+    height: 60%;
+    max-height: 356px;
+    background-color: white;
+    padding: 15px 20px 20px;
+    border-radius: 10px;
+    position: relative; /* For positioning the close button */
+    text-align: center;
+  }
     
   .closeButton {
     position: absolute;
@@ -58,9 +70,8 @@
     margin-right: 1px;
   }
   
-  .lockEmail {
-    pointer-events: none; /* 마우스 클릭 방지 */
-    color: #888888;
+  .visible {
+    color: #222222;
   }
   
   .inputBox {

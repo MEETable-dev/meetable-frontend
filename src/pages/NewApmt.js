@@ -21,7 +21,7 @@ const NewApmt = () => {
   const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
-  const [isMember, setIsMember] = useState(accessToken);  // 멤버 여부 api 받아와서 판별로 바꾸기 -> ok
+  const [isMember, setIsMember] = useState(accessToken);
 
   const [selectDate, setSelectDate] = useState(new Set());
   const [startTime, setStartTime] = useState(0);

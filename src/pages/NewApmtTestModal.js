@@ -17,20 +17,20 @@ import PWChangeModal from "../components/PWChangeModal"
 
 
 const NewApmt = () => {
-  // 모달 실험용
+  // 모달 실험용 코드. NewAmpt.js에 붙여넣고 버튼 눌러서 Modal들이 잘 작동하는지 확인하기 위한 것.
+  // 내가(주다윤) 만든 것 중 회원가입 후 사용할 수 있는 페이지가 NewAmpt 뿐이라서... 사용...
+  // 머지 시 Modal 뜨게 연결하는 것만 여기서 Onclick 시 Modal 뜨는 거 활용해서 갖다 붙이면 될 듯 합니당
 
-  // 얘도 마이페이지 홈(?)에 기본 변수로 추가하기
-  const [userName, setUserName] = useState('');  // 백에서 토큰 가져와서 디폴트값 설정
-  const [email, setEmail] = useState('');  // 백에서 토큰 가져와서 디폴트값 설정
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
 
-  // 이 함수를 내 정보 버튼 눌렀을 때 모달 뜸과 함께 실행되게 하기
   const getUserInfo = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/member/info`, {
         });
         console.log(response.data);
 
-        setUserName(response.data.name); // userName 받아서 기본값으로 설정하기
+        setUserName(response.data.name);
         setEmail(response.data.email);
 
         console.log(email)
@@ -226,11 +226,11 @@ const NewApmt = () => {
             </div>
           </div>
           {/* Modals */}
-          {openModal === 'serviceTerms' && <MyInfoModal title="" onClose={() => toggleModal(null)}>
-            여긴 서비스 이용약관 관련 세부 조항 입니다!!! 
+          {openModal === 'serviceTerms' && <MyInfoModal onClose={() => toggleModal(null)}>
+            내 정보 모달
           </MyInfoModal>}
-          {openModal === 'marketing' && <PWChangeModal title="" onClose={() => toggleModal(null)}>
-            여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
+          {openModal === 'marketing' && <PWChangeModal onClose={() => toggleModal(null)}>
+            비밀번호 변경 모달
           </PWChangeModal>}
 
         <SubmitBtn

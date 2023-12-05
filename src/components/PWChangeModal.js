@@ -8,7 +8,7 @@ import axios from "axios";
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
 
-const PWChangeModal = ({ title, onClose, children }, ref) => {
+const PWChangeModal = ({ onClose }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
     const [PWD1, setPWD1] = useState('');

@@ -17,6 +17,7 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
     const [isVisible1, setIsVisible1] = useState(false);
     const [isVisible2, setIsVisible2] = useState(false);
     const [isVisible3, setIsVisible3] = useState(false);
+    const [currentPWDSubmitted, setCurrentPWDSubmitted] = useState(false);
     const [isValidCurrentPWD, setIsValidCurrentPWD] = useState(false);
     const [isValidNewPWD, setIsValidNewPWD] = useState(false);
 
@@ -46,6 +47,7 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
         setIsValidCurrentPWD(true);
 
         // 틀리면 경고문구 띄우기
+        // currentPWDSubmitted -> true
     }
 
     const handleIsSameNewPWD = () => {
@@ -80,6 +82,12 @@ const PWChangeModal = ({ title, onClose, children }, ref) => {
                                 >
                                     {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
                                 </InputArea>
+                                {/* alertzone 추가 */}
+                                <div className={styles.alertZone}>
+                                    <div className={`${isValidCurrentPWD && currentPWDSubmitted ? '' : styles.hidden}`}>
+                                        <div className={styles.message}>인증 코드가 틀려요.</div>
+                                    </div>
+                                </div>
                             </div> :
                             <div className={styles.inputHeight}>
                                 <InputArea

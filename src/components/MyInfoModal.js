@@ -8,7 +8,7 @@ import axios from "axios";
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
 
-const MyInfoModal = ({ title, onClose, children }, ref) => {
+const MyInfoModal = ({ useName1, email1, onClose }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
     const [userNameLocked, setUserNameLocked] = useState(true);
@@ -19,16 +19,9 @@ const MyInfoModal = ({ title, onClose, children }, ref) => {
 
     // 이 함수를 내 정보 버튼 눌렀을 때 모달 뜸과 함께 실행되게 하기
     const getUserInfo = async () => {
-        // header
-        const config = {
-            headers: {
-            accessToken: accessToken
-            }
-        };
-
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/member/info`, {
-          }, config);
+          });
           console.log(response.data);
 
           setUserName(response.data.userName); // userName 받아서 기본값으로 설정하기
@@ -41,17 +34,11 @@ const MyInfoModal = ({ title, onClose, children }, ref) => {
     };
 
     const saveUserName = async () => {
-        // header
-        const config = {
-            headers: {
-            accessToken: accessToken
-            }
-        };
         // 백앤드로 바뀐 유저네임 넘기기
         try {
             const response = await axios.patch(`${process.env.REACT_APP_API_URL}/member/resetname`, {
                 name: userName
-            }, config);
+            });
             console.log(response.data);
         } catch (error) {
             const errorResponse = error.response;

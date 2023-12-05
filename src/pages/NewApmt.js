@@ -12,17 +12,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewApmt from "../components/CalendarNewApmt";
 import InputArea from '../components/InputArea';
-import MyInfoModal from "../components/MyInfoModal"
-import PWChangeModal from "../components/PWChangeModal"
 
 
 const NewApmt = () => {
-  // 모달 실험용
-  const [openModal, setOpenModal] = useState(null); // New state for tracking open modal
-  const toggleModal = (modalId) => {
-    setOpenModal(openModal === modalId ? null : modalId);
-  };
-
   const accessToken = useSelector((state) => state.user.accessToken);
   const navigate = useNavigate();
 
@@ -30,6 +22,33 @@ const NewApmt = () => {
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
   const [isMember, setIsMember] = useState(accessToken);  // 멤버 여부 api 받아와서 판별로 바꾸기 -> ok
+
+  const [selectDate, setSelectDate] = useState(new Set());
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(24);
+
+  const [amptName, setAmptName] = useState('약속');
+  const [nickname, setNickname] = useState('');
+  const [nicknamePlace, setNicknamePlace] = useState('');
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/member/info`, {
+      });
+      console.log(response.data);
+      setNickname(response.data.name);
+      setNicknamePlace(response.data.name);
+
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data.statusCode);
+    }
+  };
+
+  // 여기에 useEffect를 추가합니다.
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const createAmpt = async () => {
     try {
@@ -69,8 +88,6 @@ const NewApmt = () => {
     }
   };
 
-  const [selectDate, setSelectDate] = useState(new Set());
-
   // 날짜 변경 핸들러
   const handleDateChange = (newDate) => {
     setSelectDate(prevSelectDate => {
@@ -92,10 +109,6 @@ const NewApmt = () => {
       return updatedSelectDate;
     });
   }
-  
-  // 시간 선택 상태 추가
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(24);
 
   const handleStartTimeChange = (e) => {
     setStartTime(parseInt(e.target.value, 10));
@@ -119,9 +132,6 @@ const NewApmt = () => {
       return `${hour.toString().padStart(2, '0')}:00:00`;
     }
   };
-  
-  const [amptName, setAmptName] = useState('약속');
-  const [nickname, setNickname] = useState('미터블'); // 회원가입명으로 바꾸기
 
   const handleAmptNameChange = (e) => {
     setAmptName(e.target.value);
@@ -276,7 +286,7 @@ const NewApmt = () => {
             <div className={styles.contentInput}>
               <div className={`${styles.timeCollectInput} ${styles.inputPadding}`}>
                 <InputArea tArea
-                  placeholder="미터블" // 회원가입명으로 디폴트 처리
+                  placeholder={nicknamePlace}
                   value={nickname}
                   onChange={handleNicknameChange}
                   onClear={handleClearNickname}
@@ -289,50 +299,15 @@ const NewApmt = () => {
           null
         }
 
-
-        {/* 모달 실험용 */}
-        <div className={styles.contentArea}>
-            <div className={styles.contentName}>
-              <p>내 정보 / 비밀번호 변경</p>
-            </div>
-            <div className={styles.contentInput}>
-              <button type="button" 
-                onClick={() => toggleModal('serviceTerms')} 
-                className={styles.policyArrow}>
-                  <div>
-                    {svgList.policyIcon.arrow}
-                  </div>
-              </button>
-
-              <button type="button" 
-                onClick={() => toggleModal('marketing')} 
-                className={styles.policyArrow}>
-                  <div>
-                    {svgList.policyIcon.arrow}
-                  </div>
-              </button>
-            </div>
-          </div>
-          {/* Modals */}
-          {openModal === 'serviceTerms' && <MyInfoModal title="" onClose={() => toggleModal(null)}>
-            여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-          </MyInfoModal>}
-          {openModal === 'marketing' && <PWChangeModal title="" onClose={() => toggleModal(null)}>
-            여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
-          </PWChangeModal>}
-
-
-
-
         <SubmitBtn
           text="만들기"
-          onClick={createAmpt} // 누르면 정보 백엔드에 발송도 추가
+          onClick={createAmpt}
           isActive={amptName && nickname}
           className={`${styles.createBtn}`}
         />
 
       </div>
-
+      
     </div>
   );
 };

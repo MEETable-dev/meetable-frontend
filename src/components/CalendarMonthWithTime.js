@@ -1,18 +1,18 @@
 // import ConfirmedApmt from './ConfirmedApmt';
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
-import styles from '../css/Calendar.module.css';
+import styles from '../css/CalendarMonthWithTime.module.css';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
-const not = '2023-11-25';
+const not = '2023-12-05';
 
-const Calendar = (props) => {
+const CalendarMonthWithTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
-  const Body = ({currentDate, selectDate}) => {
-    const monthStart = startOfMonth(currentDate);
-    const monthEnd = endOfMonth(currentDate);
+  const Body = ({selectWeek, selectDate}) => {
+    const monthStart = startOfMonth(selectWeek);
+    const monthEnd = endOfMonth(selectWeek);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
     // cont [selectWeek, setSelectWeek] = useState(currsentDate);
@@ -87,7 +87,6 @@ const Calendar = (props) => {
     };
   }, []);
   
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectDate, setSelectDate] = useState(new Set());
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -124,10 +123,10 @@ const Calendar = (props) => {
   }
 
   const prevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
+    setSelectWeek(subMonths(selectWeek, 1));
   };
   const nextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
+    setSelectWeek(addMonths(selectWeek, 1));
   };
   const onDateClick = (day) => {
     if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
@@ -157,7 +156,7 @@ const Calendar = (props) => {
           </svg>
         </div>
         <div className={styles.headerText}>
-          {format(currentDate, 'yy')}년 {format(currentDate, 'M')}월
+          {format(selectWeek, 'yy')}년 {format(selectWeek, 'M')}월
         </div>
         <div className={styles.toAnotherMonth} onClick={nextMonth}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -166,7 +165,7 @@ const Calendar = (props) => {
         </div>
       </div>
       <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} onClick={()=>{setCurrentDate(new Date()); setSelectWeek(new Date())}}>오늘</div>
+        <div className={styles.TodayBtn} onClick={()=>{setSelectWeek(new Date())}}>오늘</div>
       </div>
     </div>
     <div className={styles.bodyContainer}>
@@ -183,11 +182,11 @@ const Calendar = (props) => {
         : (windowWidth >= 580 && windowWidth <= 1200)
         ? {marginLeft:'2vw', marginRight:'2vw'}
         : {marginLeft:'40px', marginRight:'40px'}
-      }><Body currentDate={currentDate} selectDate={selectDate} onDateClick={onDateClick} /></div>
+      }><Body selectWeek={selectWeek} selectDate={selectDate} onDateClick={onDateClick} /></div>
     </div>
     {/* <ConfirmedApmt />
     <CustomedSched /> */}
   </div>
 };
 
-export default Calendar;
+export default CalendarMonthWithTime;

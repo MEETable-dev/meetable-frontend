@@ -1,0 +1,122 @@
+.entire {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 38px;
+  padding-bottom: 36px;
+}
+
+.headerContainer {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.headerLeft, .headerRight {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+}
+
+.headerCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toAnotherMonth {
+  display: flex;
+  align-items: center;
+}
+
+.headerText {
+  color: #222;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.TodayBtn {
+  position: absolute;
+  border-radius: 5px;
+  border: 1px solid #D0D0D0;
+  color: #888;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 3px 5px;
+  left: 4px;
+}
+
+.bodyContainer {
+  padding-top: 10px;
+}
+
+.DaysOfWeek {
+  display: flex;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.colDays {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 8px;
+}
+
+.col{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.day {
+  height: 60px;
+}
+
+.day:hover {
+  box-shadow: 0 0 0 3px #40C06F inset;
+}
+
+.eachDay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.dateHeader {
+  height: 17px;
+  width: 17px;
+  color: #222222;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.dateHeaderToday {
+  height: 17px;
+  width: 17px;
+  border-radius: 10px;
+  background-color: #8E66EE;
+  color: #FFF;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.txtDate {
+  color: #222222;
+}

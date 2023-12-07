@@ -1,16 +1,16 @@
 // import ConfirmedApmt from './ConfirmedApmt';
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
-import styles from '../css/WeekWithTime.module.css';
-import { format, addMonths, subMonths, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
+import styles from '../css/CalendarWeekWithoutTime.module.css';
+import { format, addWeeks, subWeeks, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
-const not = '2023-11-25';
+const not = '2023-12-05';
 
-const WeekWithTime = (props) => {
+const CalendarWeekWithoutTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
-  const Body = ({currentDate, selectDate}) => {
+  const Body = ({selectDate, onTimeClick}) => {
     const startDate = startOfWeek(selectWeek);
     const endDate = endOfWeek(selectWeek);
     
@@ -20,27 +20,19 @@ const WeekWithTime = (props) => {
     let dayHeaders = [];
     let day = startOfDay(startDate);
     let formattedDate = '';
-
-    times.push(
-      <div style={{width:'30px', position:'relative'}}>
-        <div className={styles.time}>
-          0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
-        </div>
-      </div>
-    );
     
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, 'd');
       if (format(day, 'yyyy-MM-dd') !== not) {
-        for (let j = 0; j < 48; j++) {
-          // const cloneDay = startOfDay(day);
+        // for (let j = 0; j < 48; j++) {
+          const cloneDay = day;
           days.push(
             <div
             // 범위에 포함 안되면 disabled 추가
             // 일정 있으면
             // 확정된 약속 있으면
             className={
-              selectDate.has(format(day, 'yyyy-MM-dd'))
+              selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-ss'))
               ? `${styles.col} ${styles.day} ${styles.selected}`
               : `${styles.col} ${styles.day} ${styles.valid}`
             }
@@ -48,6 +40,8 @@ const WeekWithTime = (props) => {
             key={day}
             onClick={() => {
               // setSelectWeek(cloneDay);
+              console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
+              onTimeClick(cloneDay)
             }}
             >
               <AiOutlineCalendar size={10} color='#FFFFFF'/>
@@ -56,13 +50,13 @@ const WeekWithTime = (props) => {
             </div>
           );
           day = addMinutes(day, 30);
-        }
+        // }
       }
       else {
         days.push(<div className={`${styles.col} ${styles.wholeday} ${styles.disabled}`} style={getStyles()}>
           <svg width="60" height="719" viewBox="0 0 60 719" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M59 0.993042L1 718.007" stroke="#A8A8A8" stroke-linecap="round"/>
-            <path d="M1 0.993042L59 718.007" stroke="#A8A8A8" stroke-linecap="round"/>
+            <path d="M59 0.993042L1 718.007" stroke="#A8A8A8" strokeLinecap="round"/>
+            <path d="M1 0.993042L59 718.007" stroke="#A8A8A8" strokeLinecap="round"/>
           </svg>
         </div>);
         day = addDays(day, 1);  
@@ -79,19 +73,12 @@ const WeekWithTime = (props) => {
       );
       days = [];
     }
-    times.push(
-      <div style={{width:'30px', position:'relative'}}>
-        <div className={styles.time}>
-          0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
-        </div>
-      </div>
-    );
     cols.push(
       <div
         style={{marginBottom:'7px', justifyContent:'center', alignItems:'center'}}
         key={'Week'+day}
         >
-          <div style={{display:'flex', flexDirection:'row', margin:'0 30px'}}>{dayHeaders}</div>
+          <div style={{display:'flex', flexDirection:'row',}}>{dayHeaders}</div>
           <div className={styles.week} style={{display:'flex', flexDirection:'row'}}>{times}</div>
       </div>
     );
@@ -111,7 +98,6 @@ const WeekWithTime = (props) => {
     };
   }, []);
   
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectDate, setSelectDate] = useState(new Set());
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -147,21 +133,21 @@ const WeekWithTime = (props) => {
     )
   }
 
-  const prevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
+  const prevWeek = () => {
+    setSelectWeek(subWeeks(selectWeek, 1));
   };
-  const nextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
+  const nextWeek = () => {
+    setSelectWeek(addWeeks(selectWeek, 1));
   };
-  const onDateClick = (day) => {
-    if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
+  const onTimeClick = (day) => {
+    if (selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-00'))) {
       setSelectDate(prevState => {
-        prevState.delete(format(day, 'yyyy-MM-dd'));
+        prevState.delete(format(day, 'yyyy-MM-dd-HH-mm-00'));
         return new Set(prevState);
       })
     }
     else {
-      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
+      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd-HH-mm-ss')]));
     }
   }
 
@@ -175,22 +161,22 @@ const WeekWithTime = (props) => {
     <div className={styles.headerContainer}>
       <div className={styles.headerLeft}></div>
       <div className={styles.headerCenter}>
-        <div className={styles.toAnotherMonth} onClick={prevMonth}>
+        <div className={styles.toAnotherMonth} onClick={prevWeek}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M11.9883 16.2403L13.0527 15.1759L6.87677 8.99989L13.0527 2.82392L11.9883 1.75952L4.74796 8.99989L11.9883 16.2403Z" fill="#888888"/>
           </svg>
         </div>
         <div className={styles.headerText}>
-          {format(currentDate, 'yy')}년 {format(currentDate, 'M')}월
+          {format(selectWeek, 'yy')}년 {format(selectWeek, 'M')}월
         </div>
-        <div className={styles.toAnotherMonth} onClick={nextMonth}>
+        <div className={styles.toAnotherMonth} onClick={nextWeek}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6.01167 16.2403L4.94727 15.1759L11.1232 8.99989L4.94727 2.82392L6.01167 1.75952L13.252 8.99989L6.01167 16.2403Z" fill="#888888"/>
           </svg>
         </div>
       </div>
       <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} onClick={()=>{setCurrentDate(new Date()); setSelectWeek(new Date());}}>오늘</div>
+        <div className={styles.TodayBtn} onClick={()=>{setSelectWeek(new Date());}}>오늘</div>
       </div>
     </div>
     <div className={styles.bodyContainer}>
@@ -207,11 +193,11 @@ const WeekWithTime = (props) => {
         : (windowWidth >= 580 && windowWidth <= 1200)
         ? {marginLeft:'2vw', marginRight:'2vw'}
         : {marginLeft:'40px', marginRight:'40px'}
-      }><Body currentDate={currentDate} selectDate={selectDate} onDateClick={onDateClick} /></div>
+      }><Body selectDate={selectDate} onTimeClick={onTimeClick} /></div>
     </div>
     {/* <ConfirmedApmt />
     <CustomedSched /> */}
   </div>
 };
 
-export default WeekWithTime;
+export default CalendarWeekWithoutTime;

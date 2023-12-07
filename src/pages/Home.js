@@ -1,9 +1,13 @@
-import Calendar from '../components/Calendar';
+import CalendarMine from '../components/CalendarMine';
+import { useState } from 'react';
+
 const Home = () => {
+
+  const [selectWeek, setSelectWeek] = useState(new Date());
   return (
     <div>
       홈
-      <Calendar spaceX={4} spaceY={4} />
+      <CalendarMine selectWeek={selectWeek} setSelectWeek={setSelectWeek} />
     </div>
   );
 };

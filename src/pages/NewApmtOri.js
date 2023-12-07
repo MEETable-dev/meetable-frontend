@@ -15,6 +15,7 @@ import InputArea from '../components/InputArea';
 
 
 const NewApmt = () => {
+  // NewAmpt 정상 기능 코드 -> ModalTest 코드와 구분하기 위해 복제해놓음
   const accessToken = useSelector((state) => state.user.accessToken);
   const navigate = useNavigate();
 
@@ -74,10 +75,9 @@ const NewApmt = () => {
         end_time: formattedEndTime,
         date: formattedDates,
         canallconfirm: selectedElement3
-      }, config); // config 객체를 요청과 함께 전달
+      }, config);
       console.log(response.data);
 
-      // 새로운 링크로 리디렉션
       const promiseCode = response.data.promiseCode;
       navigate(`/AmptDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
 

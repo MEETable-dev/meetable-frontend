@@ -12,13 +12,14 @@ import ApmtDetail from './pages/ApmtDetail';
 import Layout from './components/Layout';
 import useAxiosInterceptor from 'hooks/useAxiosInterceptor';
 import PrivateRoute from 'components/PrivateRoute';
-// import LayoutTest from 'components/Layout test';
+import LayoutTest from 'components/Layout test';
 
 function App() {
   useAxiosInterceptor();
   return (
     <Routes>
       <Route element={<Layout head={false}/>}>
+      {/* <Route element={<LayoutTest head={false}/>}> */}
         {/* <Route index element={<PrivateRoute member={false} goto={"/newapmt"}><NewApmt /></PrivateRoute>} /> */}
         <Route path="/login" element={<PrivateRoute member={false} goto={"/:username"}><Login /></PrivateRoute>} />
         <Route path="/emailauth" element={<PrivateRoute member={false} goto={"/:username"}><EmailAuth /></PrivateRoute>} />
@@ -28,6 +29,7 @@ function App() {
         <Route path="/resetpass" element={<PrivateRoute member={false} goto={"/:username"}><ResetPass /></PrivateRoute>} />
       </Route>
       <Route element={<Layout head={true}/>}>
+      {/* <Route element={<LayoutTest head={true}/>}> */}
         <Route index element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />
         <Route path="/apmtdetail/:apmtId" element={<PrivateRoute member={false} goto={"/:username/apmtdetail/:apmtId"}><ApmtDetail /></PrivateRoute>} />
         <Route path="/newapmt" element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />

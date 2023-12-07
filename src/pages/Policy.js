@@ -79,28 +79,43 @@ const Policy = () => {
       <h4></h4>
       <div className={styles.content}>
         <div className={styles.policyZone}>
-          <label>
-            <input className={styles.checkBox}
-              type="checkbox"
-              checked={isCheckedAll}
-              onChange={handleCheckboxChangeAll}/>
-            모두 동의합니다.
-          </label>
 
+          {/* 모두 동의 */}
+          <div className={styles.inputBlock}>
+            <div className={styles.detailArea}>
+              <button type="button"
+                onClick={handleCheckboxChangeAll} 
+                className={styles.policyCheckBox}>
+                <div>
+                  {isCheckedAll ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
+                </div>
+              </button>
+              <div className={""}>
+                모두 동의합니다.
+              </div>
+            </div>
+          </div>
+
+          {/* 구분선 */}
           <div className={styles.lineArea}>
             <div className={styles.underLine}></div>
           </div>
 
+          {/* 서비스 이용약관 */}
           <div className={styles.inputBlock}>
-            <label className={styles.detailPolicy}>
-              <div>
-                <input className={styles.checkBox}
-                  type="checkbox"
-                  checked={isChecked1}
-                  onChange={handleCheckboxChange1}/>
+            <div className={styles.detailArea}>
+              <button type="button"
+                onClick={handleCheckboxChange1} 
+                className={styles.policyCheckBox}>
+                <div>
+                  {isChecked1 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
+                </div>
+              </button>
+              <div className={""}>
                 [필수] 서비스 이용약관
               </div>
-            </label>
+            </div>
+
             <button type="button" 
             onClick={() => toggleModal('serviceTerms')} 
             className={styles.policyArrow}>
@@ -110,35 +125,45 @@ const Policy = () => {
             </button>
           </div>
 
+
+          {/* 개인정보처리방침 */}
           <div className={styles.inputBlock}>
-            <label className={styles.detailPolicy}>
-              <div>
-                <input className={styles.checkBox}
-                  type="checkbox"
-                  checked={isChecked2}
-                  onChange={handleCheckboxChange2}/>
+            <div className={styles.detailArea}>
+              <button type="button"
+                onClick={handleCheckboxChange2} 
+                className={styles.policyCheckBox}>
+                <div>
+                  {isChecked2 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
+                </div>
+              </button>
+              <div className={""}>
                 [필수] 개인정보처리방침
               </div>
-            </label>
+            </div>
+
             <button type="button" 
-              onClick={() => toggleModal('individualInfo')} 
+              onClick={() => toggleModal('serviceTerms')} 
               className={styles.policyArrow}>
-                <div>
-                  {svgList.policyIcon.arrow}
-                </div>
+              <div>
+                {svgList.policyIcon.arrow}
+              </div>
             </button>
           </div>
 
+          {/* 마케팅 활용 동의 */}
           <div className={styles.inputBlock}>
-            <label className={styles.detailPolicy}>
-              <div>
-                <input className={styles.checkBox}
-                  type="checkbox"
-                  checked={isChecked3}
-                  onChange={handleCheckboxChange3}/>
+            <div className={styles.detailArea}>
+              <button type="button"
+                onClick={handleCheckboxChange3} 
+                className={styles.policyCheckBox}>
+                <div>
+                  {isChecked3 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
+                </div>
+              </button>
+              <div className={""}>
                 [선택] 마케팅 활용 동의
               </div>
-            </label>
+            </div>
             <button type="button" 
               onClick={() => toggleModal('marketing')} 
               className={styles.policyArrow}>
@@ -154,7 +179,8 @@ const Policy = () => {
           <SubmitBtn
             text="동의하기"
             isActive={isChecked1 && isChecked2}
-            className={''}
+            className={styles.submitBtn}
+            margin={"20px 0px 0px"}
           />
         </div>
         {/* </Link> */}

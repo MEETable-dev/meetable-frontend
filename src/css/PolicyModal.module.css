@@ -13,13 +13,19 @@
 .modalContent {
   width: 80%; /* Adjust size as necessary */
   max-width: 646px;
-  height: 45%;
-  max-height: 335px;
+  height: 60%;
+  max-height: 305px;
   background-color: white;
   padding: 15px 20px 20px;
   border-radius: 10px;
   position: relative; /* For positioning the close button */
   text-align: justify;
+}
+
+.modalHead {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
   
 .closeButton {
@@ -47,4 +53,15 @@
 h2 {
   font-size: 15px;
   color: #222222;
+}
+
+.title {
+  font-size: 15px;
+  color: #222222;
+  margin-top: 10px;
+}
+
+.closeX {
+  margin-top: 7px;
+  margin-right: 1px;
 }

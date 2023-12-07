@@ -41,6 +41,14 @@ const EmailAuth = () => {
     }
   };
 
+  // alertZone이 hidden 상태가 아닌지 확인하는 함수
+  const isAlertZoneVisible = () => {
+    return emailSubmitted && (errorMessage || !isValidEmail || authCodeSubmitted);
+  };
+
+  // SubmitBtn에 적용할 마진 값 계산
+  const submitButtonMargin = isAlertZoneVisible() ? '20.5px' : '45px';
+
   const handleAuthSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     try {
@@ -195,28 +203,28 @@ const EmailAuth = () => {
             onClick={sendVerifyCode}
             isActive={email}
             className={`${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
-            margin="45px 0px 0px"
+            margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
             isActive={authCode}
             className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
-            margin="45px 0px 0px"
+            margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증하기"
             onClick={handleAuthSubmit}
             isActive={authCode}
             className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
-            margin="45px 0px 0px"
+            margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
             isActive={authCode}
             className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden}`}
-            margin="45px 0px 0px"
+            margin={`${submitButtonMargin} 0px 0px`}
           />
         </form>
         <div className={styles.linkLine}>

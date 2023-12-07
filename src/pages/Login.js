@@ -19,7 +19,7 @@ const Login = () => {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [pwSubmitted, setPwSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState(true);
-  const [isUser, setIsUser] = useState(false);
+  const [isUser, setIsUser] = useState(true);
   const navigate = useNavigate();
   // 쿼리 파라미터 받아오기
   const [searchParams, setSearchParams] = useSearchParams();

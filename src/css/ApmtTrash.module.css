@@ -1,0 +1,70 @@
+.TrashBox{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 3px;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
+  }
+
+  .TrashBoxFocused{
+    display: inline-flexbox;
+    flex-direction: column;
+    margin-right: 3px;
+    margin-left: 3px;
+    width: 120px;
+    min-height: 152px; 
+    flex-flow:column;
+    justify-content: center;
+    border: none;
+    color:#222222;
+    cursor: pointer;
+    background-color: #8E66EE33;
+  }
+
+
+  .TrashBox:hover{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .TrashBox::selection{
+    background-color: rgba(142, 102, 238, 0.20);
+  }
+  .TrashIcon{
+    display: block;
+    border: none;
+    /* flex-grow: 1; */
+  }
+
+  .TrashName{
+    display: flex;
+    flex-direction: row;
+    /* align-items: stretch; */
+    flex-grow: 1;
+    /* flex-shrink: 1; */
+    margin-right: 10px;
+    justify-content: center;
+    color: #222222;
+    border: none;
+    width: 100%;
+
+    min-height: 24px;
+
+  }
+
+  .TrashText{
+    display: flex;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
+    align-self: center;
+    padding-right: 6px;
+    height: 100%;
+    
+  }

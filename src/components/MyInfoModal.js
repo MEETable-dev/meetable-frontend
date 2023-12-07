@@ -8,13 +8,15 @@ import axios from "axios";
 import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
 
-const MyInfoModal = ({ onClose }, ref) => {
+const MyInfoModal = ({ onClose, changePW }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
 
     const [userNameLocked, setUserNameLocked] = useState(true);
 
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
+
+    // const changePW = props.changePW;
 
     const getUserInfo = async () => {
         try {
@@ -103,13 +105,13 @@ const MyInfoModal = ({ onClose }, ref) => {
                     {/* 링크 알맞게 달아주기 */}
                     <div className={styles.links}>
                         <div className={styles.linkLine}>
-                            <Link to="/Login" className={styles.loginLink}>
+                            <div className={styles.link} onClick={()=>changePW('marketing')}>
                                 비밀번호 바꾸기
-                            </Link>
-                            <span> | </span>
-                            <Link to="/Login" className={styles.loginLink}>
+                            </div>
+                            <div className={styles.bar}> | </div>
+                            <div className={styles.link}>
                                 탈퇴하기
-                            </Link>
+                            </div>
                         </div>
                     </div>
 

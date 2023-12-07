@@ -88,12 +88,22 @@ h2 {
 }
 
 .linkLine {
-  display: inline;
-}
-
-.loginLink {
+  display: flex;
+  justify-content: center;
   margin: 0;
   font-size: 13px;
   color: #888888;
   text-decoration: none;
+}
+
+.linkLine div {
+  margin: 0 4px;
+}
+
+.bar {
+  color: #D0D0D0;
+}
+
+.link {
+  cursor: pointer;
 }

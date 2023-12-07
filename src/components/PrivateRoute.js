@@ -8,15 +8,17 @@ const PrivateRoute = (props) => {
   const localStorage = window.localStorage;
 
   if ((member && !accessToken) || (!member && accessToken)) {
-    if (localStorage.getItem('originURL')) {
+    if (localStorage.getItem('originURL') && !goto.includes('login')) {
       const url = localStorage.getItem('originURL').split('3000')[1]
       localStorage.removeItem('originURL')
       window.location.href = url;
+      console.log('go')
       return;
     }
-    if (goto.includes('login')) {
-      localStorage.setItem('originURL', window.location);
-    }
+    // if (goto.includes('login')) {
+    //   localStorage.setItem('originURL', window.location);
+    //   console.log(window.location)
+    // }
     window.location.href = goto;
     return;
   }

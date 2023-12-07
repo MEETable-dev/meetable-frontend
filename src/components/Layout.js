@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
 import styles from '../css/Layout.module.css';
 import { useSelector } from "react-redux";
@@ -18,8 +18,13 @@ import { IoMdArrowDropup } from "react-icons/io";
 import { setToken } from "../store/modules/user";
 import { useAppDispatch } from "store";
 import axios from "axios";
+import MyInfoModal from "../components/MyInfoModal"
+import PWChangeModal from "../components/PWChangeModal"
 
 const Layout = (props) => {
+  const localStorage = window.localStorage;
+  const navigate = useNavigate();
+
   const head = props.head;
   const dispatch = useAppDispatch();
   const sidebarInitialSize = 300;
@@ -41,11 +46,16 @@ const Layout = (props) => {
   const [promiseData, setPromiseData] = useState([]);
   const [selectedItemID, setSelectedItemID] = useState(null);
   const [openBookmark, setOpenBookmark] = useState(true);
-  // const [openFolders, setOpenFolders] = useState({});
+  const [refresh, setRefresh] = useState(false);
 
   const modalRef = useRef();
   const modalHeaderRef = useRef();
   const inputRef = useRef();
+
+  const [mypageModal, setMypageModal] = useState(null); // New state for tracking open modal
+  const toggleModal = (modalId) => {
+    setMypageModal(mypageModal === modalId ? null : modalId);
+  };
 
   const openModal = (itemID, event, type, name) => {
     event.preventDefault();
@@ -105,30 +115,30 @@ const Layout = (props) => {
     };
   });
 
-  useEffect(()=>{
-    const getData = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
-        // {headers : {Authorization:`Bearer ${token}`}}
-        )
-        console.log(response.data)
-        setBookmarkData(response.data.bookmark);
-        setPromiseData(response.data.promise)
-      } catch (error) {
-        const errorResponse = error.response;
-        console.log(errorResponse.data)
-      }
-    }
-    if (accessToken) getData();
-  }, []);
-
+  
   // 폴더 토글 함수
   // const toggleFolder = (folderName) => {
-  //   setOpenFolders(prevState => ({
-  //     ...prevState,
-  //     [folderName]: !prevState[folderName]
-  //   }));
-  // };
+    //   setOpenFolders(prevState => ({
+      //     ...prevState,
+      //     [folderName]: !prevState[folderName]
+      //   }));
+      // };
+      useEffect(()=>{
+        const getData = async () => {
+          try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
+            // {headers : {Authorization:`Bearer ${token}`}}
+            )
+            console.log(response.data)
+            setBookmarkData(response.data.bookmark);
+            setPromiseData(response.data.promise)
+          } catch (error) {
+            const errorResponse = error.response;
+            console.log(errorResponse.data)
+          }
+        }
+        if (accessToken) getData();
+      }, [refresh]);
 
   const bookmark = async (promiseCode) => {
     try {
@@ -138,14 +148,15 @@ const Layout = (props) => {
         // headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
+      setRefresh(!refresh);
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data)
     }
     console.log('북마크: ', promiseCode.split('-')[1].split('_')[0])
-
+    
   };
-
+  
   const unBookmark = async (promiseCode) => {
     try {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
@@ -154,6 +165,7 @@ const Layout = (props) => {
         // headers : {Authorization:`Bearer ${token}`}
       });
       console.log(response.data);
+      setRefresh(!refresh);
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data)
@@ -197,7 +209,8 @@ const Layout = (props) => {
   
   const PromiseItem = ({ name, fav, id }) => {
     return (
-      <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} onContextMenu={(event)=>{openModal(id, event, 'p', name)}}>
+      <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} 
+      onContextMenu={(event)=>{openModal(id, event, 'p', name)}} onClick={()=>{navigate(`/:username/ApmtDetail/:${id.split('-')[1]}`, {state: {promiseCode: id.split('-')[1]}})}}>
         <div className={styles.listItems}>
           {fav === 'T' && <AiFillStar color="#FFBB0D" size={22} className={styles.listIcon} onClick={()=>{unBookmark(id)}}/>}
           {!(fav === 'T') && <AiOutlineStar color="#888888" size={22} className={styles.listIcon} onClick={()=>{bookmark(id)}}/>}
@@ -239,7 +252,9 @@ const Layout = (props) => {
             <div onClick={()=>setsidebarShown(false)}>{svgList.headerIcon.headerHide}</div>
           </div>
           <div className={styles.sidebarMain}>
-            <div className={styles.newApmt}>
+            <div className={styles.newApmt} onClick={()=>
+              window.location.href = '/:username/newapmt'
+            }>
               {<AiOutlineFileAdd size={20} />}<div className={styles.btnText}>새 약속 잡기</div>
             </div>
             <div className={
@@ -299,7 +314,14 @@ const Layout = (props) => {
             <div onClick={()=>{setShowHeaderModal(true)}}><CgProfile size={28} color="#888888"/></div>
           </div>}
           {!accessToken && <div className={styles.headerBtnRightNONMEMBER}>
-            <div onClick={()=>{window.location.href = '/login'}}>로그인</div>
+            <div onClick={()=>{
+              if (window.location.href.toLowerCase().includes('apmtdetail')) {
+                let code = window.location.href.toLowerCase().split('apmtdetail/:')[1];
+                console.log(code)
+                localStorage.setItem('originURL', `3000/:username/apmtdetail/:${code}`);
+              }
+              window.location.href = `/:username/apmtdetail/:`;
+              }}>로그인</div>
             <div id={styles.bar}>|</div>
             <div onClick={()=>{window.location.href = '/emailauth'}}>가입하기</div>
           </div>}
@@ -312,9 +334,15 @@ const Layout = (props) => {
         <ContextMenuModal onClose={closeModal} type={showModal} />
       </div>}
       {showHeaderModal && <div ref={modalHeaderRef} className={styles.headermodal}>
-        <div className={styles.modalBtn}>내 정보</div>
+        <div className={styles.modalBtn} onClick={()=>{setMypageModal('serviceTerms')}}>내 정보</div>
         <div className={styles.modalBtn} onClick={logout}>로그아웃</div>
       </div>}
+      {mypageModal === 'serviceTerms' && <MyInfoModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
+        내 정보 모달
+      </MyInfoModal>}
+      {mypageModal === 'marketing' && <PWChangeModal onClose={() => toggleModal(null)}>
+        비밀번호 변경 모달
+      </PWChangeModal>}
     </div>
   );
 };

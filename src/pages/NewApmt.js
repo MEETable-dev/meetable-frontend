@@ -21,7 +21,6 @@ const NewApmt = () => {
   const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
   const [selectedElement2, setSelectedElement2] = useState('T'); // 날짜만 vs 시간
   const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
-  const [isMember, setIsMember] = useState(accessToken);
 
   const [selectDate, setSelectDate] = useState(new Set());
   const [startTime, setStartTime] = useState(0);
@@ -62,24 +61,40 @@ const NewApmt = () => {
           'Authorization': '@'
         }
       };
-      if (isMember) {
-        const config = null;
+      if (accessToken) {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
+          promise_name: amptName,
+          weekvsdate: selectedElement1,
+          ampmvstime: selectedElement2,
+          start_time: formattedStartTime,
+          end_time: formattedEndTime,
+          date: formattedDates,
+          canallconfirm: selectedElement3
+        })
+        console.log(response.data);
+  
+        // 새로운 링크로 리디렉션
+        const promiseCode = response.data.promiseCode;
+        navigate(`/:username/ApmtDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
+      }
+      else {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
+          promise_name: amptName,
+          weekvsdate: selectedElement1,
+          ampmvstime: selectedElement2,
+          start_time: formattedStartTime,
+          end_time: formattedEndTime,
+          date: formattedDates,
+          canallconfirm: selectedElement3
+        }, config) // config 객체를 요청과 함께 전달
+        console.log(response.data);
+  
+        // 새로운 링크로 리디렉션
+        const promiseCode = response.data.promiseCode;
+        navigate(`/ApmtDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
+
       }
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/promise/create`, {
-        promise_name: amptName,
-        weekvsdate: selectedElement1,
-        ampmvstime: selectedElement2,
-        start_time: formattedStartTime,
-        end_time: formattedEndTime,
-        date: formattedDates,
-        canallconfirm: selectedElement3
-      }, config); // config 객체를 요청과 함께 전달
-      console.log(response.data);
-
-      // 새로운 링크로 리디렉션
-      const promiseCode = response.data.promiseCode;
-      navigate(`/AmptDetail/:${promiseCode}`, {state: {promiseCode: promiseCode}}); // 링크 맞나 확인 필요
 
     } catch (error) {
       const errorResponse = error.response;
@@ -155,8 +170,8 @@ const NewApmt = () => {
   return (
     <div className={`${styles.loginBox} ${
       selectedElement1 === 'D' 
-        ? isMember ? styles.memberDate : styles.nonmemberDate 
-        : isMember ? styles.memberWeek : styles.nonmemberWeek
+        ? accessToken ? styles.memberDate : styles.nonmemberDate 
+        : accessToken ? styles.memberWeek : styles.nonmemberWeek
     }`}>
       <div className={styles.loginLogo}>
         <p><b>새 약속 잡기</b></p>
@@ -264,7 +279,7 @@ const NewApmt = () => {
               <div>약속에 참여하는 누구나</div>
             </div>
 
-            {isMember ?
+            {accessToken ?
               <div className={styles.timeCollectInput}>
                 <button className={styles.selectBtn} onClick={() => setSelectedElement3('F')}>
                   {selectedElement3 === 'F' ? <div>{svgList.newAmpt.btnSelected}</div> : <div>{svgList.newAmpt.btnNone}</div>}
@@ -277,7 +292,7 @@ const NewApmt = () => {
         </div>
 
         {/* 멤버 - 내 별명 */}
-        {isMember ?
+        {accessToken ?
           <div className={styles.contentArea}>
             <div className={styles.contentName}>
               <p>내 별명</p>

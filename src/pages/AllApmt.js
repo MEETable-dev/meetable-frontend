@@ -413,7 +413,7 @@ const AllApmt = () => {
     <div className={styles.container}>
     <div className={styles.innerContainer}>
       <div className={styles.headBtnContainer}>
-        <button className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
+        <button className={styles.newApmt} onClick={() => window.location.href = '/:username/newapmt'}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
         <button className={styles.syncApmt}>{<IoSyncOutline size={24} />}<div className={styles.btnText}>비회원으로 참여한 약속 불러오기</div></button>
       </div>
       <div className={styles.searchContent}>{<RiSearchLine size="18px" color='#888' className={styles.icon} style={{ marginLeft: '5px' }}></RiSearchLine>}<input value={searchApmtVal} className={styles.searchContentInput} placeholder='찾기' 
@@ -448,8 +448,6 @@ const AllApmt = () => {
       </div>}
     </div>
     </div>
-
-
   </div>
   );
 };

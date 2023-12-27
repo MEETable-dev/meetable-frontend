@@ -475,7 +475,7 @@
 
   .TrashBox:hover{
     background-color: rgba(142, 102, 238, 0.20);
-  }
+  }ƒ
   .TrashBox::selection{
     background-color: rgba(142, 102, 238, 0.20);
   }

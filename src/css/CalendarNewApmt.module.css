@@ -1,7 +1,7 @@
 .entire {
   width: 260px;
   background-color: #FFFFFF;
-  height: 209px; /* 추가 */
+  padding: 20px 0;
   border-radius: 10px;
   border: 1.5px solid #D0D0D0;
   display: flex;

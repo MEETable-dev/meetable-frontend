@@ -110,21 +110,23 @@ const EnterInfo = () => {
 
   const getSignToken = async(e) =>{
     e.preventDefault();
-    handleIsValidPW();
-    try{
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/signToken`, {
-        name: username,
-        emailToken: emailToken,
-        pwd: password
-      })
-      setIsValidSignToken(true);
-      navigate('/Policy', {state: {signToken: response.data.signToken}});
-      //policy에서 사인토큰 받을때 useLocation을 이용해서 location.state.signToken 으로 받으면 됩니당!
-    } catch(error){
-      const errorResponse = error.response;
-      console.log(errorResponse.data.statusCode);
-      setIsValidSignToken(false);
-
+    if (isValid) {
+      handleIsValidPW();
+      try{
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/signToken`, {
+          name: username,
+          emailToken: emailToken,
+          pwd: password
+        })
+        setIsValidSignToken(true);
+        navigate('/Policy', {state: {signToken: response.data.signToken}});
+        //policy에서 사인토큰 받을때 useLocation을 이용해서 location.state.signToken 으로 받으면 됩니당!
+      } catch(error){
+        const errorResponse = error.response;
+        console.log(errorResponse.data.statusCode);
+        setIsValidSignToken(false);
+  
+      }
     }
   };
 
@@ -147,7 +149,7 @@ const EnterInfo = () => {
 
 return ( <div className={styles.loginBox}>
   <div className={styles.loginLogo}>
-    <h2>MEETable</h2>
+    <p>MEETable</p>
     <form className={styles.content}>
       <InputArea2 autocomplete="username" name="name" placeholder="이름" value={username} onChange = {onChangeUsername}>
       </InputArea2>

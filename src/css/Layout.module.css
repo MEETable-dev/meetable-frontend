@@ -68,11 +68,20 @@
   flex-direction: column;
 }
 
+main {
+  flex-grow: 1;
+  width: 100vw;
+}
+
 .headerWrapper {
   background-color: #fff;
   display: flex;
   padding: 12px 10px;
   justify-content: space-between;
+}
+
+#trans {
+  background-color: transparent;
 }
 
 .headerBtnLeft, .headerBtnRight {

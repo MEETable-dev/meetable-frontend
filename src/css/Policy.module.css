@@ -34,13 +34,16 @@ body {
   height: 60px;
   width: 100%;
   margin-top: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #222222;
 }
 
 .loginBox {
-  width: 80vw;
+  /* width: 80vw; */
   height: 465px;
   max-width: 320px;
-  min-width: 280px;
+  min-width: 290px;
   background-color: white;
   border-radius: 10px;
   display: flex;
@@ -150,7 +153,7 @@ button.policyArrow {
 }
 
 .inputBlock {
-  width: 100%;
+  width: 260px;
   display: flex;
   align-items: center;
   justify-content: flex-start;

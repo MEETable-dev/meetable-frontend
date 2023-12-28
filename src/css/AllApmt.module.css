@@ -39,20 +39,20 @@
   /* 전체 컨테이너 */
   .container{
     display: flex;
-    height: 100vh;
+    flex-grow: 1;
     width: 100vw;
+    height: 100%;
     background-color: #fff;
-    padding: 1.5rem;
   }
+  
   .innerContainer {
     display: flex;
     background-color: #fff;
     width: 100%;
-    height: 100%;
     align-items: flex-start;
     flex-direction: column;
     /* flex-flow: wrap; */
-    margin: 1.5rem;
+    margin: 3rem;
   }
 
   .headBtnContainer{

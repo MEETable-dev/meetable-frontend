@@ -263,7 +263,7 @@ const AllApmt = () => {
   }
 
   
-  return ( <div>
+  return ( <div style={{height:'100%'}}>
     <div className={styles.container}>
     <div className={styles.innerContainer}>
       <div className={styles.headBtnContainer}>

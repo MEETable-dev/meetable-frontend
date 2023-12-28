@@ -49,52 +49,55 @@ const Login = () => {
   //로그인하기 버튼을 누른경우
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    if (ExistInput) {
+  
+      //이메일 아이디 제출을 true로 바꾸기
+      setEmailSubmitted(true);
+      setPwSubmitted(true);
+    
 
-    //이메일 아이디 제출을 true로 바꾸기
-    setEmailSubmitted(true);
-    setPwSubmitted(true);
+      try{
+        //로그인 하는 데에 post 하고 토큰 받아오기
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
+          email: email ,
+          pwd: password})
 
-    try{
-      //로그인 하는 데에 post 하고 토큰 받아오기
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        email: email ,
-        pwd: password})
+          setErrorMessage(false);
+          //토큰 발행에 성공한경우 토큰을 받아오기
+          setIsUser(true);
+          dispatch(setToken(response.jwt));
 
-        setErrorMessage(false);
-        //토큰 발행에 성공한경우 토큰을 받아오기
-        setIsUser(true);
-        dispatch(setToken(response.jwt));
+          //이전에 있던 url 링크 받아오기
+          const redirectUrl = searchParams.get("redirectUrl");
+          console.log(response.data);
+          dispatch(setToken(response.data.accessToken));
+          if (keepLogin) {
+            localStorage.setItem('refreshToken', response.data.refreshToken)
+            console.log('refreshToken saved')
+          }
+          else {
+            console.log('no keep login')
+          }
 
-        //이전에 있던 url 링크 받아오기
-        const redirectUrl = searchParams.get("redirectUrl");
-        console.log(response.data);
-        dispatch(setToken(response.data.accessToken));
-        if (keepLogin) {
-          localStorage.setItem('refreshToken', response.data.refreshToken)
-          console.log('refreshToken saved')
-        }
-        else {
-          console.log('no keep login')
-        }
+          //특정 시간이 지나면 redirected url로 돌아가기
+          // setTimeout(()=> {
+          //   if (redirectUrl) {
+          //     navigate(redirectUrl);
+          //   } else {
+          //     navigate("/");
+          //   }
+          // }, 2000);
 
-        //특정 시간이 지나면 redirected url로 돌아가기
-        // setTimeout(()=> {
-        //   if (redirectUrl) {
-        //     navigate(redirectUrl);
-        //   } else {
-        //     navigate("/");
-        //   }
-        // }, 2000);
+      } catch(error){
 
-    } catch(error){
-
-      //유저가 아닌경우
-      const errorResponse = error.response;
-      setErrorMessage(true);
-      setIsUser(false);
-      console.log(errorResponse.data.statusCode);
+        //유저가 아닌경우
+        const errorResponse = error.response;
+        setErrorMessage(true);
+        setIsUser(false);
+        console.log(errorResponse.data.statusCode);
 
 
+      }
     }
   };
 
@@ -102,7 +105,7 @@ const Login = () => {
 
 return ( <div className={styles.loginBox}>
   <div className={styles.loginLogo}>
-    <h2>MEETable</h2>
+    <p>MEETable</p>
     <form className={styles.content}>
       <InputArea2 autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
       onClear ={handleClearEmail}>
@@ -124,7 +127,7 @@ return ( <div className={styles.loginBox}>
           <span >로그인유지</span>
         </label>
       </div>
-      <SubmitBtn2 text="로그인" isActive={ExistInput} onClick={handleLoginSubmit}></SubmitBtn2>
+      <SubmitBtn2 text="로그인" isActive={ExistInput} onClick={handleLoginSubmit} />
       <div className ={styles.footerBlock}>
         <Link to="/FindEmail" className={styles.footerLink}>이메일 찾기</Link>
         <span className={styles.footerLink}>|</span>

@@ -73,7 +73,7 @@ const Policy = () => {
   return (
     <div className={styles.loginBox}>
       <div className={styles.loginLogo}>
-        <h2>MEETable</h2>
+        <p>MEETable</p>
       </div>
       {/* <h4>이용약관</h4> */}
       <h4></h4>

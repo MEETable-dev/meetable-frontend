@@ -20,6 +20,7 @@ import { useAppDispatch } from "store";
 import axios from "axios";
 import MyInfoModal from "../components/MyInfoModal"
 import PWChangeModal from "../components/PWChangeModal"
+import useCustomColor from "hooks/useCustomColor";
 
 const Layout = (props) => {
   const localStorage = window.localStorage;
@@ -241,10 +242,11 @@ const Layout = (props) => {
       }
     }
   }
+  const c = useCustomColor(8, 8);
 
   return (
     <div className={resizing ? styles.containerResizing : styles.container} 
-      onPointerMove={updateSize} onPointerUp={stopResizing}
+      onPointerMove={updateSize} onPointerUp={stopResizing} style={{backgroundColor:c}}
     >
       {accessToken && sidebarShown && <div className={styles.sidebarWrapper} style={{flexBasis:size}}>
         <div className={styles.sidebarContent}>

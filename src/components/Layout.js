@@ -246,7 +246,8 @@ const Layout = (props) => {
 
   return (
     <div className={resizing ? styles.containerResizing : styles.container} 
-      onPointerMove={updateSize} onPointerUp={stopResizing} style={{backgroundColor:c}}
+      onPointerMove={updateSize} onPointerUp={stopResizing} 
+      // style={{backgroundColor:c}}
     >
       {accessToken && sidebarShown && <div className={styles.sidebarWrapper} style={{flexBasis:size}}>
         <div className={styles.sidebarContent}>

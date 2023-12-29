@@ -170,8 +170,8 @@ const CalendarWeekWithTime = (props) => {
     windowWidth < 580 
     ? {marginLeft:'10px', marginRight:'10px', width:'300px'}
     : (windowWidth >= 580 && windowWidth <= 1200)
-    ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'48vw'}
-    : {width:'580px'}
+    ? {marginLeft:'0vw', marginRight:'0vw', width:'46vw'}
+    : {width:'560px'}
   }>
     <div className={styles.headerContainer}>
       <div className={styles.headerLeft}></div>

@@ -145,7 +145,7 @@ const CalendarMonthWithTime = (props) => {
     ? {marginLeft:'10px', marginRight:'10px', width:'280px'}
     : (windowWidth >= 580 && windowWidth <= 1200)
     ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'43vw'}
-    : {width:'580px'}
+    : {width:'550px'}
   }>
     <div className={styles.headerContainer}>
       <div className={styles.headerLeft}></div>
@@ -174,14 +174,14 @@ const CalendarMonthWithTime = (props) => {
         ? {marginLeft:'12px', marginRight:'12px'}
         : (windowWidth >= 580 && windowWidth <= 1200)
         ? {marginLeft:'2vw', marginRight:'2vw'}
-        : {marginLeft:'40px', marginRight:'40px'}
+        : {marginLeft:'25px', marginRight:'25px'}
       }>{DivDates}</div>
       <div className={styles.body} style={
         windowWidth < 580 
         ? {marginLeft:'12px', marginRight:'12px'}
         : (windowWidth >= 580 && windowWidth <= 1200)
         ? {marginLeft:'2vw', marginRight:'2vw'}
-        : {marginLeft:'40px', marginRight:'40px'}
+        : {marginLeft:'25px', marginRight:'25px'}
       }><Body selectWeek={selectWeek} selectDate={selectDate} onDateClick={onDateClick} /></div>
     </div>
     {/* <ConfirmedApmt />

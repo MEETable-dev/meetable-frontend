@@ -47,6 +47,11 @@ const CalendarMonthWithoutTime = (props) => {
             onDateClick(cloneDay);
           }}
           >
+            {format(day, 'yyyy-MM-dd') === not && <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M59 1L1 59" stroke="#A8A8A8" stroke-linecap="round"/>
+                <path d="M1 1L59 59" stroke="#A8A8A8" stroke-linecap="round"/>
+              </svg>
+            }
             {format(day, 'yyyy-MM-dd') !== not && <AiOutlineCalendar size={24} color='#FFFFFF' style={{position:'absolute', left:0, top:0}}/>}
             {format(day, 'yyyy-MM-dd') !== not && <div>3</div>}
           </div>
@@ -129,14 +134,16 @@ const CalendarMonthWithoutTime = (props) => {
     setSelectWeek(addMonths(selectWeek, 1));
   };
   const onDateClick = (day) => {
-    if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
-      setSelectDate(prevState => {
-        prevState.delete(format(day, 'yyyy-MM-dd'));
-        return new Set(prevState);
-      })
-    }
-    else {
-      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
+    if (format(day, 'yyyy-MM-dd') !== not) {
+      if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
+        setSelectDate(prevState => {
+          prevState.delete(format(day, 'yyyy-MM-dd'));
+          return new Set(prevState);
+        })
+      }
+      else {
+        setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
+      }
     }
   }
 

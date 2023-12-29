@@ -5,59 +5,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 38px;
-  padding-bottom: 36px;
-}
-
-.headerContainer {
-  display: flex;
-  position: relative;
-  width: 100%;
-}
-
-.headerLeft, .headerRight {
-  display: flex;
-  flex-grow: 1;
-  position: relative;
-}
-
-.headerCenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.toAnotherMonth {
-  display: flex;
-  align-items: center;
-}
-
-.headerText {
-  color: #222;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.TodayBtn {
-  position: absolute;
-  border-radius: 5px;
-  border: 1px solid #D0D0D0;
-  color: #888;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 3px 5px;
-  left: 4px;
+  /* padding: 205px 0; */
+  height: 560px;
 }
 
 .bodyContainer {
-  padding-top: 10px;
+  padding-top: 0px;
 }
 
 .DaysOfWeek {
   display: flex;
-  /* padding: 0 30px; */
 }
 
 .body {
@@ -72,6 +29,9 @@
   align-items: center;
   background-color: #ffffff;
   margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #222222;
 }
 
 .col{
@@ -89,48 +49,12 @@
   box-shadow: 0 0 0 3px #40C06F inset;
 }
 
-.wholeday {
-  height: 720px;
-}
-
 .eachDay {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: 1px;
-}
-
-.dateHeader {
-  height: 17px;
-  width: 17px;
-  color: #222222;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 1px;
-}
-
-.dateHeaderToday {
-  height: 17px;
-  width: 17px;
-  border-radius: 10px;
-  background-color: #8E66EE;
-  color: #FFF;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 1px;
-}
-
-.time {
-  position: absolute;
-  color: #222;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 29.8px;
-  top:-11px;
-  left:2px;
 }
 
 .week {
@@ -140,6 +64,10 @@
 
 .disabled {
   background: #888888;
+}
+
+.disabled:hover {
+  box-shadow: none;
 }
 
 .valid {
@@ -166,6 +94,6 @@
 .howmany {
   color: #FFF;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }

@@ -95,6 +95,9 @@
   height: 21px;
   width: 27px;
 }
+.disabled:hover {
+  box-shadow: none;
+}
 
 .valid {
   background-color: #D0D0D0;

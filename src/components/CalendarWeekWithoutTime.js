@@ -5,7 +5,7 @@ import styles from '../css/CalendarWeekWithoutTime.module.css';
 import { format, addWeeks, subWeeks, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
-const not = '2023-12-05';
+const not = '2023-12-27';
 
 const CalendarWeekWithoutTime = (props) => {
   let selectWeek = props.selectWeek;
@@ -44,20 +44,20 @@ const CalendarWeekWithoutTime = (props) => {
               onTimeClick(cloneDay)
             }}
             >
-              <AiOutlineCalendar size={10} color='#FFFFFF'/>
+              <AiOutlineCalendar size={23} color='#FFFFFF' style={{position:'absolute', top:'2px', left:2}}/>
               <div className={styles.howmany}>3</div>
-              <div className={styles.emptycalendar}></div>
             </div>
           );
-          day = addMinutes(day, 30);
+          day = addDays(day, 1);
         // }
       }
       else {
-        days.push(<div className={`${styles.col} ${styles.wholeday} ${styles.disabled}`} style={getStyles()}>
-          <svg width="60" height="719" viewBox="0 0 60 719" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M59 0.993042L1 718.007" stroke="#A8A8A8" strokeLinecap="round"/>
-            <path d="M1 0.993042L59 718.007" stroke="#A8A8A8" strokeLinecap="round"/>
+        days.push(<div className={`${styles.col} ${styles.day} ${styles.disabled}`} style={getStyles()}>
+          <svg width="60" height="120" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M59 1L1 119" stroke="#A8A8A8" stroke-linecap="round"/>
+            <path d="M1 1L59 119" stroke="#A8A8A8" stroke-linecap="round"/>
           </svg>
+
         </div>);
         day = addDays(day, 1);  
       }
@@ -65,11 +65,6 @@ const CalendarWeekWithoutTime = (props) => {
         <div style={{flexDirection:'row'}}>
           <div>{days}</div>
         </div>
-      );
-      dayHeaders.push(
-        <div className={styles.col} style={getStyles()}>
-          <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
-        </div>  
       );
       days = [];
     }
@@ -106,18 +101,21 @@ const CalendarWeekWithoutTime = (props) => {
   const getStyles = () => {
     if (windowWidth < 580) {
       return {
+        position:'relative',
         width: '27px',
         marginLeft: '2.9px',
         marginRight: '2.9px',
       };
     } else if (windowWidth >= 580 && windowWidth <= 1200) {
       return {
+        position:'relative',
         width: '4.5vw',
         marginLeft: '0.5vw',
         marginRight: '0.5vw',
       };
     } else {
       return {
+        position:'relative',
         width: '60px',
         marginLeft: '4px',
         marginRight: '4px',
@@ -133,12 +131,6 @@ const CalendarWeekWithoutTime = (props) => {
     )
   }
 
-  const prevWeek = () => {
-    setSelectWeek(subWeeks(selectWeek, 1));
-  };
-  const nextWeek = () => {
-    setSelectWeek(addWeeks(selectWeek, 1));
-  };
   const onTimeClick = (day) => {
     if (selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-00'))) {
       setSelectDate(prevState => {
@@ -158,27 +150,6 @@ const CalendarWeekWithoutTime = (props) => {
     ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'48vw'}
     : {width:'580px'}
   }>
-    <div className={styles.headerContainer}>
-      <div className={styles.headerLeft}></div>
-      <div className={styles.headerCenter}>
-        <div className={styles.toAnotherMonth} onClick={prevWeek}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.9883 16.2403L13.0527 15.1759L6.87677 8.99989L13.0527 2.82392L11.9883 1.75952L4.74796 8.99989L11.9883 16.2403Z" fill="#888888"/>
-          </svg>
-        </div>
-        <div className={styles.headerText}>
-          {format(selectWeek, 'yy')}년 {format(selectWeek, 'M')}월
-        </div>
-        <div className={styles.toAnotherMonth} onClick={nextWeek}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.01167 16.2403L4.94727 15.1759L11.1232 8.99989L4.94727 2.82392L6.01167 1.75952L13.252 8.99989L6.01167 16.2403Z" fill="#888888"/>
-          </svg>
-        </div>
-      </div>
-      <div className={styles.headerRight}>
-        <div className={styles.TodayBtn} onClick={()=>{setSelectWeek(new Date());}}>오늘</div>
-      </div>
-    </div>
     <div className={styles.bodyContainer}>
       <div className={styles.DaysOfWeek} style={
         windowWidth < 580 
@@ -195,8 +166,6 @@ const CalendarWeekWithoutTime = (props) => {
         : {marginLeft:'40px', marginRight:'40px'}
       }><Body selectDate={selectDate} onTimeClick={onTimeClick} /></div>
     </div>
-    {/* <ConfirmedApmt />
-    <CustomedSched /> */}
   </div>
 };
 

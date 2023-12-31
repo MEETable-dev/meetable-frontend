@@ -45,7 +45,7 @@ const NewApmt = () => {
   };
 
   useEffect(() => {
-    getUserInfo();
+    if (accessToken) getUserInfo();
   }, []);
 
   const createAmpt = async () => {

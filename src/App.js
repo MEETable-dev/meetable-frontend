@@ -33,6 +33,7 @@ function App() {
         <Route path="/newapmt" element={<PrivateRoute member={false} goto={"/:username"}><NewApmt /></PrivateRoute>} />
         <Route path="/:username">
           <Route path="apmtdetail/:apmtId" element={<PrivateRoute member={true} goto={"/login"}><ApmtDetail /></PrivateRoute>} />
+          <Route path="newapmt" element={<PrivateRoute member={true} goto={"/newapmt"}><NewApmt /></PrivateRoute>} />
         </Route>
       </Route>
       <Route element={<Layout head={'color'}/>}>

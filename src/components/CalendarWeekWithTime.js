@@ -74,11 +74,11 @@ const CalendarWeekWithTime = (props) => {
           <div>{days}</div>
         </div>
       );
-      dayHeaders.push(
-        <div className={styles.col} style={getStyles()}>
-          <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
-        </div>  
-      );
+      // dayHeaders.push(
+      //   <div className={styles.col} style={getStyles()}>
+      //     <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
+      //   </div>  
+      // );
       days = [];
     }
     times.push(
@@ -173,7 +173,7 @@ const CalendarWeekWithTime = (props) => {
     ? {marginLeft:'0vw', marginRight:'0vw', width:'46vw'}
     : {width:'560px'}
   }>
-    <div className={styles.headerContainer}>
+    {/* <div className={styles.headerContainer}>
       <div className={styles.headerLeft}></div>
       <div className={styles.headerCenter}>
         <div className={styles.toAnotherMonth} onClick={prevWeek}>
@@ -193,7 +193,7 @@ const CalendarWeekWithTime = (props) => {
       <div className={styles.headerRight}>
         <div className={styles.TodayBtn} onClick={()=>{setSelectWeek(new Date());}}>오늘</div>
       </div>
-    </div>
+    </div> */}
     <div className={styles.bodyContainer}>
       <div className={styles.DaysOfWeek} style={
         windowWidth < 580 

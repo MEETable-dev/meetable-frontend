@@ -22,6 +22,8 @@
   color: #222;
   font-weight: 500;
   font-size: 15px;
+  max-width: 50px;
+  min-width: 50px;
 }
 
 .empty {
@@ -36,9 +38,13 @@
   padding-bottom: 9px;
   margin-bottom: 9px;
   border-bottom: #D0D0D0 1px solid;
-  text-wrap: nowrap;
+  /* text-wrap: nowrap; */
 }
 
-.partiBody{
-  text-wrap: nowrap;
+/* .partiBody {
+} */
+
+.partiList {
+  word-break: break-all;
+
 }

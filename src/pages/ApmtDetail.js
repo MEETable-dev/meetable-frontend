@@ -28,9 +28,10 @@ const ApmtDetail = () => {
   }, []);
   return <div style={{height:'auto'}}>
     약속 세부
+    {!(!week && time) && <div>약속이름 공유</div>}
     <div style={{display:'table'}}>
       <div className={styles.calendar}>
-        <div>약속이름 공유</div>
+        {!week && time && <div>약속이름 공유</div>}
           {!week && time && <CalendarMonthWithTime selectWeek={selectWeek} setSelectWeek={setSelectWeek} />}
         {/* {!week && time && <div>달력에서 주 선택</div>} */}
 
@@ -45,10 +46,13 @@ const ApmtDetail = () => {
         {/* {!week && !time && <div>달력에서 날짜 선택</div>} */}
 
       </div>
-      <div className={styles.empty} style={{padding:'0.5vw'}}></div>
+      <div className={styles.empty} style={{padding:'0.3vw'}}></div>
       <div className={styles.participants}>
         <div className={styles.partiHead}>참가자</div>
-        <div className={styles.partiBody}>김영dsdfdsf<br />sdfs</div>
+        <div className={styles.partiBody}>
+          <div className={styles.partiList}>선우정아이어요</div>
+          <div className={styles.partiList}>가나다</div>
+        </div>
       </div>
     </div>
     <Filter />

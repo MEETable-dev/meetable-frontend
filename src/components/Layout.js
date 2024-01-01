@@ -305,7 +305,7 @@ const Layout = (props) => {
         </div>
       </div>}
       <div className={styles.mainWrapper}>
-        {head && <header className={styles.headerWrapper}>
+        {head && <header className={styles.headerWrapper} id={head === 'trans' ? styles.trans : ''}>
           <div className={styles.headerBtnLeft}>
             {accessToken && !sidebarShown && <div onClick={()=>setsidebarShown(true)}>{svgList.headerIcon.headerShow}</div>}
           </div>

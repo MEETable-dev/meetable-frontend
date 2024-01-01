@@ -1,5 +1,50 @@
 .calendar {
-  display:flex;
+  display:table-cell;
   width: 100vw;
   align-items: center;
+  justify-content: center;
+}
+
+.monthwithtime {
+  display: table-cell;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+}
+
+.participants {
+  display: table-cell;
+  align-items: center;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 30px 10px;
+  border-radius: 10px;
+  color: #222;
+  font-weight: 500;
+  font-size: 15px;
+  max-width: 50px;
+  min-width: 50px;
+}
+
+.empty {
+  display: table-cell;
+}
+
+.partiHead {
+  text-align: center;
+  color: #8E66EE;
+  font-weight: 700;
+  font-size: 15px;
+  padding-bottom: 9px;
+  margin-bottom: 9px;
+  border-bottom: #D0D0D0 1px solid;
+  /* text-wrap: nowrap; */
+}
+
+/* .partiBody {
+} */
+
+.partiList {
+  word-break: break-all;
+
 }

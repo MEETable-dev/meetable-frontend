@@ -48,6 +48,9 @@ main {
     height: 60px;
     width: 100%;
     margin-top: 40px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #222222;
   }
   
   .infoArea {
@@ -73,7 +76,7 @@ main {
 
   .footerBlock{
     /* background-color: aqua; */
-    width: 100%;
+    width: 250px;
     margin-top: 1rem;
     color: #888888;
     font-size: 13px;
@@ -103,7 +106,7 @@ main {
   } */
   
   input.CheckBox{
-    margin: 10px;
+    margin: 10px 5px 10px 0px;
     accent-color:#8E66EE
   }
 

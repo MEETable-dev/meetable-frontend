@@ -144,9 +144,9 @@ const EmailAuth = () => {
     <div className={styles.mainBox}>
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <h2>MEETable</h2>
+          <p>MEETable</p>
         </div>
-        <h4>가입하기</h4>
+        <p className={styles.signup}>가입하기</p>
         <form className={styles.content} onSubmit={handleEmailSubmit}>
           <InputArea
             className={`${emailSubmitted && !errorMessage ? styles.lockEmail : ''}`}

@@ -124,7 +124,7 @@ const EmailAuth = () => {
   return (
     <div className={styles.loginBox}>
       <div className={styles.loginLogo}>
-        <h2>MEETable</h2>
+        <p>MEETable</p>
       </div>
       <h4>가입하기</h4>
       <div className={styles.content}>

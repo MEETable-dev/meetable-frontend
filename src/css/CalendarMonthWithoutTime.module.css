@@ -125,6 +125,9 @@
 .disabled {
   background: #888888;
 }
+.disabled:hover {
+  box-shadow: none;
+}
 
 .valid {
   background-color: #D0D0D0;

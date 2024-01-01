@@ -23,7 +23,18 @@ const CalendarWeekWithTime = (props) => {
 
     times.push(
       <div style={{width:'30px', position:'relative'}}>
-        <div className={styles.time}>
+        <div className={styles.timeL} style={
+          (windowWidth < 580) ? {
+            left:'1.3vw',
+            fontSize: '10px',
+          } : (windowWidth >= 580 && windowWidth <= 700) ? {
+            left:'1.2vw',
+            fontSize: '10px',
+          } : {
+            left:'0.2vw',
+            fontSize: '12px',
+          }
+        }>
           0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
         </div>
       </div>
@@ -74,16 +85,24 @@ const CalendarWeekWithTime = (props) => {
           <div>{days}</div>
         </div>
       );
-      dayHeaders.push(
-        <div className={styles.col} style={getStyles()}>
-          <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
-        </div>  
-      );
+      // dayHeaders.push(
+      //   <div className={styles.col} style={getStyles()}>
+      //     <div className={styles[format(subDays(day,1), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
+      //   </div>  
+      // );
       days = [];
     }
     times.push(
       <div style={{width:'30px', position:'relative'}}>
-        <div className={styles.time}>
+        <div className={styles.timeR} style={
+          (windowWidth < 580) ? {
+            fontSize: '10px',
+          } : (windowWidth >= 580 && windowWidth <= 700) ? {
+            fontSize: '10px',
+          } : {
+            fontSize: '12px',
+          }
+        }>
           0시<br />1시<br />2시<br />3시<br />4시<br />5시<br />6시<br />7시<br />8시<br />9시<br />10시<br />11시<br />12시<br />13시<br />14시<br />15시<br />16시<br />17시<br />18시<br />19시<br />20시<br />21시<br />22시<br />23시<br />24시
         </div>
       </div>
@@ -170,10 +189,10 @@ const CalendarWeekWithTime = (props) => {
     windowWidth < 580 
     ? {marginLeft:'10px', marginRight:'10px', width:'300px'}
     : (windowWidth >= 580 && windowWidth <= 1200)
-    ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'48vw'}
-    : {width:'580px'}
+    ? {marginLeft:'0vw', marginRight:'0vw', width:'46vw'}
+    : {width:'560px'}
   }>
-    <div className={styles.headerContainer}>
+    {/* <div className={styles.headerContainer}>
       <div className={styles.headerLeft}></div>
       <div className={styles.headerCenter}>
         <div className={styles.toAnotherMonth} onClick={prevWeek}>
@@ -193,7 +212,7 @@ const CalendarWeekWithTime = (props) => {
       <div className={styles.headerRight}>
         <div className={styles.TodayBtn} onClick={()=>{setSelectWeek(new Date());}}>오늘</div>
       </div>
-    </div>
+    </div> */}
     <div className={styles.bodyContainer}>
       <div className={styles.DaysOfWeek} style={
         windowWidth < 580 

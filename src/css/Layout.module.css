@@ -20,6 +20,8 @@
   flex: 0 0 50px; 
   position: relative;
   box-shadow: 3px 0px 6px rgba(34, 34, 34, 0.30);
+  background-color: #fff;
+  z-index: 1;
 }
 
 .sidebarContent {
@@ -68,11 +70,20 @@
   flex-direction: column;
 }
 
+main {
+  flex-grow: 1;
+  width: 100vw;
+}
+
 .headerWrapper {
   background-color: #fff;
   display: flex;
   padding: 12px 10px;
   justify-content: space-between;
+}
+
+#trans {
+  background-color: transparent;
 }
 
 .headerBtnLeft, .headerBtnRight {

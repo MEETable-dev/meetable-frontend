@@ -32,6 +32,13 @@ body {
   align-items: center;
   text-align: center;
 }
+
+.signup {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+}
+
 .content {
   padding-top: 20px;
   margin: 0px 30px;
@@ -48,6 +55,9 @@ body {
   height: 60px;
   width: 100%;
   margin-top: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #222222;
 }
 
 .infoArea {

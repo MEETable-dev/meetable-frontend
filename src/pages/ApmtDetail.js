@@ -28,10 +28,10 @@ const ApmtDetail = () => {
   }, []);
   return <div style={{height:'auto'}}>
     약속 세부
-    {!(!week && time) && <div>약속이름 공유</div>}
+    {!(!week && time) && <div>약속이름, 공유</div>}
     <div style={{display:'table'}}>
       <div className={styles.calendar}>
-        {!week && time && <div>약속이름 공유</div>}
+        {!week && time && <div>약속이름, 공유</div>}
           {!week && time && <CalendarMonthWithTime selectWeek={selectWeek} setSelectWeek={setSelectWeek} />}
         {/* {!week && time && <div>달력에서 주 선택</div>} */}
 

@@ -168,26 +168,16 @@ const PWChangeModal = ({ onClose }, ref) => {
                         </div>
                     </div> :
                     ////// 여기부분 아직 수정해야됨!!!ㅠㅠㅠ
-                    <div className={styles.modalContentLong}>
-                        <button className={styles.closeButton} onClick={onClose}>
-                            <div className={styles.closeX}>
-                                {svgList.policyIcon.closeBtn}
-                            </div>
-                        </button>
-                        <h2>비밀번호가 성공적으로 변경되었어요.</h2>
+                    <div className={styles.modalContent}>
+                        <h2>비밀번호가 변경되었어요.</h2>
                         <div className={styles.modalBody}>
-                            <div className={styles.inputBox}>
-                                <div className={styles.inputHeight}>
-                                </div>
-                            </div>
                             <SubmitBtn
-                                text="완료하기"
-                                onClick={handleChangePWDInfo}
-                                isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
+                                text="확인"
+                                onClick={onClose}
+                                isActive={isValidPWD}
                                 // className={`${''}`}
                                 margin={`10px 0px 0px`}
                             />
-        
                         </div>
                     </div>
             }

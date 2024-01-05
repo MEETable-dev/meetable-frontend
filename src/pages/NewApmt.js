@@ -316,7 +316,7 @@ const NewApmt = () => {
             text="만들기"
             onClick={createAmpt}
             isActive={amptName && (!nickname === !accessToken)}
-            className={`${styles.createBtn} ${styles.active}`}
+            className={`${styles.createBtn} ${styles.btnLength}`}
           />
 
 

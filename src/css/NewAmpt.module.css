@@ -80,7 +80,7 @@ cursor: pointer;
 outline: none;
 width: 24px;
 height: 24px;
-margin-left: 0px; /* 추가된 내용 */
+margin-left: -8px; /* 추가된 내용 */
 }
 
 .selectTxt {
@@ -115,7 +115,7 @@ display: none;
 }
 
 .inputPadding {
-margin-left: 10px;
+margin-left: 0px;
 }
 
 .timeCollectInput {
@@ -137,7 +137,7 @@ margin-right: 3px;
 }
 
 .calendar {
-margin-left: -3px;
+margin-left: -1px;
 }
 
 .mobileSignUp {
@@ -210,10 +210,10 @@ margin-left: -3px;
     margin-right: 0px;
   }
   .createBtn {
-    width: 100%;
-    min-width: 260px;
-    /* width: calc(100% - 12px);
-    min-width: calc(320px - 12px); */
+    /* width: 100%;
+    min-width: 260px; */
+    width: calc(100% - 12px);
+    min-width: calc(260px - 12px);
     margin: 30px 0;
   }
   .calendar {

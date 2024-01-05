@@ -123,3 +123,7 @@ h2 {
   color: red;
   padding-top: 8px;
 }
+
+.normalFont {
+  font-weight: normal;
+}

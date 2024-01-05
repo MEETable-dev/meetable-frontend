@@ -12,8 +12,6 @@ import SubmitBtn from "../components/SubmitBtn";
 import { useNavigate } from "react-router-dom";
 
 
-
-
 const EmailAuth = () => {
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
@@ -48,7 +46,7 @@ const EmailAuth = () => {
   };
 
   // SubmitBtn에 적용할 마진 값 계산
-  const submitButtonMargin = isAlertZoneVisible() ? '20.5px' : '45px';
+  const submitButtonMargin = isAlertZoneVisible() ? '20px' : '45px';
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -113,11 +111,13 @@ const EmailAuth = () => {
   const handleClearAuthCode = () => {
     setAuthCode('');
     setIsVaildAuthCode(false);
+    setAuthCodeSubmitted(false);
   };
 
   const handleAuthCodeChange = (e) => {
     setAuthCode(e.target.value);
     setIsVaildAuthCode(false);
+    setAuthCodeSubmitted(false);
   }
 
   const handleEmailSubmit = (e) => {

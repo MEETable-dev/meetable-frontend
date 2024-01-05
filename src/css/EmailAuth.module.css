@@ -199,3 +199,7 @@ input.lockEmail {
   margin: 0 5px;
   font-size: 13px;
 }
+
+.btnWidth {
+  width: calc(100% - 12px);
+}

@@ -29,6 +29,7 @@ const EmailAuth = () => {
   const navigate = useNavigate();
 
   const sendVerifyCode = async () => {
+    setAuthCodeSubmitted(false);
     resetTimer();
     startTimer();
     try {
@@ -202,28 +203,28 @@ const EmailAuth = () => {
             text="인증 메일 보내기"
             onClick={sendVerifyCode}
             isActive={email}
-            className={`${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
+            className={`${emailSubmitted && !errorMessage ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
-            isActive={authCode}
-            className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+            isActive={emailSubmitted && !authCode}
+            className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증하기"
             onClick={handleAuthSubmit}
             isActive={authCode}
-            className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+            className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
-            isActive={authCode}
-            className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden}`}
+            isActive={timerExpired}
+            className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
         </form>

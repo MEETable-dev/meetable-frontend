@@ -21,7 +21,7 @@ const ApmtList = ({ data, fav, isTrash = false, searchApmtVal ,selectedItemID, c
 
   return (
     <div className={styles.ApmtListContainer}>
-      {!isTrash && !fav ? <TrashCanIcon onClick={handleShowTrash}></TrashCanIcon> : ''}
+      {!isTrash && !fav ? <TrashCanIcon onClick={handleShowTrash} openModal={openModal}></TrashCanIcon> : ''}
       {filteredApmts.map((item, index) => (
         <ApmtItem
           isTrash={isTrash}

@@ -12,7 +12,7 @@ const ApmtItem = ({ name, fav, id , isTrash= false, selectedItemID, modifyName,s
   }, []);
 
   const handleOnBlur = useCallback((e)=>{
-    
+
     changeName(selectedItemID, value);
     setModifyName(false);
     setValue('')
@@ -33,7 +33,7 @@ const ApmtItem = ({ name, fav, id , isTrash= false, selectedItemID, modifyName,s
 
   const truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
   return (
-    <div className={selectedItemID===id ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event)=>{ event.preventDefault(); openModal(id, event, 'p', name)}}>
+    <div className={selectedItemID===id ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event)=>{ event.preventDefault(); openModal(id, event, 'p')}}>
       <div className={styles.ApmtIcon}>
       {svgList.folder.Apmt}
       </div>
@@ -42,8 +42,8 @@ const ApmtItem = ({ name, fav, id , isTrash= false, selectedItemID, modifyName,s
         {!(fav === 'T') && !isTrash && <AiOutlineStar color="#888888" size={22} className={styles.favoritesIcon} onClick={()=>{bookmark(id)}}/>}
         {isTrash && ''}
         <div className={styles.favoritesText}>
-              {(selectedItemID === id && modifyName) ? <input value={value} name="writeName" className={styles.renameInput}
-              onChange ={onChange}  onBlur={handleOnBlur} ref={inputRef}
+              {(selectedItemID === id && modifyName && !isTrash) ? <input value={value} name="writeName" className={styles.renameInput}
+              onChange ={onChange}  onBlur={handleOnBlur} ref={inputRef} spellCheck={false}
                /> : truncatedName}
         </div>
       </div>

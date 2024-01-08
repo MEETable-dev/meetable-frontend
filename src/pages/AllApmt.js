@@ -3,7 +3,7 @@ import { IoSyncOutline, IoCheckboxOutline } from "react-icons/io5";
 import { AiOutlineFileAdd , AiFillStar , AiOutlineStar} from "react-icons/ai";
 import { RiSearchLine } from "react-icons/ri";
 import { svgList } from 'assets/svg';
-import {useMemo, useState, useEffect, useRef, useCallback} from 'react';
+import {useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from "react-redux";
 import React from "react";
 import { GoChevronUp , GoChevronDown } from "react-icons/go";
@@ -12,10 +12,13 @@ import  axios  from 'axios';
 import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const AllApmt = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [showModal, setShowModal] = useState('');
   const [showHeaderModal, setShowHeaderModal] = useState('');
@@ -311,7 +314,9 @@ const AllApmt = () => {
     <div className={styles.container}>
     <div className={styles.innerContainer}>
       <div className={styles.headBtnContainer}>
-        <button className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
+        <button onClick={()=>
+              window.location.href = '/:username/newapmt'
+            } className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
         <button className={styles.syncApmt}>{<IoSyncOutline size={24} />}<div className={styles.btnText}>비회원으로 참여한 약속 불러오기</div></button>
       </div>
       <div className={styles.searchContent}>{<RiSearchLine size="18px" color='#888' className={styles.icon} style={{ marginLeft: '5px' }}></RiSearchLine>}<input value={searchApmtVal} className={styles.searchContentInput} placeholder='찾기' 

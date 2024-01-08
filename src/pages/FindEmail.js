@@ -130,6 +130,18 @@ const FindEmail = () => {
           <Link to="/Login" className={styles.loginLink}>
             로그인하기
           </Link>
+          <Link className={styles.loginLink}>
+            |
+          </Link>
+          <Link to="/ResetPass" className={styles.loginLink}>
+            비밀번호 찾기
+          </Link>
+          <Link className={styles.loginLink}>
+            |
+          </Link>
+          <Link to="/EmailAuth" className={styles.loginLink}>
+            가입하기
+          </Link>
         </div>
       </div>
     </div>

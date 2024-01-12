@@ -26,13 +26,15 @@ const EmailAuth = () => {
   const timerRef = useRef();
   const navigate = useNavigate();
 
+  // 이미 가입된 이메일이에요 추가하기
   const sendVerifyCode = async () => {
     setAuthCodeSubmitted(false);
     resetTimer();
     startTimer();
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sendVerifyCode`, {
-        email: email})
+        email: email,
+        findPwdOrSignup: "S"})
       console.log(response.data)
     } catch (error) {
       const errorResponse = error.response;

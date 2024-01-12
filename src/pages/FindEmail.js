@@ -11,8 +11,6 @@ import InputArea from '../components/InputArea';
 import SubmitBtn from "../components/SubmitBtn";
 import { useNavigate } from "react-router-dom";
 
-// 이메일 맞나 백앤드 보내는 과정 수정 필요할듯
-
 const FindEmail = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -107,7 +105,6 @@ const FindEmail = () => {
                   </div>
               </div> : null
             }
-            {/* 파란 글씨로 스타일 바꾸기 */}
             { submitted && isValidEmail && isMember ?
               <div className={styles.alertZone}>
                   <div className={``}>

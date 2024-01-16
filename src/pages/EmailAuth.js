@@ -147,7 +147,8 @@ const EmailAuth = () => {
     <div className={styles.mainBox}>
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <p>MEETable</p>
+          {/* <p>MEETable</p> */}
+          {svgList.logoIcon.logo}
         </div>
         <p className={styles.signup}>가입하기</p>
         <form className={styles.content} onSubmit={handleEmailSubmit}>

@@ -63,7 +63,8 @@ const FindEmail = () => {
     <div className={styles.mainBox}>
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <p>MEETable</p>
+          {/* <p>MEETable</p> */}
+          {svgList.logoIcon.logo}
         </div>
         <p className={styles.signup}>이메일 찾기</p>
         <div className={styles.content}>

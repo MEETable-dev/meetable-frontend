@@ -202,7 +202,8 @@ const ResetPass = () => {
       { !isAuthEmail ?
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <p>MEETable</p>
+          {/* <p>MEETable</p> */}
+          {svgList.logoIcon.logo}
         </div>
         <p className={styles.signup}>비밀번호 바꾸기</p>
         <div className={styles.content}>
@@ -338,7 +339,8 @@ const ResetPass = () => {
       { isAuthEmail && !isValidPWD ?
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <p>MEETable</p>
+          {/* <p>MEETable</p> */}
+          {svgList.logoIcon.logo}
         </div>
         <p className={styles.signup}>비밀번호 바꾸기</p>
         <div className={styles.content}>

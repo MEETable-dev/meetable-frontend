@@ -216,3 +216,9 @@ body {
     font-weight: 600;
     color: #222222;
 }
+
+@media only screen and (max-width: 400px) {
+    body {
+        background-color: white;
+    }
+}

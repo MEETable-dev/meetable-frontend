@@ -145,7 +145,7 @@ margin-left: -1px;
 }
 
 @media only screen and (max-width: 580px) {
-/* 600px 이하일 때의 스타일을 여기에 작성하세요 */
+/* 580px 이하일 때의 스타일을 여기에 작성하세요 */
 .entire {
   display: flex;
   justify-content: center;

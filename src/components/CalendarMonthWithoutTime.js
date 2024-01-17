@@ -2,20 +2,113 @@
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
 import styles from '../css/CalendarMonthWithoutTime.module.css';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns'
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, getWeekOfMonth, getDay, getYear, getMonth, isSameDay } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
-const not = '2023-12-05';
+const not = '2024-01-05';
 
 const CalendarMonthWithoutTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
+
+  const [dragStart, setDragStart] = useState(null);
+  const [dragEnd, setDragEnd] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectDate, setSelectDate] = useState(new Set());
+
+  const handleMouseDown = (date) => {
+    setDragStart(date);
+    setIsDragging(true);
+  };
+
+  const handleMouseUp = (date) => {
+    setDragEnd(date);
+    setIsDragging(false);
+    // 여기서 선택 범위를 계산하고, 선택된 날짜를 업데이트할 수 있습니다.
+  };
+
+  const handleMouseMove = (date) => {
+    if (isDragging && !isSameDay(dragEnd, date)) {
+      let row = (getWeekOfMonth(dragStart) <= getWeekOfMonth(date));
+      let col = (getDay(dragStart) <= getDay(date));
+      setDragEnd(date);
+
+      if (row) {
+        if (col) {
+          for (let r = getWeekOfMonth(dragStart); r <= getWeekOfMonth(date); r++) {
+            for (let c = getDay(dragStart);
+              c <= getDay(date);
+              c++
+            ) {
+              setSelectDate(prevState => new Set([...prevState, format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd')]));
+              // console.log(format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd'))
+            }
+          }
+        } else {
+          for (let r = getWeekOfMonth(dragStart); r <= getWeekOfMonth(date); r++) {
+            for (let c = getDay(date);
+              c <= getDay(dragStart);
+              c++
+            ) {
+              setSelectDate(prevState => new Set([...prevState, format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd')]));
+              // console.log(format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd'))
+            }
+          }
+        }
+      } else {
+        if (col) {
+          for (let r = getWeekOfMonth(date); r <= getWeekOfMonth(dragStart); r++) {
+            for (let c = getDay(dragStart);
+              c <= getDay(date);
+              c++
+            ) {
+              setSelectDate(prevState => new Set([...prevState, format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd')]));
+              // console.log(format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd'))
+            }
+          }
+        } else {
+          for (let r = getWeekOfMonth(date); r <= getWeekOfMonth(dragStart); r++) {
+            for (let c = getDay(date);
+              c <= getDay(dragStart);
+              c++
+            ) {
+              setSelectDate(prevState => new Set([...prevState, format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd')]));
+              // console.log(format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd'))
+            }
+          }
+        }
+      }
+      // for (let r = (row) ? getWeekOfMonth(dragStart) : getWeekOfMonth(date); r <= (row) ? getWeekOfMonth(date) : getWeekOfMonth(dragStart); r++) {
+      //   for (let c = (col) ? getDay(dragStart) : getDay(date);
+      //     c <= (col) ? getDay(date) : getDay(dragStart);
+      //     c++
+      //   ) {
+      //     setSelectDate(prevState => new Set([...prevState, format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd')]));
+      //     // console.log(format(new Date(getYear(date), getMonth(date), (r-1) * 7 + c), 'yyyy-MM-dd'))
+      //   }
+      // }
+
+      // document.querySelector(`.table_${getWeekOfMonth(date)}_${getDay(date)}`).id = `${styles.selected}`
+      // document.querySelector(`.table_${getWeekOfMonth(date)}_${getDay(date)}`).classList.remove(`${styles.valid}`);
+      // document.querySelector(`.table_${getWeekOfMonth(date)}_${getDay(date)}`).classList.add(`${styles.uni}`);
+      // setSelectDate(prevState => new Set([...prevState, format(date, 'yyyy-MM-dd')]));
+
+
+      
+      // 필요한 경우, 드래그 중인 상태를 갱신합니다.
+    }
+  };
+
+  const table = [];
+
   const Body = ({selectWeek, selectDate, onDateClick}) => {
     const monthStart = startOfMonth(selectWeek);
     const monthEnd = endOfMonth(selectWeek);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
     // cont [selectWeek, setSelectWeek] = useState(currsentDate);
+
+    
     
     const rows = [];
     let days = [];
@@ -29,23 +122,27 @@ const CalendarMonthWithoutTime = (props) => {
         formattedDate = format(day, 'd');
         const cloneDay = day;
         days.push(
-        <div className={styles.eachDay}>
+        <div className={styles.eachDay} key={cloneDay}>
           <div
-          // 범위에 포함 안되면 disabled 추가
-          // 일정 있으면
-          // 확정된 약속 있으면
-          className={
-            selectDate.has(format(day, 'yyyy-MM-dd'))
-            ? `${styles.col} ${styles.day} ${styles.selected}`
-            : format(day, 'yyyy-MM-dd') !== not
-            ? `${styles.col} ${styles.day} ${styles.valid}`
-            : `${styles.col} ${styles.day} ${styles.disabled}`
-          }
-          style={getStyles()}
-          key={day}
-          onClick={() => {
-            onDateClick(cloneDay);
-          }}
+            // 범위에 포함 안되면 disabled 추가
+            // 일정 있으면
+            // 확정된 약속 있으면
+            className={
+              selectDate.has(format(day, 'yyyy-MM-dd'))
+              ? `table_${getWeekOfMonth(cloneDay)}_${getDay(cloneDay)} ${styles.col} ${styles.day} ${styles.selected}`
+              : format(day, 'yyyy-MM-dd') !== not
+              ? `table_${getWeekOfMonth(cloneDay)}_${getDay(cloneDay)} ${styles.col} ${styles.day} ${styles.valid}`
+              : `table_${getWeekOfMonth(cloneDay)}_${getDay(cloneDay)} ${styles.col} ${styles.day} ${styles.disabled}`
+            }
+            // id={`${styles.selected}`}
+            style={getStyles()}
+            key={day}
+            onMouseDown={() => handleMouseDown(cloneDay)}
+            onMouseUp={() => handleMouseUp(cloneDay)}
+            onMouseMove={() => handleMouseMove(cloneDay)}
+            onClick={() => {
+              onDateClick(cloneDay);
+            }}
           >
             {format(day, 'yyyy-MM-dd') === not && <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M59 1L1 59" stroke="#A8A8A8" stroke-linecap="round"/>
@@ -62,6 +159,7 @@ const CalendarMonthWithoutTime = (props) => {
             <div className={styles[format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
           </div>
         );
+        table.push(days);
         day = addDays(day, 1);
       }
       rows.push(
@@ -79,6 +177,7 @@ const CalendarMonthWithoutTime = (props) => {
     return <div className={styles.body}>{rows}</div>;
   }
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
 
   useEffect(()=>{
     const handleResize = () => {
@@ -91,8 +190,6 @@ const CalendarMonthWithoutTime = (props) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  
-  const [selectDate, setSelectDate] = useState(new Set());
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const DivDates = [];

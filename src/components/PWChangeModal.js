@@ -21,6 +21,7 @@ const PWChangeModal = ({ onClose }, ref) => {
     const [isValidPWD, setIsValidPWD] = useState(false);
     const [isLongPWD, setIsLongPWD] = useState(true);
     const [isSamePWD, setIsSamePWD] = useState(true);
+    const [changeSamePWD, setChageSamePWD] = useState(false);
 
     useEffect(() => {
         if (PWD2 && PWD3) {
@@ -35,9 +36,11 @@ const PWChangeModal = ({ onClose }, ref) => {
     const handlePWD1Change = (e) => {
         setPWD1(e.target.value);
         setNewPWDSubmitted(false);
+        setChageSamePWD(false);
     };
     const handlePWD2Change = (e) => {
         setPWD2(e.target.value);
+        setChageSamePWD(false);
 
         // PWD2의 값 길이가 8자 이상인지 확인
         if (e.target.value.length >= 8) {
@@ -48,6 +51,7 @@ const PWChangeModal = ({ onClose }, ref) => {
     };
     const handlePWD3Change = (e) => {
         setPWD3(e.target.value);
+        setChageSamePWD(false);
     };
 
     const handleIsVisible1 = () => {
@@ -62,19 +66,24 @@ const PWChangeModal = ({ onClose }, ref) => {
 
     // 백앤드로 정보 전달
     const handleChangePWDInfo = async () => {
-        try {
-          const response = await axios.patch(`${process.env.REACT_APP_API_URL}/auth/resetpwd`, {
-            newPwd: PWD2,
-            originalPwd: PWD1
-          });
-          console.log(response.data);
-          setIsValidPWD(true);
-    
-        } catch (error) {
-          const errorResponse = error.response;
-          console.log(errorResponse.data.statusCode);
-          // 현 비밀번호가 틀리다는 오류 문구 띄우기
-          setNewPWDSubmitted(true);
+        if (PWD1 === PWD2){
+            setChageSamePWD(true);
+        }
+        else {
+            try {
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/auth/resetpwd`, {
+                newPwd: PWD2,
+                originalPwd: PWD1
+            });
+            console.log(response.data);
+            setIsValidPWD(true);
+        
+            } catch (error) {
+            const errorResponse = error.response;
+            console.log(errorResponse.data.statusCode);
+            // 현 비밀번호가 틀리다는 오류 문구 띄우기
+            setNewPWDSubmitted(true);
+            }
         }
       };
 
@@ -153,6 +162,14 @@ const PWChangeModal = ({ onClose }, ref) => {
                                         </div>
                                     </div> : null
                                     }
+                                    { changeSamePWD ?
+                                    <div className={styles.alertZone}>
+                                        <div className={``}>
+                                            <div className={styles.message}>새 비밀번호는 기존 비밀번호와 달라야 해요.</div>
+                                        </div>
+                                    </div> : null
+                                    }
+
                                 </div>
                                 
                             </div>
@@ -167,27 +184,16 @@ const PWChangeModal = ({ onClose }, ref) => {
         
                         </div>
                     </div> :
-                    ////// 여기부분 아직 수정해야됨!!!ㅠㅠㅠ
-                    <div className={styles.modalContentLong}>
-                        <button className={styles.closeButton} onClick={onClose}>
-                            <div className={styles.closeX}>
-                                {svgList.policyIcon.closeBtn}
-                            </div>
-                        </button>
-                        <h2>비밀번호가 성공적으로 변경되었어요.</h2>
+                    <div className={styles.modalContent}>
+                        <h2 className={styles.normalFont}>비밀번호가 변경되었어요.</h2>
                         <div className={styles.modalBody}>
-                            <div className={styles.inputBox}>
-                                <div className={styles.inputHeight}>
-                                </div>
-                            </div>
                             <SubmitBtn
-                                text="완료하기"
-                                onClick={handleChangePWDInfo}
-                                isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
+                                text="확인"
+                                onClick={onClose}
+                                isActive={isValidPWD}
                                 // className={`${''}`}
                                 margin={`10px 0px 0px`}
                             />
-        
                         </div>
                     </div>
             }

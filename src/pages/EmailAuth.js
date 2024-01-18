@@ -12,8 +12,6 @@ import SubmitBtn from "../components/SubmitBtn";
 import { useNavigate } from "react-router-dom";
 
 
-
-
 const EmailAuth = () => {
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
@@ -28,12 +26,15 @@ const EmailAuth = () => {
   const timerRef = useRef();
   const navigate = useNavigate();
 
+  // 이미 가입된 이메일이에요 추가하기
   const sendVerifyCode = async () => {
+    setAuthCodeSubmitted(false);
     resetTimer();
     startTimer();
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sendVerifyCode`, {
-        email: email})
+        email: email,
+        findPwdOrSignup: "S"})
       console.log(response.data)
     } catch (error) {
       const errorResponse = error.response;
@@ -47,7 +48,7 @@ const EmailAuth = () => {
   };
 
   // SubmitBtn에 적용할 마진 값 계산
-  const submitButtonMargin = isAlertZoneVisible() ? '20.5px' : '45px';
+  const submitButtonMargin = isAlertZoneVisible() ? '20px' : '45px';
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -112,11 +113,13 @@ const EmailAuth = () => {
   const handleClearAuthCode = () => {
     setAuthCode('');
     setIsVaildAuthCode(false);
+    setAuthCodeSubmitted(false);
   };
 
   const handleAuthCodeChange = (e) => {
     setAuthCode(e.target.value);
     setIsVaildAuthCode(false);
+    setAuthCodeSubmitted(false);
   }
 
   const handleEmailSubmit = (e) => {
@@ -144,7 +147,8 @@ const EmailAuth = () => {
     <div className={styles.mainBox}>
       <div className={styles.loginBox}>
         <div className={styles.loginLogo}>
-          <p>MEETable</p>
+          {/* <p>MEETable</p> */}
+          {svgList.logoIcon.logo}
         </div>
         <p className={styles.signup}>가입하기</p>
         <form className={styles.content} onSubmit={handleEmailSubmit}>
@@ -202,28 +206,28 @@ const EmailAuth = () => {
             text="인증 메일 보내기"
             onClick={sendVerifyCode}
             isActive={email}
-            className={`${emailSubmitted && !errorMessage ? styles.hidden : ''}`}
+            className={`${emailSubmitted && !errorMessage ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
-            isActive={authCode}
-            className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+            isActive={emailSubmitted && !authCode}
+            className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증하기"
             onClick={handleAuthSubmit}
             isActive={authCode}
-            className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''}`}
+            className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
           <SubmitBtn
             text="인증 메일 다시 보내기"
             onClick={sendVerifyCode}
-            isActive={authCode}
-            className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden}`}
+            isActive={timerExpired}
+            className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.btnWidth}`}
             margin={`${submitButtonMargin} 0px 0px`}
           />
         </form>

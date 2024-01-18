@@ -58,6 +58,9 @@ body {
   font-size: 24px;
   font-weight: 600;
   color: #222222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .infoArea {
@@ -198,4 +201,8 @@ input.lockEmail {
   color: #D0D0D0;
   margin: 0 5px;
   font-size: 13px;
+}
+
+.btnWidth {
+  width: calc(100% - 12px);
 }

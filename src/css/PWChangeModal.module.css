@@ -14,7 +14,7 @@
   width: 80%; /* Adjust size as necessary */
   max-width: 320px;
   height: 45%;
-  max-height: 286px;
+  max-height: 165px;
   background-color: white;
   padding: 15px 20px 20px;
   border-radius: 10px;
@@ -122,4 +122,8 @@ h2 {
   text-align: left;
   color: red;
   padding-top: 8px;
+}
+
+.normalFont {
+  font-weight: normal;
 }

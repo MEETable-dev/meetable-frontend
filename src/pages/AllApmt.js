@@ -3,7 +3,7 @@ import { IoSyncOutline, IoCheckboxOutline } from "react-icons/io5";
 import { AiOutlineFileAdd , AiFillStar , AiOutlineStar} from "react-icons/ai";
 import { RiSearchLine } from "react-icons/ri";
 import { svgList } from 'assets/svg';
-import {useMemo, useState, useEffect, useRef, useCallback} from 'react';
+import {useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from "react-redux";
 import React from "react";
 import { GoChevronUp , GoChevronDown } from "react-icons/go";
@@ -12,9 +12,13 @@ import  axios  from 'axios';
 import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const AllApmt = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [showModal, setShowModal] = useState('');
   const [showHeaderModal, setShowHeaderModal] = useState('');
@@ -69,6 +73,19 @@ const AllApmt = () => {
     setSelectedItemID(null);
   };
 
+  const restoreApmt = async (promiseCode) =>{
+    console.log('restore',promiseCode);
+    console.log('ApmtData', ApmtData);
+    try{
+      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/restore`, 
+        {promiseId: promiseCode.split('-')[1].split('_')[0]});
+      await getData();
+      await getTrashData();
+      console.log(response);
+    } catch(error){
+      const errorResponse= error.response;
+      console.log(errorResponse.data);
+    }};
   //Notion Modal Zone
   //약속 삭제(휴지통으로 이동)
   const moveApmtToTrash = async (promiseCode)=>{
@@ -85,10 +102,9 @@ const AllApmt = () => {
 
   //약속에서 빠지기
   const backoutApmt = async (promiseCode) =>{
+    console.log(ApmtData);
     try{
-      const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
-      // {
-      //   headers : {Authorization: ACCESSTOKEN}},
+      const response = await axios.delete( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
         {promiseId: promiseCode.split('-')[1].split('_')[0]});
       console.log(response.data);
       await getData();
@@ -99,14 +115,36 @@ const AllApmt = () => {
       const errorResponse= error.response;
       console.log(errorResponse.data);
     }};
+
+    //휴지통 비우기(모든 약속에서 빠지기)
+
+    const backoutAll = async (TrashData) =>{
+      console.log(TrashData);
+      try{
+        const response = await axios.delete( `${process.env.REACT_APP_API_URL}/home/backoutall`,)
+        console.log(response.data);
+        await getData();
+        await getTrashData();
+        console.log(TrashData)
   
-  const openModal = useCallback ((itemID, event, type, name) => {
-    event.preventDefault();
-    setModalPosition({x:event.pageX, y:event.pageY});
-    setSelectedItemID(itemID);
-    setModifyName(false);
-    //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
-    setShowModal(type);
+      } catch(error){
+        const errorResponse= error.response;
+        console.log(errorResponse.data);
+      }};
+  
+  const openModal = useCallback ((itemID, event, type) => {
+    if (type === 'p'){
+      event.preventDefault();
+      setModalPosition({x:event.pageX, y:event.pageY});
+      setSelectedItemID(itemID);
+      setModifyName(false);
+      //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
+      setShowModal(type);}
+    else{
+      event.preventDefault();
+      setModalPosition({x:event.pageX, y:event.pageY});
+      setShowModal(type);
+    }
     // setSelectedList([...selectedList, itemID]);
   },[]);
 
@@ -125,21 +163,31 @@ const AllApmt = () => {
     left:`${modalPosition.x}px`,
   };
 
-  const ContextMenuModal = ({  onClose, style, type}) => {
+  const ContextMenuModal = ({  onClose, style, type , showTrash, selectedItemID}) => {
     console.log("ContextMenuModal rendered");
-    return (
-      type === 'p'
-      ? <div style={style}>
-        <div className={styles.modalBtn} onClick={()=>{setModifyName(true); setShowModal(''); }}>이름 변경하기</div>  
-        <div className={styles.modalBtn} onClick = {()=>{ setShowNotionModal('B') ; setShowModal('');   }} >약속에서 빠지기</div>  
-        <div className={styles.modalBtn} onClick = {()=>{ setShowNotionModal('T'); setShowModal(''); }}>약속 삭제하기</div>  
-
-      </div>
-      : <div style={style}>
-        <div className={styles.modalBtn} onClick={()=>{setModifyName(true); setShowModal('');}}>이름 변경하기</div>  
-        <div className={styles.modalBtn}>폴더 삭제하기</div>
-      </div>
-    );};
+    return  (
+      (!showTrash && type === 'p' && (
+        <div style={style}>
+          <div className={styles.modalBtn} onClick={() => { setModifyName(true); setShowModal(''); }}>이름 변경하기</div>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('B'); setShowModal(''); }}>약속에서 빠지기</div>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('T'); setShowModal(''); }}>약속 삭제하기</div>
+        </div>
+      ))
+      ||
+      (showTrash && type === 'p' && (
+        <div style={style}>
+          <div className={styles.modalBtn} onClick={() => { restoreApmt(selectedItemID); setShowModal(''); }}>복원하기</div>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('B'); setShowModal(''); }}>약속에서 빠지기</div>
+        </div>
+      ))
+      ||
+      (type === 't' && (
+        <div style={style}>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('BA'); setShowModal(''); }}>휴지통 비우기</div>
+        </div>
+      ))
+    );
+  };
 
     //Bookmark Zone
   const bookmark = useCallback (async (promiseCode) => {
@@ -267,7 +315,9 @@ const AllApmt = () => {
     <div className={styles.container}>
     <div className={styles.innerContainer}>
       <div className={styles.headBtnContainer}>
-        <button className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
+        <button onClick={()=>
+              window.location.href = '/:username/newapmt'
+            } className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
         <button className={styles.syncApmt}>{<IoSyncOutline size={24} />}<div className={styles.btnText}>비회원으로 참여한 약속 불러오기</div></button>
       </div>
       <div className={styles.searchContent}>{<RiSearchLine size="18px" color='#888' className={styles.icon} style={{ marginLeft: '5px' }}></RiSearchLine>}<input value={searchApmtVal} className={styles.searchContentInput} placeholder='찾기' 
@@ -290,16 +340,16 @@ const AllApmt = () => {
       </div></>)
 
       :(<div className={styles.folderContainer}>
-      <div className={styles.folderHeader}><div className={styles.TrashOutIcon} onClick={()=>{setShowTrash(false)}}>{svgList.folder.outofTrashBtn}</div><div className={styles.TrashText}>휴지통</div>
+      <div className={styles.folderHeader}><div className={styles.TrashOutIcon} onClick={()=>{setShowTrash(false)}}>{svgList.folder.outofTrashBtn}</div><div className={styles.emptyTrashCanContainer} onClick ={()=>setShowNotionModal('BA')}>{svgList.smallTrashIcon} 휴지통 비우기</div>
       </div>
       <ApmtList data={TrashData} fav={false} isTrash ={true} selectedItemID={selectedItemID} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash}  />
       </div>
       )}
       {showModal && <div ref={modalRef} style={modalStyle} className={styles.modal}>
-        <ContextMenuModal onClose={closeModal} type={showModal} />
+        <ContextMenuModal onClose={closeModal} type={showModal} showTrash={showTrash} selectedItemID={selectedItemID}/>
       </div>}
       {showNotionModal !=='' && <div ref={notionModalRef}>
-        <NotionModal onClose={closeNotionModal} type={showNotionModal} selectedItemID={selectedItemID} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} />
+        <NotionModal onClose={closeNotionModal} type={showNotionModal} selectedItemID={selectedItemID} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
       </div>}
     </div>
     </div>

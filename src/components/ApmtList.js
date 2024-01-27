@@ -4,6 +4,7 @@ import React from "react";
 import ApmtItem from './ApmtItem';
 import TrashCanIcon from './TrashCanIcon';
 
+//임시로 주석추가
 
 const ApmtList = ({ data, fav, isTrash = false, searchApmtVal ,selectedItemID, changeName,modifyName,setModifyName, bookmark, unBookmark, openModal ,handleShowTrash}) => {
   console.log("ApmtList rendered");

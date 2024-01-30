@@ -2,14 +2,94 @@
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
 import styles from '../css/CalendarWeekWithoutTime.module.css';
-import { format, addWeeks, subWeeks, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
+import { format, addWeeks, subWeeks, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameDay, getDay, addDays, parse, isBefore, startOfDay } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
-
-const not = '2023-12-27';
 
 const CalendarWeekWithoutTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
+
+
+  const [dragStart, setDragStart] = useState(null);
+  const [dragEnd, setDragEnd] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectDate, setSelectDate] = useState(new Set());
+  const [selectingDate, setSelectingDate] = useState(new Set());
+  const [removingDate, setRemovingDate] = useState(new Set());
+  const [adding, setAdding] = useState(true);
+
+  const handleMouseDown = (date) => {
+    setDragStart(date);
+    setIsDragging(true);
+    if (selectDate.has(format(date, 'yyyy-MM-dd'))) setAdding(false);
+    else setAdding(true);
+  };
+
+  const handleMouseUp = (date) => {
+    setDragEnd(date);
+    setIsDragging(false);
+    if (adding) setSelectDate(prevState => new Set([...prevState, ...selectingDate]));
+    else setSelectDate(prevState => {
+      return new Set(
+        [...prevState].filter(element => !removingDate.has(element))
+      );
+    })
+    setSelectingDate(new Set());
+    setRemovingDate(new Set());
+    if (isSameDay(dragStart, date)) onDateClick(date);
+  };
+
+  const handleMouseMove = (date) => {
+    if (isDragging && !isSameDay(dragEnd, date)) {
+      setDragEnd(date);
+      setSelectingDate(new Set());
+      setRemovingDate(new Set());
+
+      let start = new Date();
+      let end = new Date();
+      if (getDay(dragStart) <= getDay(date)) {
+        if (isBefore(dragStart, date)) {
+          // 오른쪽아래
+          start = dragStart;
+          end = date;
+        }
+        else {
+          // 오른쪽위
+          start = addDays(startOfWeek(date), getDay(dragStart));
+          end = addDays(startOfWeek(dragStart), getDay(date));
+        }
+      }
+      else {
+        if (isBefore(date, dragStart)) {
+          // 왼쪽위
+          start = date;
+          end = dragStart;
+        }
+        else {
+          // 왼쪽아래
+          start = addDays(startOfWeek(dragStart), getDay(date));
+          end = addDays(startOfWeek(date), getDay(dragStart));
+        }
+      }
+
+      let A = start;
+      while (isBefore(A, addDays(end, 1))) {
+        let day = format(A, 'yyyy-MM-dd');
+        // console.log(day);
+        if (adding) setSelectingDate(prevState => new Set([...prevState, day]));
+        // console.log(selectingDate)
+        else setRemovingDate(prevState => new Set([...prevState, day]));
+
+        if (getDay(A) == getDay(end)) {
+          A = addDays(A, 7 - getDay(end) + getDay(start));
+          continue;
+        }
+        A = addDays(A, 1);
+      }
+
+    }
+  };
+
   const Body = ({selectDate, onTimeClick}) => {
     const startDate = startOfWeek(selectWeek);
     const endDate = endOfWeek(selectWeek);
@@ -23,7 +103,6 @@ const CalendarWeekWithoutTime = (props) => {
     
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, 'd');
-      if (format(day, 'yyyy-MM-dd') !== not) {
         // for (let j = 0; j < 48; j++) {
           const cloneDay = day;
           days.push(
@@ -32,17 +111,21 @@ const CalendarWeekWithoutTime = (props) => {
             // 일정 있으면
             // 확정된 약속 있으면
             className={
-              selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-ss'))
+              (selectDate.has(format(day, 'yyyy-MM-dd')) || selectingDate.has(format(day, 'yyyy-MM-dd'))) && !removingDate.has(format(day, 'yyyy-MM-dd'))
               ? `${styles.col} ${styles.day} ${styles.selected}`
               : `${styles.col} ${styles.day} ${styles.valid}`
             }
+            // id={`${styles.selected}`}
             style={getStyles()}
             key={day}
-            onClick={() => {
-              // setSelectWeek(cloneDay);
-              console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
-              onTimeClick(cloneDay)
-            }}
+            onMouseDown={() => handleMouseDown(cloneDay)}
+            onMouseUp={() => handleMouseUp(cloneDay)}
+            onMouseMove={() => handleMouseMove(cloneDay)}
+            // onClick={() => {
+            //   // setSelectWeek(cloneDay);
+            //   console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
+            //   onTimeClick(cloneDay)
+            // }}
             >
               <AiOutlineCalendar size={23} color='#FFFFFF' style={{position:'absolute', top:'2px', left:2}}/>
               <div className={styles.howmany}>3</div>
@@ -50,17 +133,6 @@ const CalendarWeekWithoutTime = (props) => {
           );
           day = addDays(day, 1);
         // }
-      }
-      else {
-        days.push(<div className={`${styles.col} ${styles.day} ${styles.disabled}`} style={getStyles()}>
-          <svg width="60" height="120" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M59 1L1 119" stroke="#A8A8A8" stroke-linecap="round"/>
-            <path d="M1 1L59 119" stroke="#A8A8A8" stroke-linecap="round"/>
-          </svg>
-
-        </div>);
-        day = addDays(day, 1);  
-      }
       times.push(
         <div style={{flexDirection:'row'}}>
           <div>{days}</div>
@@ -93,7 +165,7 @@ const CalendarWeekWithoutTime = (props) => {
     };
   }, []);
   
-  const [selectDate, setSelectDate] = useState(new Set());
+  // const [selectDate, setSelectDate] = useState(new Set());
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const DivDates = [];
@@ -142,7 +214,17 @@ const CalendarWeekWithoutTime = (props) => {
       setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd-HH-mm-ss')]));
     }
   }
-
+  const onDateClick = (day) => {
+    if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
+      setSelectDate(prevState => {
+        prevState.delete(format(day, 'yyyy-MM-dd'));
+        return new Set([...prevState]);
+      })
+    }
+    else {
+      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
+    }
+  }
   return <div className={styles.entire} style={
     windowWidth < 580 
     ? {marginLeft:'10px', marginRight:'10px', width:'300px'}

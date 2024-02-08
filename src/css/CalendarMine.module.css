@@ -87,6 +87,10 @@
   border-right: none;
 }
 
+.colDays:first-child {
+  border-left: 1px solid transparent; /*skyblue*/
+}
+
 .colDays:last-child {
   border-right: 1px solid transparent; /*skyblue*/
 }
@@ -112,9 +116,11 @@
   align-items: center;
   flex-direction: column;
   border: 0.5px solid #D0D0D0;
-  /* border-top: none;
-  border-right: none; */
   z-index: 1;
+}
+
+.eachDay:first-child {
+  border-left: 1px solid #D0D0D0;
 }
 
 .eachDay:last-child {
@@ -122,7 +128,7 @@
 }
 
 .eachDay:hover {
-  outline: 1.5px solid #8E66EE;
+  outline: 2px solid #8E66EE;
   outline-offset: -1px;
   z-index: 2;
 }
@@ -135,7 +141,6 @@
   text-align: center;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 1px;
 }
 
 .dateHeaderToday {
@@ -147,7 +152,6 @@
   text-align: center;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 1px;
 }
 
 /* 해당 달에 해당하지 않는 날짜 */
@@ -158,7 +162,6 @@
   text-align: center;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 1px;
 }
 
 .txtDate {
@@ -167,7 +170,7 @@
 
 .dateNum {
   text-align: left;
-  border-left: none;
+  /* border-left: none; */
   width: 100%;
 }
 

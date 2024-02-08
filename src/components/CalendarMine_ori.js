@@ -8,100 +8,77 @@ const not = '2023-12-05';
 const CalendarMine = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
-  // const Body = ({selectWeek, selectDate}) => {
-  //   const monthStart = startOfMonth(selectWeek);
-  //   const monthEnd = endOfMonth(selectWeek);
-  //   const startDate = startOfWeek(monthStart);
-  //   const endDate = endOfWeek(monthEnd);
-    
-  //   const rows = [];
-  //   let day = startDate;
-  //   let formattedDate = '';
-    
-  //   while (day <= endDate) {
-  //     let days = [];
-  //     for (let i = 0; i < 7; i++) {
-  //       formattedDate = format(day, 'd');
-  //       const cloneDay = day;
-  //       days.push(
-  //         <div className={styles.eachDay} key={day}>
-  //           <div className={styles.col}>
-  //             <div className={styles[format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
-  //           </div>
-  //           <div
-  //             className={
-  //               selectDate.has(format(day, 'yyyy-MM-dd'))
-  //               ? `${styles.day} ${styles.selected}`
-  //               : format(day, 'yyyy-MM-dd') !== not
-  //               ? `${styles.day} ${styles.valid}`
-  //               : `${styles.day} ${styles.disabled}`
-  //             }
-  //             onClick={() => {
-  //               setSelectWeek(cloneDay);
-  //             }}
-  //           >
-  //           </div>
-  //         </div>
-  //       );
-  //       day = addDays(day, 1);
-  //     }
-  //     rows.push(
-  //       <div
-  //         className={`${styles.dayContent} ${isSameWeek(selectWeek, subDays(day, 1)) ? styles.weekSelected : styles.week} ${styles.dateBox}`}
-  //         key={'Week'+day}
-  //       >
-  //         {days}
-  //       </div>
-  //     );
-  //   }
-  //   return <div className={styles.body}>{rows}</div>;
-  // }
-  const Body = ({ selectWeek, selectDate }) => {
+  const Body = ({selectWeek, selectDate}) => {
     const monthStart = startOfMonth(selectWeek);
     const monthEnd = endOfMonth(selectWeek);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
-  
-    let day = startDate;
-  
+    // cont [selectWeek, setSelectWeek] = useState(currsentDate);
+    
     const rows = [];
-  
+    let days = [];
+    let dayHeaders = [];
+    let day = startDate;
+    let formattedDate = '';
+
+    
     while (day <= endDate) {
-      let days = [];
       for (let i = 0; i < 7; i++) {
-        const formattedDate = format(day, 'd');
-        const isNotThisMonth = format(day, 'M') !== format(monthStart, 'M'); // Check if the day is not in the current month
-        const dateHeaderClass = `${format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader'}`;
-  
+        formattedDate = format(day, 'd');
+        const cloneDay = day;
         days.push(
-          <div className={styles.eachDay} key={day}>
-            <div className={styles.col}>
-              <div className={`${styles[dateHeaderClass]}  ${format(day, 'M') !== format(monthStart, 'M') ? styles.notThisMonth : ""}`}>{formattedDate}</div>
-            </div>
-            <div
-              className={
-                `${styles.day} ${selectDate.has(format(day, 'yyyy-MM-dd')) ? styles.selected : ''} ${format(day, 'yyyy-MM-dd') !== not ? styles.valid : styles.disabled}`
-              }
-              onClick={() => {
-                if (!isNotThisMonth) setSelectWeek(day); // Prevent selecting days not in the current month
-              }}
-            >
-            </div>
+        <div className={styles.eachDay}>
+          <div
+          // 범위에 포함 안되면 disabled 추가
+          // 일정 있으면
+          // 확정된 약속 있으면
+          // className={
+          //   selectDate.has(format(day, 'yyyy-MM-dd'))
+          //   ? `${styles.col} ${styles.day} ${styles.selected}`
+          //   : format(day, 'yyyy-MM-dd') !== not
+          //   ? `${styles.col} ${styles.day} ${styles.valid}`
+          //   : `${styles.col} ${styles.day} ${styles.disabled}`
+          // }
+          className={
+            selectDate.has(format(day, 'yyyy-MM-dd'))
+            ? `${styles.day} ${styles.selected}`
+            : format(day, 'yyyy-MM-dd') !== not
+            ? `${styles.day} ${styles.valid}`
+            : `${styles.day} ${styles.disabled}`
+          }
+          // style={getStyles()}
+          key={day}
+          onClick={() => {
+            setSelectWeek(cloneDay);
+          }}
+          >
+            {/* {format(day, 'yyyy-MM-dd') !== not && <AiOutlineCalendar size={24} color='#FFFFFF' style={{position:'absolute', left:0, top:0}}/>}
+            {format(day, 'yyyy-MM-dd') !== not && <div>3</div>} */}
+          </div>
+        </div>
+        );
+        dayHeaders.push(
+          // <div className={styles.col} style={getStyles()}>
+          <div className={styles.col}>
+            <div className={styles[format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader']}>{formattedDate}</div>
           </div>
         );
         day = addDays(day, 1);
       }
       rows.push(
         <div
-          className={`${styles.dayContent} ${isSameWeek(selectWeek, subDays(day, 1)) ? styles.weekSelected : styles.week} ${styles.dateBox}`}
-          key={'Week' + day}
-        >
-          {days}
+          className={styles.dateNum}
+          key={'Week'+day}
+          >
+            <div className={styles.dayHeader}>{dayHeaders}</div>
+            <div className={`${styles.dayContent} ${isSameWeek(selectWeek, subDays(day, 1)) ? styles.weekSelected : styles.week} ${styles.dateBox}`}>{days}</div>
         </div>
       );
+      days = [];
+      dayHeaders = [];
     }
     return <div className={styles.body}>{rows}</div>;
-  };
+  }
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(()=>{
@@ -120,6 +97,28 @@ const CalendarMine = (props) => {
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const DivDates = [];
+
+  // const getStyles = () => {
+  //   if (windowWidth < 580) {
+  //     return {
+  //       width: '27px',
+  //       marginLeft: '2.9px',
+  //       marginRight: '2.9px',
+  //     };
+  //   } else if (windowWidth >= 580 && windowWidth <= 1200) {
+  //     return {
+  //       width: '4.5vw',
+  //       marginLeft: '0.5vw',
+  //       marginRight: '0.5vw',
+  //     };
+  //   } else {
+  //     return {
+  //       width: '60px',
+  //       marginLeft: '4px',
+  //       marginRight: '4px',
+  //     };
+  //   }
+  // };
   
   for (let i = 0; i < 7; i++) {
     DivDates.push(
@@ -147,6 +146,14 @@ const CalendarMine = (props) => {
       setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
     }
   }
+
+  // return <div className={styles.entire} style={
+  //   windowWidth < 580 
+  //   ? {marginLeft:'10px', marginRight:'10px', width:'280px'}
+  //   : (windowWidth >= 580 && windowWidth <= 1200)
+  //   ? {marginLeft:'1.8vw', marginRight:'1.8vw', width:'43vw'}
+  //   : {width:'580px'}
+  // }>
 
   return <div className={styles.entire} style={
     (windowWidth <= 900)
@@ -176,9 +183,22 @@ const CalendarMine = (props) => {
       </div>
     </div>
     <div className={styles.bodyContainer}>
+      {/* <div className={styles.DaysOfWeek} style={
+        windowWidth < 580 
+        ? {marginLeft:'12px', marginRight:'12px'}
+        : (windowWidth >= 580 && windowWidth <= 1200)
+        ? {marginLeft:'2vw', marginRight:'2vw'}
+        : {marginLeft:'40px', marginRight:'40px'}
+      }>{DivDates}</div> */}
       <div className={styles.DaysOfWeek}>{DivDates}</div>
+      {/* <div className={styles.body} style={
+        windowWidth < 580 
+        ? {marginLeft:'12px', marginRight:'12px'}
+        : (windowWidth >= 580 && windowWidth <= 1200)
+        ? {marginLeft:'2vw', marginRight:'2vw'}
+        : {marginLeft:'40px', marginRight:'40px'}
+      }><Body selectWeek={selectWeek} selectDate={selectDate} onDateClick={onDateClick} /></div> */}
       <div className={styles.body}><Body selectWeek={selectWeek} selectDate={selectDate} onDateClick={onDateClick} /></div>
-      <div className={styles.boderBottom}><div></div></div>
     </div>
     {/* <ConfirmedApmt />
     <CustomedSched /> */}

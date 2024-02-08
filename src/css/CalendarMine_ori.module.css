@@ -82,8 +82,8 @@
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  border: 0.5px solid transparent; /*skyblue*/
-  border-bottom: 0.5px solid #D0D0D0; /*skyblue*/
+  border: 1px solid transparent; /*skyblue*/
+  border-bottom: 1px solid #D0D0D0; /*skyblue*/
   border-right: none;
 }
 
@@ -93,41 +93,48 @@
 
 /* 날짜 적힌 부분 */
 .col{
-  width: 100%;
+  width: 13%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   position: relative;
+  border-top: none;
+  border: 1px solid #D0D0D0; /*skyblue*/
+  border-right: none;
+  border-bottom: none;
+  border-top: none;
+}
+
+.col:last-child{
+  border-right: 1px solid #D0D0D0; /*skyblue*/
 }
 
 .day {
   height: 60px;
 }
 
-/* 달력 1칸 */
+.day:hover {
+  box-shadow: 0 0 0 3px #40C06F inset;
+}
+
+/* 일정 적히는 칸 부분 */
 .eachDay {
   width: 13%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 0.5px solid #D0D0D0;
-  /* border-top: none;
-  border-right: none; */
-  z-index: 1;
+  border: 1px solid skyblue;
+  border-top: none;
+  border-right: none;
 }
 
 .eachDay:last-child {
-  border-right: 1px solid #D0D0D0;
-}
-
-.eachDay:hover {
-  outline: 1.5px solid #8E66EE;
+  border-right: 1px solid red;
+  outline: 2px solid #8E66EE;
   outline-offset: -1px;
-  z-index: 2;
 }
 
-/* 해당 달에 해당하는 날짜 */
 .dateHeader {
   height: 17px;
   width: 17px;
@@ -150,25 +157,16 @@
   margin-bottom: 1px;
 }
 
-/* 해당 달에 해당하지 않는 날짜 */
-.notThisMonth  {
-  height: 17px;
-  width: 17px;
-  color:#888888;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 1px;
-}
-
 .txtDate {
   color: #222222;
 }
 
 .dateNum {
   text-align: left;
+  /* border: 1px solid #D0D0D0; */
   border-left: none;
   width: 100%;
+  /* display: flex; */
 }
 
 .dayHeader{
@@ -183,19 +181,4 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100%;
-}
-
-.boderBottom {
-  width: 100%;
-  height: 3px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.boderBottom > div {
-  width: calc(91% + 7px);
-  height: 2px;
-  border-top: 0.5px solid #D0D0D0; /*skyblue*/
 }

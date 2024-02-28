@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 640px;
+  height: 560px;
   padding-top: 38px;
   /* padding-bottom: 36px; */
 }
@@ -42,7 +42,6 @@
 }
 
 .TodayBtn {
-  margin-left: 10px;
   position: absolute;
   border-radius: 5px;
   border: 1px solid #D0D0D0;
@@ -52,10 +51,6 @@
   font-weight: 500;
   padding: 3px 5px;
   left: 4px;
-}
-
-.TodayBtn:hover {
-  cursor: pointer; /* hover할 때 마우스 커서를 포인터로 설정해줘 */
 }
 
 .bodyContainer {
@@ -87,114 +82,70 @@
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  border: 1px solid transparent; /* 0.5 */
+  border: 1px solid transparent; /*skyblue*/
+  border-bottom: 1px solid #D0D0D0; /*skyblue*/
   border-right: none;
-  box-sizing: border-box;
-}
-
-.colDays:first-child {
-  border-left: 2px solid transparent; /* 1 */
 }
 
 .colDays:last-child {
-  border-right: 2px solid transparent; /* 1 */
+  border-right: 1px solid transparent; /*skyblue*/
 }
 
 /* 날짜 적힌 부분 */
 .col{
-  width: 100%;
+  width: 13%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
+  border-top: none;
+  border: 1px solid #D0D0D0; /*skyblue*/
+  border-right: none;
+  border-bottom: none;
+  border-top: none;
 }
 
-.hoverButton {
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-}
-
-/* 달 이동 화살표 & 일정 추가 버튼 */
-svg:hover {
-  cursor: pointer;
+.col:last-child{
+  border-right: 1px solid #D0D0D0; /*skyblue*/
 }
 
 .day {
   height: 60px;
 }
 
-/* 달력 1칸 */
-.eachDay {
-  width: 13%;
-  padding-top: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  border: 1px solid #D0D0D0; /* 0.5 */
-  z-index: 1;
-  box-sizing: border-box;
-  height: 92px;
+.day:hover {
+  box-shadow: 0 0 0 3px #40C06F inset;
 }
 
-.eachDay:first-child {
-  border-left: 2px solid #D0D0D0; /* 1 */
+/* 일정 적히는 칸 부분 */
+.eachDay {
+  width: 13%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid skyblue;
+  border-top: none;
+  border-right: none;
 }
 
 .eachDay:last-child {
-  border-right: 2px solid #D0D0D0; /* 1 */
+  border-right: 1px solid red;
+  outline: 2px solid #8E66EE;
+  outline-offset: -1px;
 }
 
-.eachDay:hover {
-  outline: 2px solid #8E66EE; /* 1 */
-  outline-offset: -2px; /* -1 */
-  z-index: 2;
-}
-
-.dayContent:first-of-type .eachDay {
-  border-top: 2px solid #D0D0D0; /* 1 */
-}
-
-.dayContent:last-of-type .eachDay {
-  border-bottom: 2px solid #D0D0D0; /* 1 */
-}
-
-/* 첫 번째 row의 첫 번째 요소 */
-.dayContent:first-of-type .eachDay:first-of-type {
-  border-top-left-radius: 8px;
-}
-
-/* 첫 번째 row의 마지막 요소 */
-.dayContent:first-of-type .eachDay:last-of-type {
-  border-top-right-radius: 8px;
-}
-
-/* 마지막 row의 첫 번째 요소 */
-.dayContent:last-of-type .eachDay:first-of-type {
-  border-bottom-left-radius: 8px;
-}
-
-/* 마지막 row의 마지막 요소 */
-.dayContent:last-of-type .eachDay:last-of-type {
-  border-bottom-right-radius: 8px;
-}
-
-/* 해당 달에 해당하는 날짜 */
 .dateHeader {
-  padding-top: 1px;
-  margin: -2px 0px 0px 3px;
   height: 17px;
   width: 17px;
   color: #222222;
   text-align: center;
   font-size: 12px;
   font-weight: 500;
+  margin-bottom: 1px;
 }
 
 .dateHeaderToday {
-  padding-top: 1px;
-  margin: -2px 0px 0px 3px;
   height: 17px;
   width: 17px;
   border-radius: 10px;
@@ -203,18 +154,7 @@ svg:hover {
   text-align: center;
   font-size: 12px;
   font-weight: 500;
-}
-
-/* 해당 달에 해당하지 않는 날짜 */
-.notThisMonth  {
-  padding-top: 1px;
-  margin: -2px 0px 0px 3px;
-  height: 17px;
-  width: 17px;
-  color:#888888;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
+  margin-bottom: 1px;
 }
 
 .txtDate {
@@ -223,8 +163,10 @@ svg:hover {
 
 .dateNum {
   text-align: left;
-  /* border-left: none; */
+  /* border: 1px solid #D0D0D0; */
+  border-left: none;
   width: 100%;
+  /* display: flex; */
 }
 
 .dayHeader{
@@ -239,5 +181,4 @@ svg:hover {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100%;
 }

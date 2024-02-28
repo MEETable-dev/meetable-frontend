@@ -2,7 +2,7 @@
 // import CustomedSched from './CustomedSched';
 import { useState, useEffect } from 'react';
 import styles from '../css/CalendarWeekWithTime.module.css';
-import { format, addWeeks, subWeeks, addMinutes, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore, startOfDay } from 'date-fns'
+import { format, addWeeks, subWeeks, addMinutes, isSameISOWeek, startOfWeek, endOfWeek, isSameDay, getDay, addDays, parse, isBefore, startOfDay, isSameHour, isSameMinute, getHours, getMinutes, addHours } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
 const not = '2023-12-05';
@@ -10,6 +10,96 @@ const not = '2023-12-05';
 const CalendarWeekWithTime = (props) => {
   let selectWeek = props.selectWeek;
   let setSelectWeek = props.setSelectWeek;
+
+  const [dragStart, setDragStart] = useState(null);
+  const [dragEnd, setDragEnd] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectDate, setSelectDate] = useState(new Set());
+  const [selectingDate, setSelectingDate] = useState(new Set());
+  const [removingDate, setRemovingDate] = useState(new Set());
+  const [adding, setAdding] = useState(true);
+
+  const handleMouseDown = (date) => {
+    setDragStart(date);
+    // console.log(date)
+    setIsDragging(true);
+    if (selectDate.has(format(date, 'yyyy-MM-dd-HH-mm'))) setAdding(false);
+    else setAdding(true);
+  };
+
+  const handleMouseUp = (date) => {
+    setDragEnd(date);
+    setIsDragging(false);
+    if (adding) setSelectDate(prevState => new Set([...prevState, ...selectingDate]));
+    else setSelectDate(prevState => {
+      return new Set(
+        [...prevState].filter(element => !removingDate.has(element))
+      );
+    })
+    setSelectingDate(new Set());
+    setRemovingDate(new Set());
+    if (isSameDay(dragStart, date) && isSameHour(dragStart, date) && isSameMinute(dragStart, date)) onTimeClick(date);
+  };
+
+  const handleMouseMove = (date) => {
+    if (isDragging && !(isSameDay(dragEnd, date) && isSameHour(dragEnd, date) && isSameMinute(dragEnd, date))) {
+      setDragEnd(date);
+      setSelectingDate(new Set());
+      setRemovingDate(new Set());
+      // console.log('date', format(date, 'MM-dd-mm'))
+
+      let start = new Date();
+      let end = new Date();
+      if (getDay(dragStart) <= getDay(date)) {
+        if (getHours(dragStart) + getMinutes(dragStart) / 60 <= getHours(date) + getMinutes(date) / 60 ) {
+          // 오른쪽아래
+          start = dragStart;
+          end = date;
+        }
+        else {
+          // 오른쪽위
+          // start = addDays(startOfWeek(date), getDay(dragStart));
+          start = addMinutes(addHours(startOfDay(dragStart), getHours(date)), getMinutes(date))
+          end = addMinutes(addHours(startOfDay(date), getHours(dragStart)), getMinutes(dragStart))
+          // end = addDays(startOfWeek(dragStart), getDay(date));
+        }
+      }
+      else {
+        if (getHours(dragStart) + getMinutes(dragStart) / 60 <= getHours(date) + getMinutes(date) / 60 ) {
+          // 왼쪽위
+          start = addMinutes(addHours(startOfDay(date), getHours(dragStart)), getMinutes(dragStart))
+          end = addMinutes(addHours(startOfDay(dragStart), getHours(date)), getMinutes(date))
+        }
+        else {
+          // 왼쪽아래
+          start = date;
+          end = dragStart;
+          // start = addDays(startOfWeek(dragStart), getDay(date));
+          // end = addDays(startOfWeek(date), getDay(dragStart));
+        }
+      }
+      
+      console.log('start', format(start, 'MM-dd-HH-mm'))
+      console.log('end', format(end, 'MM-dd-HH-mm'))
+      let A = start;
+      while (isBefore(A, addMinutes(end, 30))) {
+        let day = format(A, 'yyyy-MM-dd-HH-mm');
+        // console.log(day);
+        if (adding) setSelectingDate(prevState => new Set([...prevState, day]));
+        // console.log(selectingDate)
+        else setRemovingDate(prevState => new Set([...prevState, day]));
+
+        if (getHours(A) + getMinutes(A) / 60 == getHours(end) + getMinutes(end) / 60) {
+          // A = addDays(A, 7 - getDay(end) + getDay(start));
+          A = addMinutes(addHours(startOfDay(addDays(A, 1)), getHours(start)), getMinutes(start))
+          continue;
+        }
+        A = addMinutes(A, 30);
+      }
+
+    }
+  };
+
   const Body = ({selectDate, onTimeClick}) => {
     const startDate = startOfWeek(selectWeek);
     const endDate = endOfWeek(selectWeek);
@@ -51,17 +141,20 @@ const CalendarWeekWithTime = (props) => {
             // 일정 있으면
             // 확정된 약속 있으면
             className={
-              selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-ss'))
+              (selectDate.has(format(day, 'yyyy-MM-dd-HH-mm')) || selectingDate.has(format(day, 'yyyy-MM-dd-HH-mm'))) && !removingDate.has(format(day, 'yyyy-MM-dd-HH-mm'))
               ? `${styles.col} ${styles.day} ${styles.selected}`
               : `${styles.col} ${styles.day} ${styles.valid}`
             }
             style={getStyles()}
             key={day}
-            onClick={() => {
-              // setSelectWeek(cloneDay);
-              console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
-              onTimeClick(cloneDay)
-            }}
+            onMouseDown={() => handleMouseDown(cloneDay)}
+            onMouseUp={() => handleMouseUp(cloneDay)}
+            onMouseMove={() => handleMouseMove(cloneDay)}
+            // onClick={() => {
+            //   // setSelectWeek(cloneDay);
+            //   console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
+            //   onTimeClick(cloneDay)
+            // }}
             >
               <AiOutlineCalendar size={10} color='#FFFFFF'/>
               <div className={styles.howmany}>3</div>
@@ -132,7 +225,7 @@ const CalendarWeekWithTime = (props) => {
     };
   }, []);
   
-  const [selectDate, setSelectDate] = useState(new Set());
+  // const [selectDate, setSelectDate] = useState(new Set());
   
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const DivDates = [];
@@ -174,14 +267,14 @@ const CalendarWeekWithTime = (props) => {
     setSelectWeek(addWeeks(selectWeek, 1));
   };
   const onTimeClick = (day) => {
-    if (selectDate.has(format(day, 'yyyy-MM-dd-HH-mm-00'))) {
+    if (selectDate.has(format(day, 'yyyy-MM-dd-HH-mm'))) {
       setSelectDate(prevState => {
-        prevState.delete(format(day, 'yyyy-MM-dd-HH-mm-00'));
+        prevState.delete(format(day, 'yyyy-MM-dd-HH-mm'));
         return new Set(prevState);
       })
     }
     else {
-      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd-HH-mm-ss')]));
+      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd-HH-mm')]));
     }
   }
 

@@ -12,7 +12,7 @@ import TimeYES from '../components/TimeYES';
 const ApmtDetail = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [selectWeek, setSelectWeek] = useState(new Date());
-  const [time, setTime] = useState(false);
+  const [time, setTime] = useState(true);
   const [week, setWeek] = useState(false);
 
   useEffect(()=>{

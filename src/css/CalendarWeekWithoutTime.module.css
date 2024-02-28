@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: center;
   /* padding: 205px 0; */
+  user-select: none;
   height: 560px;
 }
 

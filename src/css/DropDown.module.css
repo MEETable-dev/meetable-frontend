@@ -20,13 +20,15 @@
 
 .optionForm {
   position: absolute;
-  padding: 9px 6px;
+  padding: 3px 6px 2px 6px;
   background-color: #fff;
   border-radius: 5px;
   border: 1px solid #D0D0D0;
   display: flex;
   flex-direction: column;
-  left:4px
+  left:4px;
+  overflow-y: scroll;
+  max-height: 10vh;
 }
 
 .optionList {
@@ -47,8 +49,10 @@
   font-weight: 500;
   text-wrap: nowrap;
   cursor: pointer;
-  padding: 6px;
-  width: 20px;
+  padding: 3px 6px;
+  width: 2vw;
+  min-width: 10px;
+  max-width: 20px;
 }
 
 .optionUnSelected {
@@ -58,8 +62,10 @@
   text-wrap: nowrap;
   cursor: pointer;
   color:#8E66EE;
-  padding: 6px;
-  width: 20px;
+  padding: 3px 6px;
+  width: 2vw;
+  min-width: 10px;
+  max-width: 20px;
 }
 
 .optionUnSelected:hover {

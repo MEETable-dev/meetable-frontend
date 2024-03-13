@@ -19,15 +19,12 @@ const DropDown = ({
 							setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
-						style={{ width: '4vw' }}
+						style={{ width: '4vw', maxWidth: 40, minWidth: 20 }}
 					>
 						{btnName} {svgList.apmtDetail.toggle}
 					</div>
 					{openState && (
-						<div
-							className={styles.optionForm}
-							style={{ padding: 0, overflowY: 'scroll' }}
-						>
+						<div className={styles.optionForm} style={{ padding: 0 }}>
 							{/* 선택지 폼 */}
 							{options.map((option, index) => (
 								<div

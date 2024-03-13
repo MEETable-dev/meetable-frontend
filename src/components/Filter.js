@@ -34,9 +34,9 @@ const Filter = ({
 	return (
 		<div className={styles.filterBody}>
 			<div className={styles.filterSection}>
-				최소{windowWidth <= 650 ? <br /> : ' '}인원
+				최소{windowWidth <= 450 ? <br /> : ' '}인원
 				<DropDown
-					// options={[2, 1, 20, 45]}
+					// options={[2, 1, 20, 45, 40, 40]}
 					options={Array.from({ length: total }, (_, index) => index + 1)}
 					selection={selectionNum}
 					onSelect={(option) => onSelectNum(option)}
@@ -47,11 +47,27 @@ const Filter = ({
 				/>
 				명
 			</div>
-			<div className={styles.filterSection}>
-				최소{windowWidth <= 650 ? <br /> : ' '}시간 시간
-			</div>
+			{false && (
+				<div className={styles.filterSection}>
+					최소{windowWidth <= 450 ? <br /> : ' '}시간
+					<DropDown
+						// options={[2, 1, 20, 45]}
+						options={[
+							0.5,
+							...Array.from({ length: 24 }, (_, index) => index + 1),
+						]}
+						selection={selectionNum}
+						onSelect={(option) => onSelectNum(option)}
+						type={'radio'}
+						btnName={selectionNum}
+						openState={openNumFilter}
+						setOpenState={setOpenNumFilter}
+					/>
+					시간
+				</div>
+			)}
 			<div className={styles.filterSection} style={{ textAlign: 'center' }}>
-				필수{windowWidth <= 650 ? <br /> : ''}참여자{' '}
+				필수{windowWidth <= 450 ? <br /> : ''}참여자{' '}
 				<DropDown
 					options={options}
 					selection={selectionParti}

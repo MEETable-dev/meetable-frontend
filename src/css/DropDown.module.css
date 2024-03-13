@@ -13,6 +13,9 @@
   margin: 0px 4px;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .optionForm {
@@ -35,4 +38,31 @@
   font-weight: 500;
   text-wrap: nowrap;
   cursor: pointer;
+}
+
+.optionSelected {
+  background-color: #8E66EE;
+  color:#fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-wrap: nowrap;
+  cursor: pointer;
+  padding: 6px;
+  width: 20px;
+}
+
+.optionUnSelected {
+  background-color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-wrap: nowrap;
+  cursor: pointer;
+  color:#8E66EE;
+  padding: 6px;
+  width: 20px;
+}
+
+.optionUnSelected:hover {
+  background-color: #8E66EE;
+  color: #fff;
 }

@@ -19,12 +19,15 @@ const DropDown = ({
 							setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
+						style={{ width: '4vw' }}
 					>
-						{btnName}
-						{svgList.apmtDetail.toggle}
+						{btnName} {svgList.apmtDetail.toggle}
 					</div>
 					{openState && (
-						<div className={styles.optionForm}>
+						<div
+							className={styles.optionForm}
+							style={{ padding: 0, overflowY: 'scroll' }}
+						>
 							{/* 선택지 폼 */}
 							{options.map((option, index) => (
 								<div
@@ -32,12 +35,11 @@ const DropDown = ({
 									onClick={() => onSelect(option)}
 									className={styles.optionList}
 								>
-									{selection.includes(option) ? (
-										<div>{svgList.apmtDetail.checkboxChecked}</div>
+									{selection == option ? (
+										<div className={styles.optionSelected}>{option}</div>
 									) : (
-										<div>{svgList.apmtDetail.checkboxEmpty}</div>
+										<div className={styles.optionUnSelected}>{option}</div>
 									)}
-									<div style={{ marginTop: 1, marginLeft: 4 }}>{option}</div>
 								</div>
 							))}
 						</div>

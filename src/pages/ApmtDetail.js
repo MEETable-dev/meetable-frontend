@@ -27,7 +27,9 @@ const ApmtDetail = () => {
 	const [promiseTotal, setPromiseTotal] = useState(0);
 	const [promisePartis, setPromisePartis] = useState([]);
 
-	const [filterSelection, setFilterSelection] = useState([]);
+	const [filterSelectionNum, setFilterSelectionNum] = useState(1);
+	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5);
+	const [filterSelectionParti, setFilterSelectionParti] = useState([]);
 
 	const [shareModal, setShareModal] = useState(false);
 
@@ -54,11 +56,11 @@ const ApmtDetail = () => {
 
 	const getApmtInfo = async () => {
 		try {
-			// console.log(promiseId);
 			const response = await axios.get(
 				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
 					promiseId.split('_')[0]
 				}`,
+				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);
 			if (response.data.weekvsdate == 'W') setWeek(true);
@@ -80,6 +82,7 @@ const ApmtDetail = () => {
 				`${process.env.REACT_APP_API_URL}/promise/participants/${
 					promiseId.split('_')[0]
 				}`,
+				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);
 			setPromisePartis([]);
@@ -186,15 +189,18 @@ const ApmtDetail = () => {
 				<Filter
 					total={promiseTotal}
 					options={promisePartis}
-					selectionNum={1}
-					selectionParti={filterSelection}
+					selectionNum={filterSelectionNum}
+					onSelectNum={(option) => {
+						setFilterSelectionNum(option);
+					}}
+					selectionParti={filterSelectionParti}
 					onSelectParti={(option) => {
-						if (filterSelection.includes(option)) {
-							setFilterSelection((prev) =>
+						if (filterSelectionParti.includes(option)) {
+							setFilterSelectionParti((prev) =>
 								[...prev].filter((element) => element != option),
 							);
 						} else {
-							setFilterSelection((prev) => [...prev, option]);
+							setFilterSelectionParti((prev) => [...prev, option]);
 						}
 					}}
 				/>

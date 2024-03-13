@@ -59,6 +59,7 @@
 .partiList {
   word-break: break-all;
   margin-bottom: 5px;
+  text-align: center;
 }
 
 .apmtHeader {

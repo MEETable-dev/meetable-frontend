@@ -12,12 +12,18 @@
   background-color: red;
 }
 
+.empty {
+  display: table-cell;
+}
+
 .participants {
   display: table-cell;
-  align-items: center;
+  /* align-items: center; */
+  /* justify-content: center; */
+  vertical-align: top;
   flex-direction: column;
   background-color: #fff;
-  padding: 30px 10px;
+  padding: 10px;
   border-radius: 10px;
   color: #222;
   font-weight: 500;
@@ -26,9 +32,14 @@
   min-width: 50px;
 }
 
-.empty {
-  display: table-cell;
+.partiContainer {
+  flex-grow:1;
+  width: 100%;
+  height:20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
+
 
 .partiHead {
   text-align: center;
@@ -38,13 +49,61 @@
   padding-bottom: 9px;
   margin-bottom: 9px;
   border-bottom: #D0D0D0 1px solid;
-  /* text-wrap: nowrap; */
+  flex-shrink: 1;
 }
 
-/* .partiBody {
-} */
+.partiBody {
+  flex-grow: 1;
+}
 
 .partiList {
   word-break: break-all;
   margin-bottom: 5px;
+}
+
+.apmtHeader {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: flex-end;
+  flex-direction: row;
+  padding-left: 3vw;
+  margin-bottom: 6px;
+}
+
+.apmtName {
+  color: #222;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.share {
+  margin-left: 4px;
+}
+
+.modalHeader {
+  color: #222;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.modalMiddleHeader {
+  color: #222;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalTxt {
+  display: flex;
+  color: #8E66EE;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 12px;
+  margin-right: 4px;
+  align-items: center;
+  cursor: pointer;
 }

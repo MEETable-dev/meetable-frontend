@@ -1,0 +1,15 @@
+.filterBody {
+  width: 100%;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  color: #222;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.filterImg {
+  margin-left: 4px;
+  margin-right: 4px;
+}

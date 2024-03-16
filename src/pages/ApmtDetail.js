@@ -11,6 +11,7 @@ import TimeYES from '../components/TimeYES';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { svgList } from 'assets/svg';
+import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 
 const ApmtDetail = () => {
@@ -108,10 +109,66 @@ const ApmtDetail = () => {
 		<div style={{ height: 'auto' }}>
 			{/* 약속 세부 */}
 			{!(!week && time) && (
-				<div className={styles.apmtHeader}>
-					<div className={styles.apmtName}>{promiseName}</div>
-					<div className={styles.share} onClick={() => setShareModal(true)}>
-						{svgList.apmtDetail.shareIcon}
+				<div
+					className={styles.apmtHeader}
+					style={
+						windowWidth < 580
+							? { width: '300px' }
+							: windowWidth >= 580 && windowWidth <= 1200
+							? { width: '48vw' }
+							: { width: '580px' }
+					}
+				>
+					<div className={styles.header} style={{ paddingLeft: '1vw' }}>
+						<div
+							className={styles.apmtName}
+							style={
+								// windowWidth < 580
+								// 	? { fontSize: 18 }
+								// 	: windowWidth >= 580 && windowWidth <= 1200
+								// 	? { fontSize: 20 }
+								// 	: { fontSize: 22 },
+								{
+									maxWidth:
+										windowWidth < 580
+											? 80
+											: windowWidth >= 580 && windowWidth <= 1200
+											? 150
+											: 190,
+									textOverflow: 'ellipsis',
+									overflow: 'hidden',
+									whiteSpace: 'nowrap',
+								}
+							}
+						>
+							{/* {promiseName} */}
+							가나닥라마알마ㅓ이ㅏ러만얼머ㅏ
+						</div>
+						<div
+							className={styles.share}
+							style={{ paddingTop: 5 }}
+							onClick={() => setShareModal(true)}
+						>
+							{svgList.apmtDetail.shareIcon}
+						</div>
+					</div>
+					<div className={styles.header}>
+						<div className={`${styles.headerBtn} ${styles.white}`}>
+							{windowWidth < 580
+								? '빠지기'
+								: windowWidth >= 580 && windowWidth <= 620
+								? '빠지기'
+								: '약속에서 빠지기'}
+						</div>
+						<div className={`${styles.headerBtn} ${styles.purple}`}>
+							{windowWidth < 700 ? '확정' : '확정하기'}
+						</div>
+						<div
+							className={`${styles.headerBtn} ${styles.purple}`}
+							style={{ padding: 5, marginRight: 0 }}
+						>
+							<AiOutlineEdit size={20} color="#ffffff" />
+						</div>
 					</div>
 				</div>
 			)}
@@ -120,7 +177,9 @@ const ApmtDetail = () => {
 					{!week && time && (
 						<div className={styles.apmtHeader}>
 							<div className={styles.apmtName}>{promiseName}</div>
-							<div className={styles.share}>{svgList.apmtDetail.shareIcon}</div>
+							<div className={styles.share} onClick={() => setShareModal(true)}>
+								{svgList.apmtDetail.shareIcon}
+							</div>
 						</div>
 					)}
 					{!week && time && (

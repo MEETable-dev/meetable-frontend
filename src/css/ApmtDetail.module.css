@@ -64,11 +64,42 @@
 
 .apmtHeader {
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   align-items: flex-end;
   flex-direction: row;
-  padding-left: 3vw;
+  padding-left: 2vw;
   margin-bottom: 6px;
+  margin-right: calc(70px+.8vw);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.headerBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px 8px;
+  margin-right: 8px;
+}
+
+.purple {
+  background-color: #8E66EE;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.white {
+  background-color: #fff;
+  color: #8E66EE;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #8E66EE;
 }
 
 .apmtName {

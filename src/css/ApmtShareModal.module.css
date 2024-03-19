@@ -16,6 +16,7 @@
   border-radius: 10px;
   position: relative;
   display: flex;
+  justify-content: c;
 }
 
 .closeBtn {

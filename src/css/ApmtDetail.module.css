@@ -67,9 +67,9 @@
   justify-content: space-between;
   align-items: flex-end;
   flex-direction: row;
-  padding-left: 2vw;
+  padding-left: 10px;
   margin-bottom: 6px;
-  margin-right: calc(70px+.8vw);
+  /* margin-right: calc(70px+.8vw); */
 }
 
 .header {
@@ -92,9 +92,11 @@
   color: #fff;
   font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .white {
+  cursor: pointer;
   background-color: #fff;
   color: #8E66EE;
   font-size: 15px;

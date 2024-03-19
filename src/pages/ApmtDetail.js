@@ -16,6 +16,7 @@ import ApmtShareModal from 'components/ApmtShareModal';
 
 const ApmtDetail = () => {
 	const accessToken = useSelector((state) => state.user.accessToken);
+  const [nonmemberId, setNonmemberId] = useState(-1);
 
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [selectWeek, setSelectWeek] = useState(new Date());
@@ -27,6 +28,10 @@ const ApmtDetail = () => {
 	const [promiseName, setPromiseName] = useState('');
 	const [promiseTotal, setPromiseTotal] = useState(0);
 	const [promisePartis, setPromisePartis] = useState([]);
+
+	const [editing, setEditing] = useState(false);
+	const [selectedInfo, setSelectedInfo] = useState({});
+	const [canParti, setCanParti] = useState([]);
 
 	const [filterSelectionNum, setFilterSelectionNum] = useState(1);
 	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5);
@@ -71,6 +76,7 @@ const ApmtDetail = () => {
 			setPromiseName(response.data.promise_name);
 			if (response.data.total <= 1) setShareModal(true);
 			setPromiseTotal(response.data.total);
+			setSelectedInfo(response.data.count);
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -116,7 +122,7 @@ const ApmtDetail = () => {
 							? { width: '300px' }
 							: windowWidth >= 580 && windowWidth <= 1200
 							? { width: '48vw' }
-							: { width: '580px' }
+							: { width: '584px' }
 					}
 				>
 					<div className={styles.header} style={{ paddingLeft: '1vw' }}>
@@ -141,8 +147,8 @@ const ApmtDetail = () => {
 								}
 							}
 						>
-							{/* {promiseName} */}
-							가나닥라마알마ㅓ이ㅏ러만얼머ㅏ
+							{promiseName}
+							{/* 가나닥라마알마ㅓ이ㅏ러만얼머ㅏ */}
 						</div>
 						<div
 							className={styles.share}
@@ -152,24 +158,32 @@ const ApmtDetail = () => {
 							{svgList.apmtDetail.shareIcon}
 						</div>
 					</div>
-					<div className={styles.header}>
-						<div className={`${styles.headerBtn} ${styles.white}`}>
-							{windowWidth < 580
-								? '빠지기'
-								: windowWidth >= 580 && windowWidth <= 620
-								? '빠지기'
-								: '약속에서 빠지기'}
+					{accessToken || nonmemberId != -1 ? (
+						<div className={styles.header}>
+							<div className={`${styles.headerBtn} ${styles.white}`}>
+								{windowWidth < 580
+									? '빠지기'
+									: windowWidth >= 580 && windowWidth <= 620
+									? '빠지기'
+									: '약속에서 빠지기'}
+							</div>
+							<div className={`${styles.headerBtn} ${styles.purple}`}>
+								{windowWidth < 700 ? '확정' : '확정하기'}
+							</div>
+							<div
+								className={`${styles.headerBtn} ${styles.purple}`}
+								style={{ padding: 5, marginRight: 0 }}
+							>
+								<AiOutlineEdit size={20} color="#ffffff" />
+							</div>
 						</div>
-						<div className={`${styles.headerBtn} ${styles.purple}`}>
-							{windowWidth < 700 ? '확정' : '확정하기'}
+					) : (
+						<div className={styles.heaer}>
+							<div className={`${styles.headerBtn} ${styles.purple}`}>
+								참여하기
+							</div>
 						</div>
-						<div
-							className={`${styles.headerBtn} ${styles.purple}`}
-							style={{ padding: 5, marginRight: 0 }}
-						>
-							<AiOutlineEdit size={20} color="#ffffff" />
-						</div>
-					</div>
+					)}
 				</div>
 			)}
 			<div style={{ display: 'table' }}>
@@ -215,8 +229,13 @@ const ApmtDetail = () => {
 					{/* {time && <div>주에서 시간 선택</div>} */}
 					{week && !time && (
 						<CalendarWeekWithoutTime
+							promiseId={promiseId}
 							selectWeek={selectWeek}
-							setSelectWeek={setSelectWeek}
+							// setSelectWeek={setSelectWeek}
+							editing={editing}
+							selectedInfo={selectedInfo}
+							canParti={canParti}
+							setCanParti={setCanParti}
 						/>
 					)}
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}
@@ -233,7 +252,7 @@ const ApmtDetail = () => {
 					<div className={styles.partiContainer}>
 						<div className={styles.partiHead}>참가자</div>
 						<div className={styles.partiBody}>
-							{promisePartis.map((item, index) => (
+							{canParti.map((item, index) => (
 								<div key={index} className={styles.partiList}>
 									{item}
 								</div>

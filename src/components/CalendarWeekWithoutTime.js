@@ -177,13 +177,14 @@ const CalendarWeekWithoutTime = (props) => {
 					// 일정 있으면
 					// 확정된 약속 있으면
 					className={
-						editing
+						editing // 편집버전에서는 선택/선택x/비활성화 3단계의 배경색
 							? (selectDate.has(format(day, 'yyyy-MM-dd')) ||
 									selectingDate.has(format(day, 'yyyy-MM-dd'))) &&
 							  !removingDate.has(format(day, 'yyyy-MM-dd'))
 								? `${styles.col} ${styles.day} ${styles.selected}`
 								: `${styles.col} ${styles.day} ${styles.valid}`
-							: color === 'valid'
+							: // 아닐 때는 선택 인원수에 따라 8단계의 배경색
+							color === 'valid'
 							? `${styles.col} ${styles.day} ${styles.valid}`
 							: color === 'E0CEFF'
 							? `${styles.col} ${styles.day} ${styles.Lv1}`

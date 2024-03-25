@@ -9,6 +9,7 @@ const DropDown = ({
 	btnName,
 	openState,
 	setOpenState,
+	disabled,
 }) => {
 	switch (type) {
 		case 'radio':
@@ -16,10 +17,23 @@ const DropDown = ({
 				<div className={styles.dropDownBody}>
 					<div
 						onClick={() => {
-							setOpenState(!openState);
+							if (!disabled) setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
-						style={{ width: '4vw', maxWidth: 40, minWidth: 20 }}
+						style={
+							disabled
+								? {
+										width: '4vw',
+										maxWidth: 40,
+										minWidth: 20,
+										color: '#888888',
+								  }
+								: {
+										width: '4vw',
+										maxWidth: 40,
+										minWidth: 20,
+								  }
+						}
 					>
 						{btnName} {svgList.apmtDetail.toggle}
 					</div>
@@ -48,9 +62,10 @@ const DropDown = ({
 				<div className={styles.dropDownBody}>
 					<div
 						onClick={() => {
-							setOpenState(!openState);
+							if (!disabled) setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
+						style={disabled ? { color: '#888888' } : {}}
 					>
 						{btnName}
 					</div>

@@ -291,27 +291,32 @@ const ApmtDetail = () => {
 					)}
 					{/* {!week && !time && <div>달력에서 날짜 선택</div>} */}
 				</div>
-				{!editing && (
-					<div className={styles.empty} style={{ padding: '0.3vw' }}></div>
-				)}
-				{!editing && (
-					<div className={styles.participants}>
-						<div className={styles.partiContainer}>
-							<div className={styles.partiHead}>참가자</div>
-							<div className={styles.partiBody}>
-								{canParti.map((item, index) => (
-									<div key={index} className={styles.partiList}>
-										{item}
-									</div>
-								))}
-								{/* <div className={styles.partiList}>선우정아이어요</div>
+				<div className={styles.empty} style={{ padding: '0.3vw' }}></div>
+				<div className={styles.participants}>
+					<div className={styles.partiContainer}>
+						<div
+							className={styles.partiHead}
+							style={editing ? { color: '#888888' } : {}}
+						>
+							참가자
+						</div>
+						<div className={styles.partiBody}>
+							{canParti.map((item, index) => (
+								<div
+									key={index}
+									className={styles.partiList}
+									style={editing ? { color: '#888888' } : {}}
+								>
+									{item}
+								</div>
+							))}
+							{/* <div className={styles.partiList}>선우정아이어요</div>
 							<div className={styles.partiList}>가나다</div> */}
-							</div>
 						</div>
 					</div>
-				)}
+				</div>
 			</div>
-			{accessToken && !editing && (
+			{accessToken && (
 				<Filter
 					total={promiseTotal}
 					options={promisePartis}
@@ -329,9 +334,10 @@ const ApmtDetail = () => {
 							setFilterSelectionParti((prev) => [...prev, option]);
 						}
 					}}
+					disabled={editing}
 				/>
 			)}
-			{!editing && <ColorBar total={promiseTotal} />}
+			<ColorBar total={promiseTotal} />
 			{shareModal && (
 				<ApmtShareModal title={''} onClose={() => setShareModal(false)}>
 					<div className={styles.modalHeader}>

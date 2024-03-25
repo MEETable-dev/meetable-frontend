@@ -340,15 +340,25 @@ const ApmtDetail = () => {
 							참가자
 						</div>
 						<div className={styles.partiBody}>
-							{canParti.map((item, index) => (
-								<div
-									key={index}
-									className={styles.partiList}
-									style={editing ? { color: '#888888' } : {}}
-								>
-									{item}
-								</div>
-							))}
+							{editing
+								? [].map((item, index) => (
+										<div
+											key={index}
+											className={styles.partiList}
+											style={editing ? { color: '#888888' } : {}}
+										>
+											{item}
+										</div>
+								  ))
+								: canParti.map((item, index) => (
+										<div
+											key={index}
+											className={styles.partiList}
+											style={editing ? { color: '#888888' } : {}}
+										>
+											{item}
+										</div>
+								  ))}
 							{/* <div className={styles.partiList}>선우정아이어요</div>
 							<div className={styles.partiList}>가나다</div> */}
 						</div>

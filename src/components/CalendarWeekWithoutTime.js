@@ -251,10 +251,11 @@ const CalendarWeekWithoutTime = (props) => {
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			setCanParti([]);
-			response.data.participants.map((item, index) => {
-				setCanParti((prev) => [...prev, item.name]);
-			});
+			// console.log(response.data.participants);
+			setCanParti(response.data.participants);
+			// response.data.participants.map((item, index) => {
+			// 	setCanParti((prev) => [...prev, item.name]);
+			// });
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);

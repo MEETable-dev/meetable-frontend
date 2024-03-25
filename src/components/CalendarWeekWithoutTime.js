@@ -141,11 +141,11 @@ const CalendarWeekWithoutTime = (props) => {
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			// console.log(response.data);
-			// setPromisePartis([]);
-			// response.data.map((item, index) => {
-			// 	setPromisePartis((prev) => [...prev, item.name]);
-			// });
+			console.log(response.data.participants);
+			setCanParti([]);
+			response.data.participants.map((item, index) => {
+				setCanParti((prev) => [...prev, item.name]);
+			});
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);

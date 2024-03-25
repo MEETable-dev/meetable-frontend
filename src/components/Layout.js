@@ -20,7 +20,7 @@ import { useAppDispatch } from "store";
 import axios from "axios";
 import MyInfoModal from "../components/MyInfoModal"
 import PWChangeModal from "../components/PWChangeModal"
-import useCustomColor from "hooks/useCustomColor";
+import useCustomColor from 'hooks/CustomColor';
 
 const Layout = (props) => {
   const localStorage = window.localStorage;

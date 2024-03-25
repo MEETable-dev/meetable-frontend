@@ -20,6 +20,7 @@ import {
 	startOfDay,
 } from 'date-fns';
 import { AiOutlineCalendar } from 'react-icons/ai';
+import CustomColor from 'hooks/CustomColor';
 
 const CalendarWeekWithoutTime = (props) => {
 	const accessToken = useSelector((state) => state.user.accessToken);
@@ -28,6 +29,7 @@ const CalendarWeekWithoutTime = (props) => {
 	let selectWeek = props.selectWeek;
 	// let setSelectWeek = props.setSelectWeek;
 	let editing = props.editing;
+	let promiseTotal = props.promiseTotal;
 	let selectedInfo = props.selectedInfo;
 	let canParti = props.canParti;
 	let setCanParti = props.setCanParti;
@@ -165,17 +167,37 @@ const CalendarWeekWithoutTime = (props) => {
 			formattedDate = format(day, 'd');
 			// for (let j = 0; j < 48; j++) {
 			const cloneDay = day;
+			let color = CustomColor(
+				promiseTotal,
+				selectedInfo[`${DaysOfWeek[getDay(cloneDay)]}`],
+			);
 			days.push(
 				<div
 					// 범위에 포함 안되면 disabled 추가
 					// 일정 있으면
 					// 확정된 약속 있으면
 					className={
-						(selectDate.has(format(day, 'yyyy-MM-dd')) ||
-							selectingDate.has(format(day, 'yyyy-MM-dd'))) &&
-						!removingDate.has(format(day, 'yyyy-MM-dd'))
-							? `${styles.col} ${styles.day} ${styles.selected}`
-							: `${styles.col} ${styles.day} ${styles.valid}`
+						editing
+							? (selectDate.has(format(day, 'yyyy-MM-dd')) ||
+									selectingDate.has(format(day, 'yyyy-MM-dd'))) &&
+							  !removingDate.has(format(day, 'yyyy-MM-dd'))
+								? `${styles.col} ${styles.day} ${styles.selected}`
+								: `${styles.col} ${styles.day} ${styles.valid}`
+							: color === 'valid'
+							? `${styles.col} ${styles.day} ${styles.valid}`
+							: color === 'E0CEFF'
+							? `${styles.col} ${styles.day} ${styles.Lv1}`
+							: color === 'BEA1FE'
+							? `${styles.col} ${styles.day} ${styles.Lv2}`
+							: color === 'A988F0'
+							? `${styles.col} ${styles.day} ${styles.Lv3}`
+							: color === '8D63E8'
+							? `${styles.col} ${styles.day} ${styles.Lv4}`
+							: color === '6330DE'
+							? `${styles.col} ${styles.day} ${styles.Lv5}`
+							: color === '4B1CBC'
+							? `${styles.col} ${styles.day} ${styles.Lv6}`
+							: `${styles.col} ${styles.day} ${styles.Lv7}`
 					}
 					// id={`${styles.selected}`}
 					style={getStyles()}
@@ -189,13 +211,15 @@ const CalendarWeekWithoutTime = (props) => {
 					//   onTimeClick(cloneDay)
 					// }}
 				>
-					<AiOutlineCalendar
+					{/* <AiOutlineCalendar
 						size={23}
 						color="#FFFFFF"
 						style={{ position: 'absolute', top: '2px', left: 2 }}
-					/>
+					/> */}
 					<div className={styles.howmany}>
-						{editing ? '' : selectedInfo[`${DaysOfWeek[getDay(cloneDay)]}`]}
+						{editing || selectedInfo[`${DaysOfWeek[getDay(cloneDay)]}`] === 0
+							? ''
+							: selectedInfo[`${DaysOfWeek[getDay(cloneDay)]}`]}
 					</div>
 				</div>,
 			);

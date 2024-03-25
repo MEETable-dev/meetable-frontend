@@ -79,6 +79,34 @@
   background-color: #8E66EE;
 }
 
+.Lv1 {
+  background-color: #E0CEFF;
+}
+
+.Lv2 {
+  background-color: #BEA1FE;
+}
+
+.Lv3 {
+  background-color: #A988F0;
+}
+
+.Lv4 {
+  background-color: #8D63E8;
+}
+
+.Lv5 {
+  background-color: #6330DE;
+}
+
+.Lv6 {
+  background-color: #4B1CBC;
+}
+
+.Lv7 {
+  background-color: #400099;
+}
+
 .txtDate {
   color: #222222;
 }

@@ -43,7 +43,7 @@ const DropDown = ({
 							{options.map((option, index) => (
 								<div
 									key={index}
-									onClick={() => onSelect(option)}
+									onClick={() => {if(!disabled) onSelect(option)}}
 									className={styles.optionList}
 								>
 									{selection == option ? (
@@ -75,8 +75,11 @@ const DropDown = ({
 							{options.map((option, index) => (
 								<div
 									key={index}
-									onClick={() => onSelect(option)}
+									onClick={() => {
+										if (!disabled) onSelect(option);
+									}}
 									className={styles.optionList}
+									style={disabled ? { color: '#888888' } : {}}
 								>
 									{selection.includes(option) ? (
 										<div>{svgList.apmtDetail.checkboxChecked}</div>

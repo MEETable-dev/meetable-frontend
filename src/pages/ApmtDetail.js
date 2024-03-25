@@ -45,6 +45,8 @@ const ApmtDetail = () => {
 	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
 	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
 
+	const [reset, setReset] = useState(true);
+
 	useEffect(() => {
 		const handleResize = () => {
 			setWindowWidth(window.innerWidth);
@@ -64,6 +66,10 @@ const ApmtDetail = () => {
 		getParticipantsInfo();
 		if (accessToken) getMyParti();
 	}, [promiseId]);
+
+	useEffect(() => {
+		getApmtInfoReset();
+	}, [reset]);
 
 	const getMyParti = async () => {
 		try {
@@ -100,6 +106,37 @@ const ApmtDetail = () => {
 				else setTime(true);
 				setPromiseName(response.data.promise_name);
 				if (response.data.total <= 1) setShareModal(true);
+				setPromiseTotal(response.data.total);
+				setSelectedInfo(response.data.count);
+			} else {
+				navigate(`/`, {});
+			}
+			//
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const getApmtInfoReset = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+					promiseId.split('_')[0]
+				}`,
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			console.log(response.data);
+			setPromiseCode(response.data.promise_code);
+			if (
+				response.data.promise_code.toLowerCase() ===
+				promiseId.split('_')[promiseId.split('_').length - 1].toLowerCase()
+			) {
+				if (response.data.weekvsdate === 'W') setWeek(true);
+				else setWeek(false);
+				if (response.data.ampmvstime === 'F') setTime(false);
+				else setTime(true);
+				setPromiseName(response.data.promise_name);
 				setPromiseTotal(response.data.total);
 				setSelectedInfo(response.data.count);
 			} else {
@@ -280,6 +317,8 @@ const ApmtDetail = () => {
 							selectedInfo={selectedInfo}
 							canParti={canParti}
 							setCanParti={setCanParti}
+							reset={reset}
+							setReset={setReset}
 						/>
 					)}
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}

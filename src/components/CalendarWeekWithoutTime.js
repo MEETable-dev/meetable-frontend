@@ -33,6 +33,8 @@ const CalendarWeekWithoutTime = (props) => {
 	let selectedInfo = props.selectedInfo;
 	let canParti = props.canParti;
 	let setCanParti = props.setCanParti;
+	let reset = props.reset;
+	let setReset = props.setReset;
 
 	const [dragStart, setDragStart] = useState(null);
 	const [dragEnd, setDragEnd] = useState(null);
@@ -58,8 +60,92 @@ const CalendarWeekWithoutTime = (props) => {
 
 		console.log(result);
 		// 업데이트 로직 넣기
+		try {
+			if (adding) {
+				const response = await axios.post(
+					`${process.env.REACT_APP_API_URL}/promise/time`,
+					{
+						promiseId: promiseId.split('_')[0],
+						weekAvailable: result,
+					},
+					!accessToken && { headers: { Authorization: '@' } },
+				);
+				console.log(response.data);
+			} else {
+				if (accessToken) {
+					const response = await axios.delete(
+						`${process.env.REACT_APP_API_URL}/promise/deletetime`,
+						{
+							data: {
+								promiseId: promiseId.split('_')[0],
+								weekToDelete: result,
+							},
+						},
+					);
+					console.log(response.data);
+				} else {
+					const response = await axios.delete(
+						`${process.env.REACT_APP_API_URL}/promise/deletetime`,
+						{
+							data: {
+								promiseId: promiseId.split('_')[0],
+								weekToDelete: result,
+							},
+							headers: { Authorization: '@' },
+						},
+					);
+					console.log(response.data);
+				}
+			}
+			setReset(!reset);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
 		return result;
 	};
+
+	function getThisWeekDatesForWeekdays(weekdayList) {
+		const currentDayOfWeek = new Date().getDay(); // 오늘 요일
+		const currentDate = new Date().getDate();
+
+		const thisWeekDates = [];
+
+		weekdayList.forEach((dayOfWeek) => {
+			// 입력된 요일 인덱스
+			const inputDayIndex = DaysOfWeek.indexOf(dayOfWeek);
+
+			// 입력된 요일이 이번 주보다 이전에 있다면 이번 주의 해당 요일을 구함
+			const daysToAdd = inputDayIndex - currentDayOfWeek;
+			const targetDate = new Date(new Date());
+			targetDate.setDate(currentDate + daysToAdd);
+
+			const formattedDate = format(targetDate, 'yyyy-MM-dd');
+			thisWeekDates.push(formattedDate);
+		});
+
+		return new Set(thisWeekDates);
+	}
+
+	const getMyParti = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/myinfo/${
+					promiseId.split('_')[0]
+				}`,
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			setSelectDate(getThisWeekDatesForWeekdays(response.data.week_available));
+			console.log('myparti', response.data.week_available);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	useEffect(() => {
+		if (!isDragging) getMyParti();
+	}, [setReset]);
 
 	const handleMouseDown = (date) => {
 		if (editing) {

@@ -1,0 +1,23 @@
+.filterBody {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-left: 1.7vw;
+  margin-right: 0.2vw;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  display: flex;
+  justify-content: space-evenly;
+  color: #222;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.filterSection {
+  display: flex;
+  /* flex:1; */
+  justify-content: center;
+  align-items: center;
+  padding-top: 13px;
+  padding-bottom: 13px;
+}

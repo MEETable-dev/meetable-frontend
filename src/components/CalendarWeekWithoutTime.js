@@ -43,15 +43,23 @@ const CalendarWeekWithoutTime = (props) => {
 	const [adding, setAdding] = useState(true);
 
 	const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-	// const [selectedInfo, setSelectedInfo] = useState({
-	// 	SUN: 1,
-	// 	MON: 0,
-	// 	TUE: 0,
-	// 	WED: 0,
-	// 	THU: 0,
-	// 	FRI: 0,
-	// 	SAT: 0,
-	// });
+
+	const updateAndDelete = async (adding, selectingDate) => {
+		const result = [];
+		if (adding) {
+			selectingDate.difference(selectDate).forEach((dateStr) => {
+				result.push(DaysOfWeek[getDay(new Date(dateStr))]);
+			});
+		} else {
+			selectingDate.intersection(selectDate).forEach((dateStr) => {
+				result.push(DaysOfWeek[getDay(new Date(dateStr))]);
+			});
+		}
+
+		console.log(result);
+		// 업데이트 로직 넣기
+		return result;
+	};
 
 	const handleMouseDown = (date) => {
 		if (editing) {
@@ -66,17 +74,33 @@ const CalendarWeekWithoutTime = (props) => {
 		if (editing) {
 			setDragEnd(date);
 			setIsDragging(false);
-			if (adding)
-				setSelectDate((prevState) => new Set([...prevState, ...selectingDate]));
-			else
-				setSelectDate((prevState) => {
-					return new Set(
-						[...prevState].filter((element) => !removingDate.has(element)),
+			if (isSameDay(dragStart, date)) onDateClick(date);
+			else {
+				if (adding) {
+					// console.log(selectingDate.difference(selectDate));
+					// selectingDate.difference(selectDate).forEach((dateStr) => {
+					// 	console.log(DaysOfWeek[getDay(new Date(dateStr))]);
+					// });
+					updateAndDelete(true, selectingDate);
+					setSelectDate(
+						(prevState) => new Set([...prevState, ...selectingDate]),
 					);
-				});
+				} else {
+					// console.log('del', removingDate.intersection(selectDate));
+					// removingDate.intersection(selectDate).forEach((dateStr) => {
+					// 	console.log(DaysOfWeek[getDay(new Date(dateStr))]);
+					// });
+					updateAndDelete(false, removingDate);
+
+					setSelectDate((prevState) => {
+						return new Set(
+							[...prevState].filter((element) => !removingDate.has(element)),
+						);
+					});
+				}
+			}
 			setSelectingDate(new Set());
 			setRemovingDate(new Set());
-			if (isSameDay(dragStart, date)) onDateClick(date);
 		}
 	};
 
@@ -141,7 +165,6 @@ const CalendarWeekWithoutTime = (props) => {
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			console.log(response.data.participants);
 			setCanParti([]);
 			response.data.participants.map((item, index) => {
 				setCanParti((prev) => [...prev, item.name]);
@@ -322,11 +345,14 @@ const CalendarWeekWithoutTime = (props) => {
 	};
 	const onDateClick = (day) => {
 		if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
+			updateAndDelete(false, new Set([format(day, 'yyyy-MM-dd')]));
 			setSelectDate((prevState) => {
 				prevState.delete(format(day, 'yyyy-MM-dd'));
 				return new Set([...prevState]);
 			});
 		} else {
+			updateAndDelete(true, new Set([day]));
+			// console.log(new Set([format(day, 'yyyy-MM-dd')]).difference(selectDate));
 			setSelectDate(
 				(prevState) => new Set([...prevState, format(day, 'yyyy-MM-dd')]),
 			);

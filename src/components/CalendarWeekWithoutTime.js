@@ -139,7 +139,7 @@ const CalendarWeekWithoutTime = (props) => {
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			console.log(response.data);
+			// console.log(response.data);
 			// setPromisePartis([]);
 			// response.data.map((item, index) => {
 			// 	setPromisePartis((prev) => [...prev, item.name]);

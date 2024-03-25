@@ -93,6 +93,7 @@
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
+  border: 1px solid #8E66EE;
 }
 
 .white {

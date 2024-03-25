@@ -1,18 +1,21 @@
 import styles from '../css/ApmtDetail.module.css';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { svgList } from 'assets/svg';
 import CalendarWeekWithTime from 'components/CalendarWeekWithTime';
 import CalendarWeekWithoutTime from 'components/CalendarWeekWithoutTime';
 import CalendarMonthWithTime from 'components/CalendarMonthWithTime';
 import CalendarMonthWithoutTime from 'components/CalendarMonthWithoutTime';
 import ColorBar from '../components/ColorBar';
 import Filter from '../components/Filter';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { svgList } from 'assets/svg';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 
 const ApmtDetail = () => {
+	const navigate = useNavigate();
+
 	const accessToken = useSelector((state) => state.user.accessToken);
 	const [nonmemberId, setNonmemberId] = useState(-1);
 
@@ -23,22 +26,24 @@ const ApmtDetail = () => {
 	const [week, setWeek] = useState(false);
 
 	const [promiseId, setPromiseId] = useState('');
+	const [promiseCode, setPromiseCode] = useState('');
 	const [promiseName, setPromiseName] = useState('');
-	const [promiseTotal, setPromiseTotal] = useState(0);
-	const [promisePartis, setPromisePartis] = useState([]);
+	const [promiseTotal, setPromiseTotal] = useState(0); // 참여중인 인원 수
+	const [promisePartis, setPromisePartis] = useState([]); // 참여중인 사람 목록
 
-	const [editing, setEditing] = useState(false);
+	const [editing, setEditing] = useState(false); // 편집 버전
 	const [selectedInfo, setSelectedInfo] = useState({});
-	const [canParti, setCanParti] = useState([]);
+	const [canParti, setCanParti] = useState([]); // 올 수 있다고 표기한 사람 목록
 
-	const [filterSelectionNum, setFilterSelectionNum] = useState(1);
-	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5);
-	const [filterSelectionParti, setFilterSelectionParti] = useState([]);
+	const [filterSelectionNum, setFilterSelectionNum] = useState(1); // 최소 인원 필터 선택값
+	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5); // 최소 시간 필터 선택값
+	const [filterSelectionParti, setFilterSelectionParti] = useState([]); // 필수참여자 필터 선택값
 
-	const [partiModal, setPartiModal] = useState('no');
-	const [addDescription, setAddDescription] = useState('out');
-	const [shareModal, setShareModal] = useState(false);
-	const [copyModal, setCopyModal] = useState(false);
+	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
+	const [partiModal, setPartiModal] = useState('no'); // 참여하기 모달 (no:안보임/show:참여하기/link:비회원으로 참여한 약속 불러오기)
+	const [addDescription, setAddDescription] = useState('out'); // 추가설명 여부 (hover:떼면 안보임/click:다시 클릭해야 안보임/out:안보임)
+	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
+	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -57,7 +62,23 @@ const ApmtDetail = () => {
 		console.log(promiseId);
 		getApmtInfo();
 		getParticipantsInfo();
+		if (accessToken) getMyParti();
 	}, [promiseId]);
+
+	const getMyParti = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/isparticipate/${
+					promiseId.split('_')[0]
+				}`,
+			);
+			console.log(response.data);
+			setImIn(response.data.isParticipating);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
 
 	const getApmtInfo = async () => {
 		try {
@@ -68,14 +89,23 @@ const ApmtDetail = () => {
 				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);
-			if (response.data.weekvsdate === 'W') setWeek(true);
-			else setWeek(false);
-			if (response.data.ampmvstime === 'F') setTime(false);
-			else setTime(true);
-			setPromiseName(response.data.promise_name);
-			if (response.data.total <= 1) setShareModal(true);
-			setPromiseTotal(response.data.total);
-			setSelectedInfo(response.data.count);
+			setPromiseCode(response.data.promise_code);
+			if (
+				response.data.promise_code.toLowerCase() ===
+				promiseId.split('_')[promiseId.split('_').length - 1].toLowerCase()
+			) {
+				if (response.data.weekvsdate === 'W') setWeek(true);
+				else setWeek(false);
+				if (response.data.ampmvstime === 'F') setTime(false);
+				else setTime(true);
+				setPromiseName(response.data.promise_name);
+				if (response.data.total <= 1) setShareModal(true);
+				setPromiseTotal(response.data.total);
+				setSelectedInfo(response.data.count);
+			} else {
+				navigate(`/`, {});
+			}
+			//
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -158,8 +188,7 @@ const ApmtDetail = () => {
 							{svgList.apmtDetail.shareIcon}
 						</div>
 					</div>
-					{(accessToken && promisePartis.includes('me')) ||
-					nonmemberId !== -1 ? (
+					{(accessToken && imIn) || nonmemberId !== -1 ? (
 						<div className={styles.header}>
 							<div className={`${styles.headerBtn} ${styles.white}`}>
 								{windowWidth < 580
@@ -168,14 +197,24 @@ const ApmtDetail = () => {
 									? '빠지기'
 									: '약속에서 빠지기'}
 							</div>
-							<div className={`${styles.headerBtn} ${styles.purple}`}>
-								{windowWidth < 700 ? '확정' : '확정하기'}
-							</div>
+							{!editing && (
+								<div className={`${styles.headerBtn} ${styles.purple}`}>
+									{windowWidth < 700 ? '확정' : '확정하기'}
+								</div>
+							)}
 							<div
 								className={`${styles.headerBtn} ${styles.purple}`}
-								style={{ padding: 5, marginRight: 0 }}
+								style={{
+									padding: 5,
+									marginRight: 0,
+									backgroundColor: editing ? '#ffffff' : '#8E66EE',
+								}}
+								onClick={() => setEditing(!editing)}
 							>
-								<AiOutlineEdit size={20} color="#ffffff" />
+								<AiOutlineEdit
+									size={20}
+									color={editing ? '#8E66EE' : '#ffffff'}
+								/>
 							</div>
 						</div>
 					) : (
@@ -301,11 +340,15 @@ const ApmtDetail = () => {
 							className={styles.modalTxt}
 							onClick={() =>
 								handleCopyClipBoard(
-									`https://www.meetable.com/ApmtDetail/:${promiseId}`,
+									`https://www.meetable.com/ApmtDetail/:${
+										promiseId.split('_')[0]
+									}_${promiseCode}`,
 								)
 							}
 						>
-							https://www.meetable.com/ApmtDetail/:{promiseId}
+							{`https://www.meetable.com/ApmtDetail/:${
+								promiseId.split('_')[0]
+							}_${promiseCode}`}
 							{svgList.apmtDetail.copyIcon}
 						</div>
 					</div>
@@ -313,10 +356,12 @@ const ApmtDetail = () => {
 						약속 코드
 						<div
 							className={styles.modalTxt}
-							onClick={() => handleCopyClipBoard(promiseId)}
+							onClick={() =>
+								handleCopyClipBoard(`${promiseId.split('_')[0]}_${promiseCode}`)
+							}
 							style={{ maxWidth: 120 }}
 						>
-							{promiseId}
+							{`${promiseId.split('_')[0]}_${promiseCode}`}
 							{svgList.apmtDetail.copyIcon}
 						</div>
 					</div>

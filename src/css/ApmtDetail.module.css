@@ -223,3 +223,28 @@
   font-weight: 500;
   margin: 0 10px;
 }
+
+.wrongAddTitle {
+  color: #222222;
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.wrongAddContent {
+  color:#222222;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 46px;
+}
+
+.wrongAddBtn {
+  color: #6330DE;
+  font-size: 18px;
+  font-weight: 400;
+  text-decoration-line: underline;
+  margin-bottom: 20px; 
+  cursor: pointer;
+}

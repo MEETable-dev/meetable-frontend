@@ -12,6 +12,7 @@ import ColorBar from '../components/ColorBar';
 import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
+import OnlyShowModal from 'components/OnlyShowModal';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -44,6 +45,7 @@ const ApmtDetail = () => {
 	const [addDescription, setAddDescription] = useState('out'); // 추가설명 여부 (hover:떼면 안보임/click:다시 클릭해야 안보임/out:안보임)
 	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
 	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
+	const [wrongAddressModal, setWrongAddressModal] = useState(false); // 없는 주소 모달 여부
 
 	const [reset, setReset] = useState(true);
 
@@ -62,9 +64,13 @@ const ApmtDetail = () => {
 	useEffect(() => {
 		setPromiseId(window.location.href.split('tail/')[1].replace(':', ''));
 		console.log(promiseId);
-		getApmtInfo();
-		getParticipantsInfo();
-		if (accessToken) getMyParti();
+		if (window.location.href.split('tail/')[1].replace(':', '')) {
+			getApmtInfo();
+			getParticipantsInfo();
+			if (accessToken) getMyParti();
+		} else {
+			setWrongAddressModal(true);
+		}
 	}, [promiseId]);
 
 	useEffect(() => {
@@ -109,7 +115,8 @@ const ApmtDetail = () => {
 				setPromiseTotal(response.data.total);
 				setSelectedInfo(response.data.count);
 			} else {
-				navigate(`/`, {});
+				// navigate(`/`, {});
+				setWrongAddressModal(true);
 			}
 			//
 		} catch (error) {
@@ -140,7 +147,8 @@ const ApmtDetail = () => {
 				setPromiseTotal(response.data.total);
 				setSelectedInfo(response.data.count);
 			} else {
-				navigate(`/`, {});
+				// navigate(`/`, {});
+				setWrongAddressModal(true);
 			}
 			//
 		} catch (error) {
@@ -575,6 +583,24 @@ const ApmtDetail = () => {
 						</div>
 					)}
 				</ApmtShareModal>
+			)}
+			{wrongAddressModal && (
+				<OnlyShowModal>
+					<div className={styles.wrongAddTitle}>앗! 없는 주소예요.</div>
+					<div className={styles.wrongAddContent}>
+						최고의 일정 조율 서비스 미터블에서
+						<br />
+						약속 일정을 관리하세요!
+					</div>
+					<div
+						className={styles.wrongAddBtn}
+						onClick={() => {
+							navigate('/');
+						}}
+					>
+						미터블 홈으로 가기
+					</div>
+				</OnlyShowModal>
 			)}
 		</div>
 	);

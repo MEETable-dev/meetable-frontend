@@ -5,8 +5,8 @@ import { svgList } from "../assets/svg";
 const PolicyModal = ({ title, onClose, children }, ref) => {
   return (
     <div ref={ref}>
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
+      <div className={styles.modalOverlay} onClick={onClose}>
+        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHead}>
             <div className={styles.title}><b>{title}</b></div>
             <button className={styles.closeButton} onClick={onClose}>
@@ -15,7 +15,6 @@ const PolicyModal = ({ title, onClose, children }, ref) => {
               </div>
             </button>
           </div>
-
           <div className={styles.modalBody}>
             {children}
           </div>

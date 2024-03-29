@@ -26,7 +26,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     const [endTime, setEndTime] = useState(23);
     const [endMinute, setEndMinute] = useState(59);
 
-    const [amptName, setAmptName] = useState('일정');
+    const [amptName, setAmptName] = useState('');
     const [placeName, setPlaceName] = useState('');
     const [memo, setMemo] = useState('');
 
@@ -141,7 +141,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
             {i}
         </option>
     ));
-    const startMinuteOptions = Array.from({ length: 61 }, (_, i) => (
+    const startMinuteOptions = Array.from({ length: 60 }, (_, i) => (
         <option key={i} value={i}>
             {i}
         </option>
@@ -152,7 +152,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
             {i}
         </option>
     ));
-    const endMinuteOptions = Array.from({ length: 61 }, (_, i) => (
+    const endMinuteOptions = Array.from({ length: 60 }, (_, i) => (
         <option key={i} value={i}>
             {i}
         </option>
@@ -386,7 +386,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                         <SubmitBtn
                             text="완료"
                             onClick={createAmpt}
-                            isActive={true}
+                            isActive={amptName}
                             className={`${styles.createBtn}`}
                         />
                     </div>

@@ -251,7 +251,7 @@ margin-left: -1px;
     height: 48px;
     margin-top: 30px;
     margin-bottom: 60px;
-    border: 1px solid #8E66EE;
+    /* border: 1px solid #8E66EE; */
     }
 
 .cancelBtn {
@@ -261,7 +261,8 @@ margin-left: -1px;
     margin-bottom: 60px;
     background-color: white;
     color: #8E66EE;
-    border: 1px solid #8E66EE;
+    outline: 1px solid #8E66EE;
+    outline-offset: -1px;
     }
 
 .selectDateArea {

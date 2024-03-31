@@ -35,6 +35,7 @@ const CalendarWeekWithoutTime = (props) => {
 	let setCanParti = props.setCanParti;
 	let reset = props.reset;
 	let setReset = props.setReset;
+  let nonmemberId = props.nonmemberId;
 
 	const [dragStart, setDragStart] = useState(null);
 	const [dragEnd, setDragEnd] = useState(null);
@@ -68,7 +69,7 @@ const CalendarWeekWithoutTime = (props) => {
 						promiseId: promiseId.split('_')[0],
 						weekAvailable: result,
 					},
-					!accessToken && { headers: { Authorization: '@' } },
+					!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
 				);
 				console.log(response.data);
 			} else {
@@ -91,7 +92,7 @@ const CalendarWeekWithoutTime = (props) => {
 								promiseId: promiseId.split('_')[0],
 								weekToDelete: result,
 							},
-							headers: { Authorization: '@' },
+							headers: { Authorization: `@${nonmemberId}` },
 						},
 					);
 					console.log(response.data);
@@ -133,7 +134,7 @@ const CalendarWeekWithoutTime = (props) => {
 				`${process.env.REACT_APP_API_URL}/promise/myinfo/${
 					promiseId.split('_')[0]
 				}`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
 			);
 			setSelectDate(getThisWeekDatesForWeekdays(response.data.week_available));
 			console.log('myparti', response.data.week_available);
@@ -144,7 +145,7 @@ const CalendarWeekWithoutTime = (props) => {
 	};
 
 	useEffect(() => {
-		if (!isDragging) getMyParti();
+		if (!isDragging && nonmemberId !== -1) getMyParti();
 	}, [setReset]);
 
 	const handleMouseDown = (date) => {
@@ -249,7 +250,7 @@ const CalendarWeekWithoutTime = (props) => {
 				`${process.env.REACT_APP_API_URL}/promise/hover/${
 					promiseId.split('_')[0]
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
 			);
 			// console.log(response.data.participants);
 			setCanParti(response.data.participants);

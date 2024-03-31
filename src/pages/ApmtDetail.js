@@ -13,12 +13,15 @@ import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
+import { set } from 'date-fns';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
 
 	const accessToken = useSelector((state) => state.user.accessToken);
 	const [nonmemberId, setNonmemberId] = useState(-1);
+	const [nonmemberNickname, setNonmemberNickname] = useState('');
+	const [nonmemberPw, setNonmemberPw] = useState('');
 
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [selectWeek, setSelectWeek] = useState(new Date());
@@ -41,6 +44,8 @@ const ApmtDetail = () => {
 	const [filterSelectionParti, setFilterSelectionParti] = useState([]); // 필수참여자 필터 선택값
 
 	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
+	const [myName, setMyName] = useState(''); // 내 이름
+
 	const [partiModal, setPartiModal] = useState('no'); // 참여하기 모달 (no:안보임/show:참여하기/link:비회원으로 참여한 약속 불러오기)
 	const [addDescription, setAddDescription] = useState('out'); // 추가설명 여부 (hover:떼면 안보임/click:다시 클릭해야 안보임/out:안보임)
 	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
@@ -67,7 +72,10 @@ const ApmtDetail = () => {
 		if (window.location.href.split('tail/')[1].replace(':', '')) {
 			getApmtInfo();
 			getParticipantsInfo();
-			if (accessToken) getMyParti();
+			if (accessToken) {
+				getMyParti();
+				getMyName();
+			}
 		} else {
 			setWrongAddressModal(true);
 		}
@@ -76,6 +84,19 @@ const ApmtDetail = () => {
 	useEffect(() => {
 		getApmtInfoReset();
 	}, [reset]);
+
+	const getMyName = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/username`,
+			);
+			console.log(response.data);
+			setMyName(response.data.name);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
 
 	const getMyParti = async () => {
 		try {
@@ -170,6 +191,31 @@ const ApmtDetail = () => {
 			response.data.map((item, index) => {
 				setPromisePartis((prev) => [...prev, item.name]);
 			});
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const participate = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/participate`,
+				{
+					promiseId: promiseId.split('_')[0],
+					nickname: nonmemberNickname,
+					password: nonmemberPw,
+				},
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			console.log(response.data);
+			if (response.data.nonmemberId) {
+				setNonmemberId(response.data.nonmemberId);
+			}
+			setPartiModal('no');
+			setReset(!reset);
+			getParticipantsInfo();
+			getMyParti();
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -327,6 +373,7 @@ const ApmtDetail = () => {
 							setCanParti={setCanParti}
 							reset={reset}
 							setReset={setReset}
+							nonmemberId={nonmemberId}
 						/>
 					)}
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}
@@ -527,13 +574,24 @@ const ApmtDetail = () => {
 						<div style={{ height: 20 }}></div>
 					)}
 					<div className={styles.inputArea}>
-						<input className={styles.inputItem} placeholder="별명" />
+						<input
+							className={styles.inputItem}
+							placeholder="별명"
+							value={nonmemberNickname}
+							onChange={(e) => {
+								setNonmemberNickname(e.target.value.trim());
+							}}
+							onSubmit={() => participate()}
+						/>
 						<div
 							style={{
 								position: 'absolute',
 								right: 2,
 								top: 3,
 								cursor: 'pointer',
+							}}
+							onClick={() => {
+								setNonmemberNickname('');
 							}}
 						>
 							{svgList.loginIcon.delBtn}
@@ -542,6 +600,10 @@ const ApmtDetail = () => {
 							<input
 								className={styles.inputItem}
 								placeholder="(선택사항)비밀번호"
+								value={nonmemberPw}
+								onChange={(e) => {
+									setNonmemberPw(e.target.value.trim());
+								}}
 							/>
 						)}
 						{(!accessToken || (accessToken && partiModal === 'link')) && (
@@ -552,6 +614,9 @@ const ApmtDetail = () => {
 									top: 48,
 									cursor: 'pointer',
 								}}
+								onClick={() => {
+									setNonmemberPw('');
+								}}
 							>
 								{svgList.loginIcon.delBtn}
 							</div>
@@ -560,6 +625,13 @@ const ApmtDetail = () => {
 					<div
 						className={styles.modalBtn}
 						style={!accessToken ? { marginBottom: 30 } : { marginBottom: 0 }}
+						onClick={() => {
+							if (partiModal === 'link') {
+								console.log('비회원 약속 불러오기');
+							} else {
+								participate();
+							}
+						}}
 					>
 						{partiModal === 'link' ? '약속 불러오기' : '참여하기'}
 					</div>

@@ -195,7 +195,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     return (
     <div ref={ref}>
         <div className={styles.modalOverlay} onClick={onClose}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={`${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
                 <h2>일정 추가하기</h2>
 
                 {/* 색 고르기 */}

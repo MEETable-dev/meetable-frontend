@@ -22,8 +22,6 @@ import MyInfoModal from "../components/MyInfoModal"
 import PWChangeModal from "../components/PWChangeModal"
 import useCustomColor from "hooks/useCustomColor";
 
-import AddSchModal from "../components/AddSchModal"; // 디버깅용 추가
-
 const Layout = (props) => {
   const localStorage = window.localStorage;
   const navigate = useNavigate();
@@ -342,17 +340,12 @@ const Layout = (props) => {
         <div className={styles.modalBtn} onClick={()=>{setMypageModal('serviceTerms')}}>내 정보</div>
         <div className={styles.modalBtn} onClick={logout}>로그아웃</div>
       </div>}
-      {/* {mypageModal === 'serviceTerms' && <MyInfoModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
+      {mypageModal === 'serviceTerms' && <MyInfoModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
         내 정보 모달
-      </MyInfoModal>} */}
+      </MyInfoModal>}
       {mypageModal === 'marketing' && <PWChangeModal onClose={() => toggleModal(null)}>
         비밀번호 변경 모달
       </PWChangeModal>}
-
-      {/* 디버깅용 수정 */}
-      {mypageModal === 'serviceTerms' && <AddSchModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
-        내 정보 모달
-      </AddSchModal>}
     </div>
   );
 };

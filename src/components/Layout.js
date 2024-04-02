@@ -210,20 +210,64 @@ const Layout = (props) => {
   
   const PromiseItem = ({ name, fav, id }) => {
     return (
-      <div className={selectedItemID === id ? styles.listItemsContainerFocused : styles.listItemsContainer} 
-      onContextMenu={(event)=>{openModal(id, event, 'p', name)}} onClick={()=>{navigate(`/:username/ApmtDetail/:${id.split('-')[1]}`, {state: {promiseCode: id.split('-')[1]}})}}>
-        <div className={styles.listItems}>
-          {fav === 'T' && <AiFillStar color="#FFBB0D" size={22} className={styles.listIcon} onClick={()=>{unBookmark(id)}}/>}
-          {!(fav === 'T') && <AiOutlineStar color="#888888" size={22} className={styles.listIcon} onClick={()=>{bookmark(id)}}/>}
-          {(selectedItemID === id && modifyName) ? <input value={writeNameVal} name="writeName" ref={inputRef} className={styles.renameInput}
-                onChange={(e) => {setWriteNameVal(e.target.value)}}/> : name}
-        </div>
-        <div className={styles.btnArea} onClick={(event)=>{
-            openModal(id, event, 'p', name)
-            }
-          }>{svgList.folder.more}</div>
-      </div>
-    );
+			<div
+				className={
+					selectedItemID === id
+						? styles.listItemsContainerFocused
+						: styles.listItemsContainer
+				}
+				onContextMenu={(event) => {
+					openModal(id, event, 'p', name);
+				}}
+				onClick={() => {
+					window.location.href = `/:username/ApmtDetail/:${id.split('-')[1]}`;
+				}}
+			>
+				<div className={styles.listItems}>
+					{fav === 'T' && (
+						<AiFillStar
+							color="#FFBB0D"
+							size={22}
+							className={styles.listIcon}
+							onClick={() => {
+								unBookmark(id);
+							}}
+						/>
+					)}
+					{!(fav === 'T') && (
+						<AiOutlineStar
+							color="#888888"
+							size={22}
+							className={styles.listIcon}
+							onClick={() => {
+								bookmark(id);
+							}}
+						/>
+					)}
+					{selectedItemID === id && modifyName ? (
+						<input
+							value={writeNameVal}
+							name="writeName"
+							ref={inputRef}
+							className={styles.renameInput}
+							onChange={(e) => {
+								setWriteNameVal(e.target.value);
+							}}
+						/>
+					) : (
+						name
+					)}
+				</div>
+				<div
+					className={styles.btnArea}
+					onClick={(event) => {
+						openModal(id, event, 'p', name);
+					}}
+				>
+					{svgList.folder.more}
+				</div>
+			</div>
+		);
   };
 
   const logout = async () => {

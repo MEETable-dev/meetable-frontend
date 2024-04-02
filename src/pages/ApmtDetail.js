@@ -45,6 +45,7 @@ const ApmtDetail = () => {
 
 	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
 	const [myName, setMyName] = useState(''); // 내 이름
+	const [canConfirm, setCanConfirm] = useState(false); // 확정 권한
 
 	const [partiModal, setPartiModal] = useState('no'); // 참여하기 모달 (no:안보임/show:참여하기/link:비회원으로 참여한 약속 불러오기)
 	const [addDescription, setAddDescription] = useState('out'); // 추가설명 여부 (hover:떼면 안보임/click:다시 클릭해야 안보임/out:안보임)
@@ -107,6 +108,8 @@ const ApmtDetail = () => {
 			);
 			console.log(response.data);
 			setImIn(response.data.isParticipating);
+			if (response.data.canconfirm === 'T') setCanConfirm(true);
+			else setCanConfirm(false);
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -208,10 +211,12 @@ const ApmtDetail = () => {
 				},
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			console.log(response.data);
+			console.log('parti', response.data);
 			if (response.data.nonmemberId) {
 				setNonmemberId(response.data.nonmemberId);
 			}
+			if (response.data.canconfirm === 'T') setCanConfirm(true);
+			else setCanConfirm(false);
 			setPartiModal('no');
 			setReset(!reset);
 			getParticipantsInfo();
@@ -288,7 +293,7 @@ const ApmtDetail = () => {
 									? '빠지기'
 									: '약속에서 빠지기'}
 							</div>
-							{!editing && (
+							{!editing && canConfirm && (
 								<div className={`${styles.headerBtn} ${styles.purple}`}>
 									{windowWidth < 700 ? '확정' : '확정하기'}
 								</div>
@@ -601,6 +606,7 @@ const ApmtDetail = () => {
 								className={styles.inputItem}
 								placeholder="(선택사항)비밀번호"
 								value={nonmemberPw}
+								type="password"
 								onChange={(e) => {
 									setNonmemberPw(e.target.value.trim());
 								}}

@@ -146,7 +146,7 @@ const CalendarWeekWithoutTime = (props) => {
 
 	useEffect(() => {
 		if (!isDragging && nonmemberId !== -1) getMyParti();
-	}, [setReset]);
+	}, [setReset, nonmemberId]);
 
 	const handleMouseDown = (date) => {
 		if (editing) {

@@ -323,7 +323,7 @@ const Layout = (props) => {
                 console.log(code)
                 localStorage.setItem('originURL', `3000/:username/apmtdetail/:${code}`);
               }
-              window.location.href = `/:username/apmtdetail/:`;
+              window.location.href = `/login`;
               }}>로그인</div>
             <div id={styles.bar}>|</div>
             <div onClick={()=>{window.location.href = '/emailauth'}}>가입하기</div>

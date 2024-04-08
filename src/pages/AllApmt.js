@@ -14,8 +14,6 @@ import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const AllApmt = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -28,6 +26,8 @@ const AllApmt = () => {
   //BookMark + Selected + Apmt
   const [bookmarkData, setBookmarkData] = useState([]);
   const [ApmtData, setApmtData] = useState([]);
+
+  //selectedItemID는 그냥 아예 없는걸로. ? ㄴㄴ 그냥 ItemID랑 SelectedItemList랑..둘다
   const [selectedItemID, setSelectedItemID] = useState(null);
   const [favoritesDown, setFavoritesDownClick] = useState(true);
 
@@ -37,7 +37,7 @@ const AllApmt = () => {
 
   //Name Modification + Modals
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedList, setSelectedList] = useState([]);
+  const [selectedItemList, setSelectedItemList] = useState([]);
   const [modifyName, setModifyName] = useState(false);
 
   const modalRef = useRef();
@@ -57,20 +57,24 @@ const AllApmt = () => {
     setShowTrash(!showTrash);
   },[showTrash]);
 
-  const handleSelectAll = ()=>{
-    if (selectAll===true){
-      setSelectAll(false);
-      setSelectedList([]);
-    }
-    else{
+  const handleSelectAll = () => {
+    if (!selectAll) {
+      // 전체 선택 상태일 때
       setSelectAll(true);
-      setSelectedList(ApmtData);
-      //selectedList에 모든 object추가하기
-    }};
+      // 모든 약속의 promiseCode에서 앞에 있는 숫자만 추출하여 선택된 목록에 추가
+      setSelectedItemList(ApmtData.map(apmt => apmt.promiseCode));
+
+    } else {
+      // 선택 해제 상태일 때
+      setSelectAll(false);
+      setSelectedItemList([]); // 모든 항목 선택 해제
+    }
+  };
 
   const closeNotionModal = (e) =>{
     setShowNotionModal('');
     setSelectedItemID(null);
+    setSelectedItemList([]);
   };
 
   const restoreApmt = async (promiseCode) =>{
@@ -88,10 +92,14 @@ const AllApmt = () => {
     }};
   //Notion Modal Zone
   //약속 삭제(휴지통으로 이동)
-  const moveApmtToTrash = async (promiseCode)=>{
+  const moveApmtToTrash = async (promiseCodes)=>{
+    const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+    console.log("promiseIds: ",promiseIds);
+    console.log("promiseIds[0]: ", promiseIds[0]);
     try{
+      const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
       const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
-        {promiseId: promiseCode.split('-')[1].split('_')[0]});
+        { promiseId: promiseIds });
       await getData();
       await getTrashData();
       console.log(response);
@@ -101,20 +109,24 @@ const AllApmt = () => {
     }};
 
   //약속에서 빠지기
-  const backoutApmt = async (promiseCode) =>{
-    console.log(ApmtData);
-    try{
-      const response = await axios.delete( `${process.env.REACT_APP_API_URL}/home/backoutpromise`,
-        {promiseId: promiseCode.split('-')[1].split('_')[0]});
+  const backoutApmt = async (promiseCodes) => {
+    const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+    console.log("promiseIds: ",promiseIds);
+    try {
+      const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+      console.log("promiseIds: ",promiseIds); // promiseCodes를 파싱하여 promiseIds 배열로 변환
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/home/backoutpromise`, {
+        data: { promiseId: promiseIds } // promiseIds를 배열로 전달
+      });
       console.log(response.data);
       await getData();
       await getTrashData();
-      console.log(promiseCode);
-
-    } catch(error){
-      const errorResponse= error.response;
+      console.log(promiseCodes);
+    } catch (error) {
+      const errorResponse = error.response;
       console.log(errorResponse.data);
-    }};
+    }
+  };
 
     //휴지통 비우기(모든 약속에서 빠지기)
 
@@ -137,6 +149,7 @@ const AllApmt = () => {
       event.preventDefault();
       setModalPosition({x:event.pageX, y:event.pageY});
       setSelectedItemID(itemID);
+      setSelectedItemList([itemID]);
       setModifyName(false);
       //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
       setShowModal(type);}
@@ -152,6 +165,7 @@ const AllApmt = () => {
     setShowModal('');
     setSelectedItemID(null);
     setModifyName(false);
+    setSelectedItemList([]);
     //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
     // selectedList.splice(selectedList.indexOf(itemID), 1);
     // setSelectedList([...selectedList]);
@@ -163,7 +177,7 @@ const AllApmt = () => {
     left:`${modalPosition.x}px`,
   };
 
-  const ContextMenuModal = ({  onClose, style, type , showTrash, selectedItemID}) => {
+  const ContextMenuModal = ({  onClose, style, type , showTrash, selectedItemList}) => {
     console.log("ContextMenuModal rendered");
     return  (
       (!showTrash && type === 'p' && (
@@ -176,7 +190,7 @@ const AllApmt = () => {
       ||
       (showTrash && type === 'p' && (
         <div style={style}>
-          <div className={styles.modalBtn} onClick={() => { restoreApmt(selectedItemID); setShowModal(''); }}>복원하기</div>
+          <div className={styles.modalBtn} onClick={() => { restoreApmt(selectedItemList); setShowModal(''); }}>복원하기</div>
           <div className={styles.modalBtn} onClick={() => { setShowNotionModal('B'); setShowModal(''); }}>약속에서 빠지기</div>
         </div>
       ))
@@ -327,7 +341,7 @@ const AllApmt = () => {
         <div className={styles.folderHeader}>즐겨찾기<div className={styles.icon} onClick={handleFavoritesDownClick}>{favoritesDown ? <GoChevronDown size={24}></GoChevronDown> : <GoChevronUp size={24}></GoChevronUp>}</div>
         </div>
         <div className={favoritesDown ? styles.folderInnerContainer : styles.hidden} >
-          {favoritesDown && <ApmtList data={bookmarkData} fav={true} searchApmtVal={searchApmtVal} isTrash={false} selectedItemID={selectedItemID} changeName={changeName}  modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />}
+          {favoritesDown && <ApmtList data={bookmarkData} fav={true} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName}  modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />}
         </div>
       </div>
       <div className={styles.folderContainer}>
@@ -335,21 +349,21 @@ const AllApmt = () => {
           { selectAll ? <div className={styles.selectAll} onClick={()=> {handleSelectAll()}}>{svgList.folder.checkFilled}</div> 
         :<div className={styles.selectAll} onClick={()=>{handleSelectAll(true)}}>{svgList.folder.check}</div>}전체선택</div></div></div>
         <div className={styles.folderInnerContainer}>
-        <ApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemID={selectedItemID} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
+        <ApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
         </div>
       </div></>)
 
       :(<div className={styles.folderContainer}>
       <div className={styles.folderHeader}><div className={styles.TrashOutIcon} onClick={()=>{setShowTrash(false)}}>{svgList.folder.outofTrashBtn}</div><div className={styles.emptyTrashCanContainer} onClick ={()=>setShowNotionModal('BA')}>{svgList.smallTrashIcon} 휴지통 비우기</div>
       </div>
-      <ApmtList data={TrashData} fav={false} isTrash ={true} selectedItemID={selectedItemID} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash}  />
+      <ApmtList data={TrashData} fav={false} isTrash ={true} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash}  />
       </div>
       )}
       {showModal && <div ref={modalRef} style={modalStyle} className={styles.modal}>
-        <ContextMenuModal onClose={closeModal} type={showModal} showTrash={showTrash} selectedItemID={selectedItemID}/>
+        <ContextMenuModal onClose={closeModal} type={showModal} showTrash={showTrash} selectedItemList={selectedItemList}/>
       </div>}
       {showNotionModal !=='' && <div ref={notionModalRef}>
-        <NotionModal onClose={closeNotionModal} type={showNotionModal} selectedItemID={selectedItemID} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
+        <NotionModal onClose={closeNotionModal} type={showNotionModal} selectedItemList={selectedItemList} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
       </div>}
     </div>
     </div>

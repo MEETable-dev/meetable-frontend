@@ -1,20 +1,27 @@
 import styles from '../css/ApmtDetail.module.css';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { svgList } from 'assets/svg';
 import CalendarWeekWithTime from 'components/CalendarWeekWithTime';
 import CalendarWeekWithoutTime from 'components/CalendarWeekWithoutTime';
 import CalendarMonthWithTime from 'components/CalendarMonthWithTime';
 import CalendarMonthWithoutTime from 'components/CalendarMonthWithoutTime';
 import ColorBar from '../components/ColorBar';
 import Filter from '../components/Filter';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { svgList } from 'assets/svg';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
+import OnlyShowModal from 'components/OnlyShowModal';
+import { set } from 'date-fns';
 
 const ApmtDetail = () => {
+	const navigate = useNavigate();
+
 	const accessToken = useSelector((state) => state.user.accessToken);
 	const [nonmemberId, setNonmemberId] = useState(-1);
+	const [nonmemberNickname, setNonmemberNickname] = useState('');
+	const [nonmemberPw, setNonmemberPw] = useState('');
 
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [selectWeek, setSelectWeek] = useState(new Date());
@@ -23,22 +30,30 @@ const ApmtDetail = () => {
 	const [week, setWeek] = useState(false);
 
 	const [promiseId, setPromiseId] = useState('');
+	const [promiseCode, setPromiseCode] = useState('');
 	const [promiseName, setPromiseName] = useState('');
-	const [promiseTotal, setPromiseTotal] = useState(0);
-	const [promisePartis, setPromisePartis] = useState([]);
+	const [promiseTotal, setPromiseTotal] = useState(0); // 참여중인 인원 수
+	const [promisePartis, setPromisePartis] = useState([]); // 참여중인 사람 목록
 
-	const [editing, setEditing] = useState(false);
+	const [editing, setEditing] = useState(false); // 편집 버전
 	const [selectedInfo, setSelectedInfo] = useState({});
-	const [canParti, setCanParti] = useState([]);
+	const [canParti, setCanParti] = useState([]); // 올 수 있다고 표기한 사람 목록
 
-	const [filterSelectionNum, setFilterSelectionNum] = useState(1);
-	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5);
-	const [filterSelectionParti, setFilterSelectionParti] = useState([]);
+	const [filterSelectionNum, setFilterSelectionNum] = useState(1); // 최소 인원 필터 선택값
+	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5); // 최소 시간 필터 선택값
+	const [filterSelectionParti, setFilterSelectionParti] = useState([]); // 필수참여자 필터 선택값
 
-	const [partiModal, setPartiModal] = useState('no');
-	const [addDescription, setAddDescription] = useState('out');
-	const [shareModal, setShareModal] = useState(false);
-	const [copyModal, setCopyModal] = useState(false);
+	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
+	const [myName, setMyName] = useState(''); // 내 이름
+	const [canConfirm, setCanConfirm] = useState(false); // 확정 권한
+
+	const [partiModal, setPartiModal] = useState('no'); // 참여하기 모달 (no:안보임/show:참여하기/link:비회원으로 참여한 약속 불러오기)
+	const [addDescription, setAddDescription] = useState('out'); // 추가설명 여부 (hover:떼면 안보임/click:다시 클릭해야 안보임/out:안보임)
+	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
+	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
+	const [wrongAddressModal, setWrongAddressModal] = useState(false); // 없는 주소 모달 여부
+
+	const [reset, setReset] = useState(true);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -55,9 +70,51 @@ const ApmtDetail = () => {
 	useEffect(() => {
 		setPromiseId(window.location.href.split('tail/')[1].replace(':', ''));
 		console.log(promiseId);
-		getApmtInfo();
-		getParticipantsInfo();
+		if (window.location.href.split('tail/')[1].replace(':', '')) {
+			getApmtInfo();
+			getParticipantsInfo();
+			if (accessToken) {
+				getMyParti();
+				getMyName();
+			}
+		} else {
+			setWrongAddressModal(true);
+		}
 	}, [promiseId]);
+
+	useEffect(() => {
+		getApmtInfoReset();
+	}, [reset]);
+
+	const getMyName = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/username`,
+			);
+			console.log(response.data);
+			setMyName(response.data.name);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const getMyParti = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/isparticipate/${
+					promiseId.split('_')[0]
+				}`,
+			);
+			console.log(response.data);
+			setImIn(response.data.isParticipating);
+			if (response.data.canconfirm === 'T') setCanConfirm(true);
+			else setCanConfirm(false);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
 
 	const getApmtInfo = async () => {
 		try {
@@ -68,14 +125,56 @@ const ApmtDetail = () => {
 				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);
-			if (response.data.weekvsdate === 'W') setWeek(true);
-			else setWeek(false);
-			if (response.data.ampmvstime === 'F') setTime(false);
-			else setTime(true);
-			setPromiseName(response.data.promise_name);
-			if (response.data.total <= 1) setShareModal(true);
-			setPromiseTotal(response.data.total);
-			setSelectedInfo(response.data.count);
+			setPromiseCode(response.data.promise_code);
+			if (
+				response.data.promise_code.toLowerCase() ===
+				promiseId.split('_')[promiseId.split('_').length - 1].toLowerCase()
+			) {
+				if (response.data.weekvsdate === 'W') setWeek(true);
+				else setWeek(false);
+				if (response.data.ampmvstime === 'F') setTime(false);
+				else setTime(true);
+				setPromiseName(response.data.promise_name);
+				if (response.data.total <= 1) setShareModal(true);
+				setPromiseTotal(response.data.total);
+				setSelectedInfo(response.data.count);
+			} else {
+				// navigate(`/`, {});
+				setWrongAddressModal(true);
+			}
+			//
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const getApmtInfoReset = async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+					promiseId.split('_')[0]
+				}`,
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			console.log(response.data);
+			setPromiseCode(response.data.promise_code);
+			if (
+				response.data.promise_code.toLowerCase() ===
+				promiseId.split('_')[promiseId.split('_').length - 1].toLowerCase()
+			) {
+				if (response.data.weekvsdate === 'W') setWeek(true);
+				else setWeek(false);
+				if (response.data.ampmvstime === 'F') setTime(false);
+				else setTime(true);
+				setPromiseName(response.data.promise_name);
+				setPromiseTotal(response.data.total);
+				setSelectedInfo(response.data.count);
+			} else {
+				// navigate(`/`, {});
+				setWrongAddressModal(true);
+			}
+			//
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -95,6 +194,33 @@ const ApmtDetail = () => {
 			response.data.map((item, index) => {
 				setPromisePartis((prev) => [...prev, item.name]);
 			});
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const participate = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/participate`,
+				{
+					promiseId: promiseId.split('_')[0],
+					nickname: nonmemberNickname,
+					password: nonmemberPw,
+				},
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			console.log('parti', response.data);
+			if (response.data.nonmemberId) {
+				setNonmemberId(response.data.nonmemberId);
+			}
+			if (response.data.canconfirm === 'T') setCanConfirm(true);
+			else setCanConfirm(false);
+			setPartiModal('no');
+			setReset(!reset);
+			getParticipantsInfo();
+			getMyParti();
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -158,8 +284,7 @@ const ApmtDetail = () => {
 							{svgList.apmtDetail.shareIcon}
 						</div>
 					</div>
-					{(accessToken && promisePartis.includes('me')) ||
-					nonmemberId !== -1 ? (
+					{(accessToken && imIn) || nonmemberId !== -1 ? (
 						<div className={styles.header}>
 							<div className={`${styles.headerBtn} ${styles.white}`}>
 								{windowWidth < 580
@@ -168,14 +293,24 @@ const ApmtDetail = () => {
 									? '빠지기'
 									: '약속에서 빠지기'}
 							</div>
-							<div className={`${styles.headerBtn} ${styles.purple}`}>
-								{windowWidth < 700 ? '확정' : '확정하기'}
-							</div>
+							{!editing && canConfirm && (
+								<div className={`${styles.headerBtn} ${styles.purple}`}>
+									{windowWidth < 700 ? '확정' : '확정하기'}
+								</div>
+							)}
 							<div
 								className={`${styles.headerBtn} ${styles.purple}`}
-								style={{ padding: 5, marginRight: 0 }}
+								style={{
+									padding: 5,
+									marginRight: 0,
+									backgroundColor: editing ? '#ffffff' : '#8E66EE',
+								}}
+								onClick={() => setEditing(!editing)}
 							>
-								<AiOutlineEdit size={20} color="#ffffff" />
+								<AiOutlineEdit
+									size={20}
+									color={editing ? '#8E66EE' : '#ffffff'}
+								/>
 							</div>
 						</div>
 					) : (
@@ -234,12 +369,16 @@ const ApmtDetail = () => {
 					{week && !time && (
 						<CalendarWeekWithoutTime
 							promiseId={promiseId}
+							promiseTotal={promiseTotal}
 							selectWeek={selectWeek}
 							// setSelectWeek={setSelectWeek}
 							editing={editing}
 							selectedInfo={selectedInfo}
 							canParti={canParti}
 							setCanParti={setCanParti}
+							reset={reset}
+							setReset={setReset}
+							nonmemberId={nonmemberId}
 						/>
 					)}
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}
@@ -254,13 +393,32 @@ const ApmtDetail = () => {
 				<div className={styles.empty} style={{ padding: '0.3vw' }}></div>
 				<div className={styles.participants}>
 					<div className={styles.partiContainer}>
-						<div className={styles.partiHead}>참가자</div>
+						<div
+							className={styles.partiHead}
+							style={editing ? { color: '#888888' } : {}}
+						>
+							참가자
+						</div>
 						<div className={styles.partiBody}>
-							{canParti.map((item, index) => (
-								<div key={index} className={styles.partiList}>
-									{item}
-								</div>
-							))}
+							{editing
+								? [].map((item, index) => (
+										<div
+											key={index}
+											className={styles.partiList}
+											style={editing ? { color: '#888888' } : {}}
+										>
+											{item}
+										</div>
+								  ))
+								: canParti.map((item, index) => (
+										<div
+											key={index}
+											className={styles.partiList}
+											style={editing ? { color: '#888888' } : {}}
+										>
+											{item}
+										</div>
+								  ))}
 							{/* <div className={styles.partiList}>선우정아이어요</div>
 							<div className={styles.partiList}>가나다</div> */}
 						</div>
@@ -285,6 +443,7 @@ const ApmtDetail = () => {
 							setFilterSelectionParti((prev) => [...prev, option]);
 						}
 					}}
+					disabled={editing}
 				/>
 			)}
 			<ColorBar total={promiseTotal} />
@@ -301,11 +460,15 @@ const ApmtDetail = () => {
 							className={styles.modalTxt}
 							onClick={() =>
 								handleCopyClipBoard(
-									`https://www.meetable.com/ApmtDetail/:${promiseId}`,
+									`https://www.meetable.com/ApmtDetail/:${
+										promiseId.split('_')[0]
+									}_${promiseCode}`,
 								)
 							}
 						>
-							https://www.meetable.com/ApmtDetail/:{promiseId}
+							{`https://www.meetable.com/ApmtDetail/:${
+								promiseId.split('_')[0]
+							}_${promiseCode}`}
 							{svgList.apmtDetail.copyIcon}
 						</div>
 					</div>
@@ -313,10 +476,12 @@ const ApmtDetail = () => {
 						약속 코드
 						<div
 							className={styles.modalTxt}
-							onClick={() => handleCopyClipBoard(promiseId)}
+							onClick={() =>
+								handleCopyClipBoard(`${promiseId.split('_')[0]}_${promiseCode}`)
+							}
 							style={{ maxWidth: 120 }}
 						>
-							{promiseId}
+							{`${promiseId.split('_')[0]}_${promiseCode}`}
 							{svgList.apmtDetail.copyIcon}
 						</div>
 					</div>
@@ -414,13 +579,24 @@ const ApmtDetail = () => {
 						<div style={{ height: 20 }}></div>
 					)}
 					<div className={styles.inputArea}>
-						<input className={styles.inputItem} placeholder="별명" />
+						<input
+							className={styles.inputItem}
+							placeholder="별명"
+							value={nonmemberNickname}
+							onChange={(e) => {
+								setNonmemberNickname(e.target.value.trim());
+							}}
+							onSubmit={() => participate()}
+						/>
 						<div
 							style={{
 								position: 'absolute',
 								right: 2,
 								top: 3,
 								cursor: 'pointer',
+							}}
+							onClick={() => {
+								setNonmemberNickname('');
 							}}
 						>
 							{svgList.loginIcon.delBtn}
@@ -429,6 +605,11 @@ const ApmtDetail = () => {
 							<input
 								className={styles.inputItem}
 								placeholder="(선택사항)비밀번호"
+								value={nonmemberPw}
+								type="password"
+								onChange={(e) => {
+									setNonmemberPw(e.target.value.trim());
+								}}
 							/>
 						)}
 						{(!accessToken || (accessToken && partiModal === 'link')) && (
@@ -439,6 +620,9 @@ const ApmtDetail = () => {
 									top: 48,
 									cursor: 'pointer',
 								}}
+								onClick={() => {
+									setNonmemberPw('');
+								}}
 							>
 								{svgList.loginIcon.delBtn}
 							</div>
@@ -447,6 +631,13 @@ const ApmtDetail = () => {
 					<div
 						className={styles.modalBtn}
 						style={!accessToken ? { marginBottom: 30 } : { marginBottom: 0 }}
+						onClick={() => {
+							if (partiModal === 'link') {
+								console.log('비회원 약속 불러오기');
+							} else {
+								participate();
+							}
+						}}
 					>
 						{partiModal === 'link' ? '약속 불러오기' : '참여하기'}
 					</div>
@@ -470,6 +661,24 @@ const ApmtDetail = () => {
 						</div>
 					)}
 				</ApmtShareModal>
+			)}
+			{wrongAddressModal && (
+				<OnlyShowModal>
+					<div className={styles.wrongAddTitle}>앗! 없는 주소예요.</div>
+					<div className={styles.wrongAddContent}>
+						최고의 일정 조율 서비스 미터블에서
+						<br />
+						약속 일정을 관리하세요!
+					</div>
+					<div
+						className={styles.wrongAddBtn}
+						onClick={() => {
+							navigate('/');
+						}}
+					>
+						미터블 홈으로 가기
+					</div>
+				</OnlyShowModal>
 			)}
 		</div>
 	);

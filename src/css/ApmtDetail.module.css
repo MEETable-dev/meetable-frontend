@@ -85,6 +85,7 @@
   border-radius: 5px;
   padding: 5px 8px;
   margin-right: 8px;
+  user-select: none;
 }
 
 .purple {
@@ -93,6 +94,7 @@
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
+  border: 1px solid #8E66EE;
 }
 
 .white {
@@ -212,6 +214,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 
@@ -220,4 +223,29 @@
   font-size: 13px;
   font-weight: 500;
   margin: 0 10px;
+}
+
+.wrongAddTitle {
+  color: #222222;
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.wrongAddContent {
+  color:#222222;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 46px;
+}
+
+.wrongAddBtn {
+  color: #6330DE;
+  font-size: 18px;
+  font-weight: 400;
+  text-decoration-line: underline;
+  margin-bottom: 20px; 
+  cursor: pointer;
 }

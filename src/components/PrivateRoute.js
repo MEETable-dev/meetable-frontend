@@ -15,6 +15,15 @@ const PrivateRoute = (props) => {
       console.log('go')
       return;
     }
+    if (goto.includes('tail')) {
+			console.log(window.location);
+			window.location.href = goto.replace(
+				'apmtId',
+				window.location.href.split('tail/:')[1],
+			);
+			// localStorage.setItem('originURL', window.location);
+			return;
+		}
     // if (goto.includes('login')) {
     //   localStorage.setItem('originURL', window.location);
     //   console.log(window.location)

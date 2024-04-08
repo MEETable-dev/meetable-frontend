@@ -133,7 +133,7 @@ svg:hover {
   align-items: center;
   flex-direction: column;
   border: 1px solid #D0D0D0; /* 0.5 */
-  z-index: 1;
+  /* z-index: 1; */
   box-sizing: border-box;
   height: 92px;
 }
@@ -149,7 +149,7 @@ svg:hover {
 .eachDay:hover {
   outline: 2px solid #8E66EE; /* 1 */
   outline-offset: -2px; /* -1 */
-  z-index: 2;
+  /* z-index: 2; */
 }
 
 .dayContent:first-of-type .eachDay {

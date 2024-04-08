@@ -3,6 +3,8 @@ import styles from '../css/CalendarMine.module.css';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
 
+import AddSchModal from "../components/AddSchModal";
+
 const not = '2023-12-05';
 
 const CalendarMine = (props) => {
@@ -11,6 +13,11 @@ const CalendarMine = (props) => {
 
   // 새로운 상태 hoveredDay 추가
   const [hoveredDay, setHoveredDay] = useState(null);
+
+  const [mypageModal, setMypageModal] = useState(null); // New state for tracking open modal
+  const toggleModal = (modalId) => {
+    setMypageModal(mypageModal === modalId ? null : modalId);
+  };
 
   const Body = ({ selectWeek, selectDate }) => {
     const monthStart = startOfMonth(selectWeek);
@@ -39,8 +46,10 @@ const CalendarMine = (props) => {
             <div className={styles.col}>
               <div className={`${styles[dateHeaderClass]} ${isNotThisMonth ? styles.notThisMonth : ""}`}>{formattedDate}</div>
               {/* 조건부 렌더링으로 hoveredDay와 현재 day가 같을 때 버튼 표시 */}
+              
+              {/* 누르면 일정 추가 모달 뜨게 */}
               {hoveredDay === dayKey && (
-                <svg className={styles.hoverButton} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className={styles.hoverButton} onClick={()=>{setMypageModal('serviceTerms')}} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.5" y="0.5" width="15" height="15" rx="2.5" stroke="#D0D0D0"/>
                   <path d="M7.4872 8.51291H3.55556V7.4873H7.4872V3.55566H8.51281V7.4873H12.4444V8.51291H8.51281V12.4446H7.4872V8.51291Z" fill="#888888"/>
                 </svg>
@@ -139,6 +148,12 @@ const CalendarMine = (props) => {
     </div>
     {/* <ConfirmedApmt />
     <CustomedSched /> */}
+
+
+    {/* 일정 추가 모달 띄우기 */}
+    {mypageModal === 'serviceTerms' && <AddSchModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
+      내 정보 모달
+    </AddSchModal>}
   </div>
 };
 

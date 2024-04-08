@@ -74,7 +74,9 @@ const Policy = () => {
     <div className={styles.loginBox}>
       <div className={styles.loginLogo}>
         {/* <p>MEETable</p> */}
-        {svgList.logoIcon.logo}
+        <Link to="/">
+          {svgList.logoIcon.logo}
+        </Link>
       </div>
       {/* <h4>이용약관</h4> */}
       <h4></h4>

@@ -4,7 +4,9 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 import { svgList } from 'assets/svg';
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
-const ApmtItem = ({ name, fav, id, isSelected, isTrash = false, modifyName, setModifyName, changeName, bookmark, unBookmark, openModal }) => {
+const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false, modifyName, setModifyName, changeName, bookmark, unBookmark, openModal }) => {
+  console.log("selectedItemList: ", selectedItemList);
+  console.log("modifyName, isSelected: ", modifyName, isSelected);
   const [value, setValue] = useState('');
   const inputRef = useRef();
   const onChange = useCallback((e) => {
@@ -12,9 +14,11 @@ const ApmtItem = ({ name, fav, id, isSelected, isTrash = false, modifyName, setM
   }, []);
 
   const handleOnBlur = useCallback((e) => {
-    changeName(id, value);
-    setModifyName(false);
-    setValue('')
+    if (value){
+      changeName(id, value);
+      setModifyName(false);
+      setValue('')
+    };
   }, [id, changeName, value, setModifyName]);
 
   useEffect(() => {
@@ -29,10 +33,15 @@ const ApmtItem = ({ name, fav, id, isSelected, isTrash = false, modifyName, setM
     }
   }, [isSelected, modifyName]);
 
-  const truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
+  let truncatedName = name;
+
+  if (name){
+    truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
+  }
+
 
   return (
-    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p') }}>
+    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p', selectedItemList) }}>
       <div className={styles.ApmtIcon}>
         {svgList.folder.Apmt}
       </div>

@@ -37,8 +37,8 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
   }, [id, changeName, value, setModifyName]);
 
   const handleClickPromise = useCallback(() => {
-    // Replace ':username' with the actual username variable if available
-    const username = "username";  // 이 부분을 동적으로 대체할 필요가 있습니다.
+
+    const username = "username";  // 이 부분을 동적으로 대체할 필요가 있을수도
     console.log("clicked Promise Id: ", id);
     navigate(`/ApmtDetail/:${id}`);
   }, [id, navigate]);

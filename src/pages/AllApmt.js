@@ -26,9 +26,6 @@ const AllApmt = () => {
   //BookMark + Selected + Apmt
   const [bookmarkData, setBookmarkData] = useState([]);
   const [ApmtData, setApmtData] = useState([]);
-
-  //selectedItemID는 그냥 아예 없는걸로. ? ㄴㄴ 그냥 ItemID랑 SelectedItemList랑..둘다
-  // const [selectedItemID, setSelectedItemID] = useState(null);
   const [favoritesDown, setFavoritesDownClick] = useState(true);
 
   //Trash Area
@@ -43,9 +40,7 @@ const AllApmt = () => {
   const modalRef = useRef();
   const modalHeaderRef = useRef();
   const notionModalRef = useRef();
-
-  // 입력값을 가져와서 소문자로변경
-
+  
   const handleFavoritesDownClick = () =>{
     if (favoritesDown===true){
       setFavoritesDownClick(false);}
@@ -158,7 +153,6 @@ const AllApmt = () => {
     if (type === 'p'){
       event.preventDefault();
       setModalPosition({x:event.pageX, y:event.pageY});
-      // console.log("selectedItemList: ",selectedItemList);
       console.log('showModal: ', showModal);
       if (selectedItemList && selectedItemList.length > 0){
         //이미 아이템이 있는 경우에는 놔둔다.
@@ -169,17 +163,14 @@ const AllApmt = () => {
           setShowModal('m');
         }
         else{
-          // setSelectedItemID(itemID);
           setSelectedItemList([itemID]);
           setShowModal(type);
         }
       }
       else{
-          // setSelectedItemID(itemID);
           setSelectedItemList([itemID]);
           setShowModal(type);
         }
-      //아이템이 없는 경우에는 해당 모달이 켜진 것에대해서 modal 을 만든다.
 
 }
     else{
@@ -192,15 +183,9 @@ const AllApmt = () => {
   const closeModal = (itemID) => {
     console.log("modal closed");
     setShowModal('');
-    // selectAll(false);
-    // closeNotionModal();
-    // setSelectedItemID(null);
     setModifyName(false);
     setSelectedItemList([]);
     setSelectAll(false);
-    //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
-    // selectedList.splice(selectedList.indexOf(itemID), 1);
-    // setSelectedList([...selectedList]);
   };
 
   const modalStyle = {
@@ -297,10 +282,6 @@ const AllApmt = () => {
     if (modalHeaderRef.current && !modalHeaderRef.current.contains(event.target)) {
       setShowHeaderModal(false);
     }
-
-    // if (!modalRef.current&& showModal){
-    //   closeModal();
-    // }
   };
 
   useEffect(() => {

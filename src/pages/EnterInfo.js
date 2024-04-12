@@ -94,6 +94,7 @@ const EnterInfo = () => {
   // };
 
   const handleIsValidPW = ()=>{
+    console.log("password length: ", password.length);
     if ( 1<= password.length  && password.length< 8){
       setIsValidPW(false);
       setErrorMessage(true);
@@ -171,7 +172,7 @@ return ( <div className={styles.loginBox}>
           <div className = {styles.message}>비밀번호가 일치하지 않아요.</div>
         </div>
       </div>
-      <SubmitBtn2 text="회원가입" isActive={isValid} onClick={getSignToken}></SubmitBtn2>
+      <SubmitBtn2 text="회원가입" isActive={isValid && isValidPW && isPWSame} onClick={getSignToken}></SubmitBtn2>
 
     </form>
 

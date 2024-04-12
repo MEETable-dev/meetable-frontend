@@ -150,7 +150,9 @@ const EnterInfo = () => {
 
 return ( <div className={styles.loginBox}>
   <div className={styles.loginLogo}>
-    <p>MEETable</p>
+    <Link to="/">
+            {svgList.logoIcon.logo}
+    </Link>
     <form className={styles.content}>
       <InputArea2 autocomplete="username" name="name" placeholder="이름" value={username} onChange = {onChangeUsername}>
       </InputArea2>

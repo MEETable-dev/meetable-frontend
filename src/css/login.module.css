@@ -48,9 +48,13 @@ main {
     height: 60px;
     width: 100%;
     margin-top: 40px;
+    margin-bottom: 20px;
     font-size: 24px;
     font-weight: 600;
     color: #222222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .infoArea {

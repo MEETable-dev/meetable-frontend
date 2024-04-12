@@ -104,6 +104,7 @@ const AllApmt = () => {
     console.log("promiseIds[0]: ", promiseIds[0]);
     try{
       const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
+      
       const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
         { promiseId: promiseIds });
       await getData();
@@ -121,7 +122,7 @@ const AllApmt = () => {
     console.log("promiseIds: ",promiseIds);
     try {
       const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
-      console.log("promiseIds: ",promiseIds); // promiseCodes를 파싱하여 promiseIds 배열로 변환
+      console.log("delete: ", promiseIds);
       const response = await axios.delete(`${process.env.REACT_APP_API_URL}/home/backoutpromise`, {
         data: { promiseId: promiseIds } // promiseIds를 배열로 전달
       });
@@ -196,6 +197,7 @@ const AllApmt = () => {
     // setSelectedItemID(null);
     setModifyName(false);
     setSelectedItemList([]);
+    setSelectAll(false);
     //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
     // selectedList.splice(selectedList.indexOf(itemID), 1);
     // setSelectedList([...selectedList]);
@@ -392,7 +394,7 @@ const AllApmt = () => {
         <div className={styles.folderHeader}>내 약속<div><div className={styles.selectAllContainer}>
           { selectAll ? <div className={styles.selectAll} onClick={()=> {handleSelectAll()}}>{svgList.folder.checkFilled}</div> 
         :<div className={styles.selectAll} onClick={()=>{handleSelectAll(true)}}>{svgList.folder.check}</div>}전체선택</div></div></div>
-        <div className={styles.folderInnerContainer}>
+        <div className={styles.folderInnerContainer} >
         <ApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
         </div>
       </div></>)

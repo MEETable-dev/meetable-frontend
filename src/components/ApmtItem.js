@@ -3,15 +3,30 @@ import React from 'react';
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { svgList } from 'assets/svg';
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { useNavigate } from 'react-router-dom';
+
+
 
 const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false, modifyName, setModifyName, changeName, bookmark, unBookmark, openModal }) => {
   console.log("selectedItemList: ", selectedItemList);
   console.log("modifyName, isSelected: ", modifyName, isSelected);
   const [value, setValue] = useState('');
   const inputRef = useRef();
+  const navigate = useNavigate();
   const onChange = useCallback((e) => {
     setValue(e.target.value);
   }, []);
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      
+      if (value) {
+        changeName(id, value);
+        setModifyName(false);
+        setValue('');
+      }
+    }
+  }, [id, changeName, value, setModifyName]);
 
   const handleOnBlur = useCallback((e) => {
     if (value){
@@ -20,6 +35,13 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
       setValue('')
     };
   }, [id, changeName, value, setModifyName]);
+
+  const handleClickPromise = useCallback(() => {
+    // Replace ':username' with the actual username variable if available
+    const username = "username";  // 이 부분을 동적으로 대체할 필요가 있습니다.
+    console.log("clicked Promise Id: ", id);
+    navigate(`/ApmtDetail/:${id}`);
+  }, [id, navigate]);
 
   useEffect(() => {
     if (isSelected) {
@@ -41,7 +63,7 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
 
 
   return (
-    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p', selectedItemList) }}>
+    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p', selectedItemList) }} onClick={()=>{handleClickPromise()}}>
       <div className={styles.ApmtIcon}>
         {svgList.folder.Apmt}
       </div>
@@ -52,7 +74,7 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
         <div className={styles.favoritesText}>
           {isSelected && modifyName && !isTrash ?
             <input value={value} name="writeName" className={styles.renameInput}
-              onChange={onChange} onBlur={handleOnBlur} ref={inputRef} spellCheck={false} /> :
+              onChange={onChange} onBlur={handleOnBlur} onKeyDown= {handleKeyDown} ref={inputRef} spellCheck={false} /> :
             truncatedName}
         </div>
       </div>

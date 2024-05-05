@@ -384,8 +384,17 @@ const ApmtDetail = () => {
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}
 					{!week && !time && (
 						<CalendarMonthWithoutTime
+							promiseId={promiseId}
+							promiseTotal={promiseTotal}
 							selectWeek={selectWeek}
 							setSelectWeek={setSelectWeek}
+							editing={editing}
+							selectedInfo={selectedInfo}
+							canParti={canParti}
+							setCanParti={setCanParti}
+							reset={reset}
+							setReset={setReset}
+							nonmemberId={nonmemberId}
 						/>
 					)}
 					{/* {!week && !time && <div>달력에서 날짜 선택</div>} */}

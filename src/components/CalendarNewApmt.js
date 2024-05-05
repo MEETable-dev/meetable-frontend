@@ -98,16 +98,17 @@ const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
     setCurrentDate(addMonths(currentDate, 1));
   };
   const onDateClick = (day) => {
-    if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
-      setSelectDate(prevState => {
-        prevState.delete(format(day, 'yyyy-MM-dd'));
-        return new Set(prevState);
-      })
-    }
-    else {
-      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
-    }
-    onDateChange(day);
+    if (selectDate.has(format(subDays(day, 1), 'yyyy-MM-dd'))) {
+			setSelectDate((prevState) => {
+				prevState.delete(format(subDays(day, 1), 'yyyy-MM-dd'));
+				return new Set(prevState);
+			});
+		} else {
+			setSelectDate(
+				(prevState) => new Set([...prevState, format(day, 'yyyy-MM-dd')]),
+			);
+		}
+		onDateChange(subDays(day, 1));
   }
 
   return (

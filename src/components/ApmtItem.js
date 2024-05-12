@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false, modifyName, setModifyName, changeName, bookmark, unBookmark, openModal }) => {
-  console.log("selectedItemList: ", selectedItemList);
+  // console.log("selectedItemList: ", selectedItemList);
   console.log("modifyName, isSelected: ", modifyName, isSelected);
   const [value, setValue] = useState('');
   const inputRef = useRef();
@@ -29,6 +29,7 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
   }, [id, changeName, value, setModifyName]);
 
   const handleOnBlur = useCallback((e) => {
+    console.log("handleOnblur");
     if (value){
       changeName(id, value);
       setModifyName(false);
@@ -52,6 +53,7 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
   useEffect(() => {
     if (isSelected && modifyName) {
       inputRef.current.focus();
+      // console.log("modify name called");
     }
   }, [isSelected, modifyName]);
 

@@ -242,6 +242,14 @@ main {
   margin: 3px 0;
   cursor: pointer;
 }
+.labelContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  border-radius: 5px;
+  margin: 3px 0;
+  cursor: pointer;
+}
 .LayoutApmtListContainer{
   display: flex;
   justify-content: space-between;
@@ -308,9 +316,21 @@ main {
 
 .labels {
   color: #888;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   margin-top: 20px;
+  /* padding-top: 10px; */
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.labels2 {
+  color: #888;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 10px;
+  /* padding-top: 10px; */
   margin-bottom: 8px;
   display: flex;
   justify-content: flex-start;

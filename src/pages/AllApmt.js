@@ -4,7 +4,6 @@ import { AiOutlineFileAdd , AiFillStar , AiOutlineStar} from "react-icons/ai";
 import { RiSearchLine } from "react-icons/ri";
 import { svgList } from 'assets/svg';
 import {useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useSelector } from "react-redux";
 import React from "react";
 import { GoChevronUp , GoChevronDown } from "react-icons/go";
 import { useAppDispatch } from "store";
@@ -12,7 +11,6 @@ import  axios  from 'axios';
 import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
-import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 const AllApmt = () => {

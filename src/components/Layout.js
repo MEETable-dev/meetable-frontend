@@ -51,6 +51,7 @@ const Layout = (props) => {
   const [selectedItemID, setSelectedItemID] = useState(null);
   const [openBookmark, setOpenBookmark] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [sortItem, setSortItem] = useState('id');
 
     //Trash Area
     const [TrashData, setTrashData] = useState([]);
@@ -78,6 +79,17 @@ const Layout = (props) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   });
+
+  const handleSortItem = () =>{
+    if (sortItem === 'id'){
+      setSortItem('name');
+      getDatabyName();
+    }
+    else if(sortItem ==='name'){
+      setSortItem('id');
+      getData();
+    }
+  };
 
   const handleShowTrash = useCallback ((e)=>{
     setShowTrash(true);
@@ -336,6 +348,21 @@ const Layout = (props) => {
     }
   };
 
+  const getDatabyName = async () => {
+    console.log("getData (Not in useEffect) called");
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=name`, 
+      );
+      // console.log(response.data)
+      setBookmarkData(response.data.bookmark);
+      setApmtData(response.data.promise);
+      
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data)
+    }
+  };
+
   useEffect(()=>{
     const getData = async () => {
       console.log("getData called");
@@ -437,19 +464,13 @@ const Layout = (props) => {
               즐겨찾기
               <div onClick={()=> setOpenBookmark(!openBookmark)}>
                 {openBookmark
-                ? <IoMdArrowDropup color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/> 
-                : <IoMdArrowDropdown color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/>}
+                ? <IoMdArrowDropdown color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/> 
+                : <IoMdArrowDropup color="#888888" size={15} style={{marginTop:3, marginLeft:3}}/>}
               </div>
             </div>
             {openBookmark && <LayoutApmtList data={bookmarkData} fav={true} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />}
-            <div className={styles.labels}>내 약속</div>
+            <div className={styles.labelContainer}><div className={styles.labels2}>내 약속</div><div className={styles.btnArea} onClick={()=>{handleSortItem()}}>{sortItem==="name" ? svgList.headerIcon.sortbyName : svgList.headerIcon.sortbyDay}</div></div>
             <LayoutApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
-            {/* <FolderList data={[{name:'팅클 개발일정', id:10, fav:true}]} name="사이드프로젝트" id="10"/> */}
-            {/* <ul>
-              <li>{process.env.REACT_APP_API_URL}</li>
-              <li>{accessToken}</li>
-              <li>{searchApmtVal}</li>
-            </ul> */}
           </div>
         </div>
         <div 

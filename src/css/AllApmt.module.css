@@ -468,10 +468,10 @@
 
 
   .TrashBox:hover{
-    background-color: rgba(142, 102, 238, 0.20);
-  }ƒ
+    background-color: rgba(113, 111, 117, 0.2);
+  }
   .TrashBox::selection{
-    background-color: rgba(142, 102, 238, 0.20);
+    background-color: rgba(113, 111, 117, 0.2);
   }
   .TrashIcon{
     display: block;

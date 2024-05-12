@@ -13,10 +13,11 @@ import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const AllApmt = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [showModal, setShowModal] = useState('');
   const [showHeaderModal, setShowHeaderModal] = useState('');
@@ -40,6 +41,14 @@ const AllApmt = () => {
   const modalRef = useRef();
   const modalHeaderRef = useRef();
   const notionModalRef = useRef();
+
+  // navigated into allapmt from layout..
+  useEffect(() => {
+    if (location.state) {
+      setShowTrash(location.state.showTrash);
+      console.log("show Trash? :",location.state.showTrash);
+    }
+  }, [location.state]);
   
   const handleFavoritesDownClick = () =>{
     if (favoritesDown===true){

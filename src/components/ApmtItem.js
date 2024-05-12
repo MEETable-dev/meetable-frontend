@@ -63,15 +63,15 @@ const ApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false
 
 
   return (
-    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p', selectedItemList) }} onClick={()=>{handleClickPromise()}}>
-      <div className={styles.ApmtIcon}>
+    <div className={isSelected ? styles.ApmtBoxFocused : styles.ApmtBox} onContextMenu={(event) => { event.preventDefault(); openModal(id, event, 'p', selectedItemList) }}>
+      <div className={styles.ApmtIcon}  onClick={()=>{handleClickPromise()}} >
         {svgList.folder.Apmt}
       </div>
       <div className={styles.ApmtName}>
         {(fav === 'T') && !isTrash && <AiFillStar color="#FFBB0D" size={22} className={styles.favoritesIcon} onClick={() => { unBookmark(id) }} />}
         {!(fav === 'T') && !isTrash && <AiOutlineStar color="#888888" size={22} className={styles.favoritesIcon} onClick={() => { bookmark(id) }} />}
         {isTrash && ''}
-        <div className={styles.favoritesText}>
+        <div className={styles.favoritesText}  onClick={()=>{handleClickPromise()}} >
           {isSelected && modifyName && !isTrash ?
             <input value={value} name="writeName" className={styles.renameInput}
               onChange={onChange} onBlur={handleOnBlur} onKeyDown= {handleKeyDown} ref={inputRef} spellCheck={false} /> :

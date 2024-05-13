@@ -66,7 +66,6 @@ const Layout = (props) => {
 	const modalHeaderRef = useRef();
 	const inputRef = useRef();
 	const notionModalRef = useRef();
-
 	const [devMode, setDevMode] = useState(false);
 
 	const [mypageModal, setMypageModal] = useState(null); // New state for tracking open modal
@@ -688,8 +687,9 @@ const Layout = (props) => {
 							MEETable
 							{devMode && (
 								<div
-									onClick={() => dispatch(setToken(''))}
-									style={{ fontSize: 10, color: '#888888' }}
+									onClick={() => {
+										dispatch(setToken(''));
+									}}
 								>
 									리덕스 로그아웃
 								</div>

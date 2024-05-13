@@ -22,7 +22,6 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     const [selectedColor, setSelectedColor] = useState('red');
 
     const [selectDate, setSelectDate] = useState(new Set());
-    
     const [startTime, setStartTime] = useState(0);
     const [startMinute, setStartMinute] = useState(0);
     const [endTime, setEndTime] = useState(23);
@@ -201,6 +200,13 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     const handleClearMemo = () => {
         setMemo('');
     };
+
+    // selectedElement1 값이 변경될 때 selectDate를 초기화
+    useEffect(() => {
+        if (selectedElement1 === 'W') {
+            setSelectDate(new Set());
+        }
+    }, [selectedElement1]);
 
     // 시작 시간이나 종료 시간이 변경될 때 호출되는 useEffect
     useEffect(() => {

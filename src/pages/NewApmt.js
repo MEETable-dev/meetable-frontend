@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 
 import SubmitBtn from "../components/SubmitBtn";
-import CalendarNewApmt from "../components/CalendarNewApmt";
+import CalendarNewApmtDrag from "../components/CalendarNewApmtDrag";
 import InputArea from '../components/InputArea';
 
 
@@ -255,7 +255,7 @@ const NewApmt = () => {
 							</div>
 							{selectedElement1 === 'D' ? (
 								<div className={styles.calendar}>
-									<CalendarNewApmt
+									<CalendarNewApmtDrag
 										spaceX={4}
 										spaceY={4}
 										selectedDates={selectDate}

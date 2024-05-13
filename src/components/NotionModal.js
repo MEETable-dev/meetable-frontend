@@ -1,7 +1,7 @@
 import styles from 'css/NotionModal.module.css';
 import React from 'react';
 
-const NotionModal = ({ selectedItemList, onClose, type, setShowNotionModal, backoutApmt, moveApmtToTrash , backoutAll}) => {
+const NotionModal = ({ selectedItemList, onClose, contextClose, type, setShowNotionModal, backoutApmt, moveApmtToTrash , backoutAll}) => {
     console.log(selectedItemList);
   return (
     (type === 'B' && (
@@ -10,7 +10,7 @@ const NotionModal = ({ selectedItemList, onClose, type, setShowNotionModal, back
           <div className={styles.notionModalT1}>약속에서 빠지시겠어요?</div>
           <div className={styles.notionModalT2}>내가 이 약속에 남아있는 마지막 사람이에요.<br />내가 빠지면 약속 파일이 영구 삭제됩니다.</div>
           <div className={styles.notionModalBtnBox}>
-            <div className={styles.notionModalNo} onClick={() => { setShowNotionModal(''); }}>아니요.</div>
+            <div className={styles.notionModalNo} onClick={() => { setShowNotionModal(''); contextClose(); }}>아니요.</div>
             <div className={styles.notionModalYes} onClick={() => { backoutApmt(selectedItemList); setShowNotionModal(''); }}>네,빠질게요.</div>
           </div>
         </div>
@@ -23,7 +23,7 @@ const NotionModal = ({ selectedItemList, onClose, type, setShowNotionModal, back
           <div className={styles.notionModalT1} style={{ width: 141, height: 23, marginBottom: 8 }}>휴지통을 비우시겠어요?</div>
           <div className={styles.notionModalT2} style={{ width: 287, height: 23, marginBottom: 1, marginTop:8 }}>휴지통에 있는 모든 약속에서 내가 빠지게 됩니다.</div>
           <div className={styles.notionModalBtnBox}>
-            <div className={styles.notionModalNo} onClick={() => { setShowNotionModal(''); }}>아니요.</div>
+            <div className={styles.notionModalNo} onClick={() => { setShowNotionModal(''); contextClose(); }}>아니요.</div>
             <div className={styles.notionModalYes} onClick={() => { moveApmtToTrash(selectedItemList); setShowNotionModal(''); }}>네,비울게요.</div>
           </div>
         </div>

@@ -4,7 +4,6 @@ import { AiOutlineFileAdd , AiFillStar , AiOutlineStar} from "react-icons/ai";
 import { RiSearchLine } from "react-icons/ri";
 import { svgList } from 'assets/svg';
 import {useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useSelector } from "react-redux";
 import React from "react";
 import { GoChevronUp , GoChevronDown } from "react-icons/go";
 import { useAppDispatch } from "store";
@@ -12,11 +11,11 @@ import  axios  from 'axios';
 import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const AllApmt = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
   const [searchApmtVal, setSearchApmtVal] = useState('');
   const [showModal, setShowModal] = useState('');
   const [showHeaderModal, setShowHeaderModal] = useState('');
@@ -26,9 +25,6 @@ const AllApmt = () => {
   //BookMark + Selected + Apmt
   const [bookmarkData, setBookmarkData] = useState([]);
   const [ApmtData, setApmtData] = useState([]);
-
-  //selectedItemID는 그냥 아예 없는걸로. ? ㄴㄴ 그냥 ItemID랑 SelectedItemList랑..둘다
-  const [selectedItemID, setSelectedItemID] = useState(null);
   const [favoritesDown, setFavoritesDownClick] = useState(true);
 
   //Trash Area
@@ -44,8 +40,14 @@ const AllApmt = () => {
   const modalHeaderRef = useRef();
   const notionModalRef = useRef();
 
-  // 입력값을 가져와서 소문자로변경
-
+  // navigated into allapmt from layout..
+  useEffect(() => {
+    if (location.state) {
+      setShowTrash(location.state.showTrash);
+      console.log("show Trash? :",location.state.showTrash);
+    }
+  }, [location.state]);
+  
   const handleFavoritesDownClick = () =>{
     if (favoritesDown===true){
       setFavoritesDownClick(false);}
@@ -63,6 +65,8 @@ const AllApmt = () => {
       setSelectAll(true);
       // 모든 약속의 promiseCode에서 앞에 있는 숫자만 추출하여 선택된 목록에 추가
       setSelectedItemList(ApmtData.map(apmt => apmt.promiseCode));
+      // console.log("ApmtData:",ApmtData)
+      // console.log("handleSelectAll, selectedItemList: ", selectedItemList);
 
     } else {
       // 선택 해제 상태일 때
@@ -72,19 +76,23 @@ const AllApmt = () => {
   };
 
   const closeNotionModal = (e) =>{
+
     setShowNotionModal('');
-    setSelectedItemID(null);
+    // setSelectedItemID(null);
+
     setSelectedItemList([]);
   };
 
-  const restoreApmt = async (promiseCode) =>{
-    console.log('restore',promiseCode);
+  const restoreApmt = async (promiseCodes) =>{
+    console.log('restore',promiseCodes);
     console.log('ApmtData', ApmtData);
     try{
+      const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
       const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/restore`, 
-        {promiseId: promiseCode.split('-')[1].split('_')[0]});
+        {promiseId: promiseIds});
       await getData();
       await getTrashData();
+      await closeModal();
       console.log(response);
     } catch(error){
       const errorResponse= error.response;
@@ -93,15 +101,17 @@ const AllApmt = () => {
   //Notion Modal Zone
   //약속 삭제(휴지통으로 이동)
   const moveApmtToTrash = async (promiseCodes)=>{
-    const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+    const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
     console.log("promiseIds: ",promiseIds);
     console.log("promiseIds[0]: ", promiseIds[0]);
     try{
-      const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+      const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
+      
       const response = await axios.patch( `${process.env.REACT_APP_API_URL}/home/deletepromise`, 
         { promiseId: promiseIds });
       await getData();
       await getTrashData();
+      await closeModal();
       console.log(response);
     } catch(error){
       const errorResponse= error.response;
@@ -110,17 +120,18 @@ const AllApmt = () => {
 
   //약속에서 빠지기
   const backoutApmt = async (promiseCodes) => {
-    const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
+    const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
     console.log("promiseIds: ",promiseIds);
     try {
-      const promiseIds = promiseCodes.map(code => parseInt(code.split('-')[1].split('_')[0]));
-      console.log("promiseIds: ",promiseIds); // promiseCodes를 파싱하여 promiseIds 배열로 변환
+      const promiseIds = promiseCodes.map(code => parseInt(code.split('_')[0]));
+      console.log("delete: ", promiseIds);
       const response = await axios.delete(`${process.env.REACT_APP_API_URL}/home/backoutpromise`, {
         data: { promiseId: promiseIds } // promiseIds를 배열로 전달
       });
       console.log(response.data);
       await getData();
       await getTrashData();
+      await closeModal();
       console.log(promiseCodes);
     } catch (error) {
       const errorResponse = error.response;
@@ -137,6 +148,7 @@ const AllApmt = () => {
         console.log(response.data);
         await getData();
         await getTrashData();
+        await closeModal();
         console.log(TrashData)
   
       } catch(error){
@@ -144,31 +156,43 @@ const AllApmt = () => {
         console.log(errorResponse.data);
       }};
   
-  const openModal = useCallback ((itemID, event, type) => {
+  const openModal = useCallback ((itemID, event, type, selectedItemList) => {
     if (type === 'p'){
       event.preventDefault();
       setModalPosition({x:event.pageX, y:event.pageY});
-      setSelectedItemID(itemID);
-      setSelectedItemList([itemID]);
-      setModifyName(false);
-      //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
-      setShowModal(type);}
+      console.log('showModal: ', showModal);
+      if (selectedItemList && selectedItemList.length > 0){
+        //이미 아이템이 있는 경우에는 놔둔다.
+        if (selectedItemList.length >1){
+          console.log("multiple objects!!!!!");
+          setModifyName(false);
+           //multiple objects
+          setShowModal('m');
+        }
+        else{
+          setSelectedItemList([itemID]);
+          setShowModal(type);
+        }
+      }
+      else{
+          setSelectedItemList([itemID]);
+          setShowModal(type);
+        }
+
+}
     else{
       event.preventDefault();
       setModalPosition({x:event.pageX, y:event.pageY});
       setShowModal(type);
     }
-    // setSelectedList([...selectedList, itemID]);
   },[]);
 
   const closeModal = (itemID) => {
+    console.log("modal closed");
     setShowModal('');
-    setSelectedItemID(null);
     setModifyName(false);
     setSelectedItemList([]);
-    //이부분 list 를 모달이랑 어떻게 같이 할지 ㅁㄹ겠네... 동시에 이름변경이 안되니까 막는게 맞는건지..
-    // selectedList.splice(selectedList.indexOf(itemID), 1);
-    // setSelectedList([...selectedList]);
+    setSelectAll(false);
   };
 
   const modalStyle = {
@@ -183,6 +207,13 @@ const AllApmt = () => {
       (!showTrash && type === 'p' && (
         <div style={style}>
           <div className={styles.modalBtn} onClick={() => { setModifyName(true); setShowModal(''); }}>이름 변경하기</div>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('B'); setShowModal(''); }}>약속에서 빠지기</div>
+          <div className={styles.modalBtn} onClick={() => { setShowNotionModal('T'); setShowModal(''); }}>약속 삭제하기</div>
+        </div>
+      ))
+      ||
+      (!showTrash && type === 'm' && (
+        <div style={style}>
           <div className={styles.modalBtn} onClick={() => { setShowNotionModal('B'); setShowModal(''); }}>약속에서 빠지기</div>
           <div className={styles.modalBtn} onClick={() => { setShowNotionModal('T'); setShowModal(''); }}>약속 삭제하기</div>
         </div>
@@ -208,7 +239,7 @@ const AllApmt = () => {
     try {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'T',
-        promiseId: promiseCode.split('-')[1].split('_')[0]},
+        promiseId: promiseCode.split('_')[0]},
       );
       console.log(response.data);
       await getData();
@@ -216,14 +247,14 @@ const AllApmt = () => {
       const errorResponse = error.response;
       console.log(errorResponse.data)
     }
-    console.log('북마크: ', promiseCode.split('-')[1].split('_')[0])
+    console.log('북마크: ', promiseCode.split('_')[0])
   },[]);
 
   const unBookmark = useCallback( async (promiseCode) => {
     try {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/bookmark`, {
         isBookmark: 'F',
-        promiseId: promiseCode.split('-')[1].split('_')[0]},
+        promiseId: promiseCode.split('_')[0]},
       );
       console.log(response.data);
       await getData();
@@ -231,14 +262,14 @@ const AllApmt = () => {
       const errorResponse = error.response;
       console.log(errorResponse.data)
     }
-    console.log('북마크해제: ', promiseCode.split('-')[1].split('_')[0])
+    console.log('북마크해제: ', promiseCode.split('_')[0])
   },[]);
 
   const changeName = useCallback ( async(promiseCode, changeNameVal)=>{
     try {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/home/promisename`, {
         promiseName: changeNameVal,
-        promiseId: promiseCode.split('-')[1].split('_')[0]},
+        promiseId: promiseCode.split('_')[0]},
       );
       console.log(response.data);
     } catch (error) {
@@ -246,9 +277,11 @@ const AllApmt = () => {
       console.log(errorResponse.data)
     }
     await getData();
+    await closeModal();
   },[]);
 
   const handleClickOutside = (event) => {
+    console.log(modalRef);
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       closeModal();
       closeNotionModal();
@@ -275,6 +308,7 @@ const AllApmt = () => {
       // console.log(response.data)
       setBookmarkData(response.data.bookmark);
       setApmtData(response.data.promise);
+      
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data)
@@ -348,7 +382,7 @@ const AllApmt = () => {
         <div className={styles.folderHeader}>내 약속<div><div className={styles.selectAllContainer}>
           { selectAll ? <div className={styles.selectAll} onClick={()=> {handleSelectAll()}}>{svgList.folder.checkFilled}</div> 
         :<div className={styles.selectAll} onClick={()=>{handleSelectAll(true)}}>{svgList.folder.check}</div>}전체선택</div></div></div>
-        <div className={styles.folderInnerContainer}>
+        <div className={styles.folderInnerContainer} >
         <ApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
         </div>
       </div></>)
@@ -363,7 +397,7 @@ const AllApmt = () => {
         <ContextMenuModal onClose={closeModal} type={showModal} showTrash={showTrash} selectedItemList={selectedItemList}/>
       </div>}
       {showNotionModal !=='' && <div ref={notionModalRef}>
-        <NotionModal onClose={closeNotionModal} type={showNotionModal} selectedItemList={selectedItemList} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
+        <NotionModal onClose={closeNotionModal} contextClose={closeModal} type={showNotionModal} selectedItemList={selectedItemList} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
       </div>}
     </div>
     </div>

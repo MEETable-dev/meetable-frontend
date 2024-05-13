@@ -105,7 +105,10 @@ const Login = () => {
 
 return ( <div className={styles.loginBox}>
   <div className={styles.loginLogo}>
-    <p>MEETable</p>
+    <Link to="/">
+            {svgList.logoIcon.logo}
+    </Link>
+  </div>
     <form className={styles.content}>
       <InputArea2 autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
       onClear ={handleClearEmail}>
@@ -140,7 +143,7 @@ return ( <div className={styles.loginBox}>
 
   </div>
 
-</div>);
+);
 };
 
 export default Login;

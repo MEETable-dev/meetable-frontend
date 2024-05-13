@@ -128,6 +128,22 @@ export const svgList = {
 				/>
 			</svg>
 		),
+
+		sortbyName: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+		<path d="M6.10999 8.55996H2.08999V7.17996H7.81999C7.80999 10.78 6.39999 13.9 2.34999 15.89L1.39999 14.59C4.24999 13.16 5.78999 11.24 6.10999 8.54996V8.55996ZM11.04 10.57H12.75V11.96H11.04V17.97H9.33999V5.95996H11.04V10.58V10.57Z" fill="#888888"/>
+		<path d="M14.73 7.75H22.82" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M14.73 11.97H21.16" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M14.73 16.1899H18.77" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		</svg>)
+		,
+
+		sortbyDay: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+		<path d="M7.42002 17.24C10.3306 17.24 12.69 14.8805 12.69 11.97C12.69 9.05941 10.3306 6.69995 7.42002 6.69995C4.50948 6.69995 2.15002 9.05941 2.15002 11.97C2.15002 14.8805 4.50948 17.24 7.42002 17.24Z" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M7.41998 8.63989V11.9699L9.89998 14.4499" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M14.73 7.75H22.82" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M14.73 11.97H21.16" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+		<path d="M14.73 16.1899H18.77" stroke="#888888" stroke-width="1.5" stroke-miterlimit="10"/>
+	  </svg>),
 	},
 	loginIcon: {
 		delBtn: (

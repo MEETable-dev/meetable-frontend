@@ -145,7 +145,7 @@ const CalendarWeekWithoutTime = (props) => {
 	};
 
 	useEffect(() => {
-		if (!isDragging && nonmemberId !== -1) getMyParti();
+		if (!isDragging && (nonmemberId !== -1 || accessToken)) getMyParti();
 	}, [setReset, nonmemberId]);
 
 	const handleMouseDown = (date) => {
@@ -263,7 +263,7 @@ const CalendarWeekWithoutTime = (props) => {
 		}
 	};
 
-	const Body = ({ selectDate, onTimeClick }) => {
+	const Body = ({ onTimeClick }) => {
 		const startDate = startOfWeek(selectWeek);
 		const endDate = endOfWeek(selectWeek);
 
@@ -480,7 +480,7 @@ const CalendarWeekWithoutTime = (props) => {
 							: { marginLeft: '40px', marginRight: '40px' }
 					}
 				>
-					<Body selectDate={selectDate} onTimeClick={onTimeClick} />
+					<Body onTimeClick={onTimeClick} />
 				</div>
 			</div>
 		</div>

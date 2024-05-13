@@ -232,6 +232,7 @@ main {
 .listIcon {
   margin: 0 4px 0 4px;
   cursor: pointer;
+  flex: 1;
 }
 
 .listItemsContainer {
@@ -275,6 +276,7 @@ main {
   color: #222;
   font-size: 15px;
   font-weight: 500;
+  flex: 1;
 }
 
 .listItemsContainer:hover {
@@ -321,6 +323,7 @@ main {
   margin-top: 20px;
   margin-bottom: 8px;
   display: flex;
+  flex: 1;
   justify-content: flex-start;
 }
 
@@ -333,6 +336,7 @@ main {
   margin-bottom: 8px;
   display: flex;
   justify-content: flex-start;
+  flex: 1;
 }
 
 .btnArea {
@@ -342,6 +346,7 @@ main {
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
+  flex-shrink: 1;
 }
 
 .btnArea svg {

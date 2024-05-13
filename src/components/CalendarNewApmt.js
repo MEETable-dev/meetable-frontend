@@ -14,7 +14,6 @@ const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
     let days = [];
     let day = startDate;
     let formattedDate = '';
-
     
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
@@ -99,16 +98,15 @@ const CalendarNewApmt = ({ spaceX, spaceY, selectedDates, onDateChange }) => {
   };
   const onDateClick = (day) => {
     if (selectDate.has(format(subDays(day, 1), 'yyyy-MM-dd'))) {
-			setSelectDate((prevState) => {
-				prevState.delete(format(subDays(day, 1), 'yyyy-MM-dd'));
-				return new Set(prevState);
-			});
-		} else {
-			setSelectDate(
-				(prevState) => new Set([...prevState, format(day, 'yyyy-MM-dd')]),
-			);
-		}
-		onDateChange(subDays(day, 1));
+      setSelectDate(prevState => {
+        prevState.delete(format(subDays(day, 1), 'yyyy-MM-dd'));
+        return new Set(prevState);
+      })
+    }
+    else {
+      setSelectDate(prevState => new Set([...prevState, format(day, 'yyyy-MM-dd')]));
+    }
+    onDateChange(subDays(day, 1));
   }
 
   return (

@@ -71,6 +71,10 @@
   box-shadow: none;
 }
 
+.confirmSelected {
+  background-color:#40C06F;
+}
+
 .valid {
   background-color: #D0D0D0;
 }

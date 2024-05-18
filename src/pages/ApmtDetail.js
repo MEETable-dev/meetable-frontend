@@ -13,7 +13,7 @@ import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
-import { set } from 'date-fns';
+import { getDay } from 'date-fns';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -53,17 +53,34 @@ const ApmtDetail = () => {
 	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
 	const [wrongAddressModal, setWrongAddressModal] = useState(false); // 없는 주소 모달 여부
 
+	const [confirmModal, setConfirmModal] = useState(false); // 확정 모달 여부
+	const [showConfirmModal, setShowConfirmModal] = useState('no'); // 확정완료된 일정 모달 보여주기 여부 (no/hover/show)
+	const [modalPosition, setModalPosition] = useState([]);
+
+	const [confirmed, setConfirmed] = useState(new Set()); // 저장되어 있는 확정 날짜들
+	const [confirming, setConfirming] = useState(false); // 확정 일정 선택 중인지 아닌지
+	const [confirmSelected, setConfirmSelected] = useState(new Set()); // 저장 전 변동된 확정 목록
+	const [place, setPlace] = useState(''); // 장소
+	const [notion, setNotion] = useState(''); // 공지
+
 	const [reset, setReset] = useState(true);
 
 	useEffect(() => {
 		const handleResize = () => {
 			setWindowWidth(window.innerWidth);
 		};
+		const handleClick = (e) => {
+			setShowConfirmModal('no');
+		};
 
 		window.addEventListener('resize', handleResize);
+		window.addEventListener('click', handleClick);
+		window.addEventListener('contextmenu', handleClick);
 
 		return () => {
 			window.removeEventListener('resize', handleResize);
+			window.removeEventListener('click', handleClick);
+			window.removeEventListener('contextmenu', handleClick);
 		};
 	}, []);
 
@@ -85,6 +102,145 @@ const ApmtDetail = () => {
 	useEffect(() => {
 		getApmtInfoReset();
 	}, [reset]);
+
+	// useEffect(() => {
+	// 	const getConfirm = async () => {
+	// 		try {
+	// 			const response = await axios.get(
+	// 				`${process.env.REACT_APP_API_URL}/confirm/confirminfo/${
+	// 					promiseId.split('_')[0]
+	// 				}`,
+	// 				!accessToken && { headers: { Authorization: '@' } },
+	// 			);
+	// 			console.log('confirminfo: ', response.data);
+	// 			if (week) {
+	// 				setConfirmed(new Set(response.data.weekConfirmed));
+	// 				setConfirmSelected(new Set(response.data.weekConfirmed));
+	// 			} else {
+	// 				setConfirmed(new Set(response.data.dateConfirmed));
+	// 				setConfirmSelected(new Set(response.data.dateConfirmed));
+	// 			}
+	// 			setPlace(response.data.place);
+	// 			setNotion(response.data.notice);
+	// 		} catch (error) {
+	// 			const errorResponse = error.response;
+	// 			console.log(errorResponse.data.statusCode);
+	// 		}
+	// 	};
+	// 	// 저장된 확정 목록 가져오기
+	// 	// confirmed와 confirmSelected 에 저장
+	// 	console.log('확정된 약속 가져오기');
+	// 	getConfirm();
+	// }, [reset]);
+
+	const getConfirmed = async (week) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/confirm/confirminfo/${
+					promiseId.split('_')[0]
+				}`,
+				!accessToken && { headers: { Authorization: '@' } },
+			);
+			if (week) {
+				setConfirmed(new Set(response.data.weekConfirmed));
+				setConfirmSelected(new Set(response.data.weekConfirmed));
+			} else {
+				setConfirmed(new Set(response.data.dateConfirmed));
+				setConfirmSelected(new Set(response.data.dateConfirmed));
+			}
+			setPlace(response.data.place);
+			setNotion(response.data.notice);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const confirm = async () => {
+		try {
+			if (week) {
+				// let days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+				// let confirmList = [];
+				// confirmSelected.forEach((item) => {
+				// 	confirmList.push(days[getDay(new Date(item))]);
+				// });
+				// console.log('confirmList: ', confirmList);
+
+				if (time) {
+					console.log('요일시간확정');
+				} else {
+					if (confirmed.size === 0) {
+						const response = await axios.post(
+							`${process.env.REACT_APP_API_URL}/confirm/add`,
+							{
+								promiseId: promiseId.split('_')[0],
+								place: place,
+								notice: notion,
+								weekAvailable: [...confirmSelected],
+							},
+							!accessToken && { headers: { Authorization: '@' } },
+						);
+						console.log(response.data);
+						setConfirmed(new Set(response.data.weekConfirmed));
+						setConfirming(false);
+					} else {
+						console.log('update', confirmSelected, confirmed);
+						const response = await axios.patch(
+							`${process.env.REACT_APP_API_URL}/confirm/update`,
+							{
+								promiseId: promiseId.split('_')[0],
+								place: place,
+								notice: notion,
+								weekAvailable: [...confirmSelected],
+							},
+							!accessToken && { headers: { Authorization: '@' } },
+						);
+						console.log('updated', response.data);
+						setConfirmed(new Set(response.data.weekConfirmed));
+						setConfirming(false);
+					}
+				}
+			} else {
+				if (time) {
+					console.log('날짜시간확정');
+				} else {
+					if (confirmed.size === 0) {
+						const response = await axios.post(
+							`${process.env.REACT_APP_API_URL}/confirm/add`,
+							{
+								promiseId: promiseId.split('_')[0],
+								place: place,
+								notice: notion,
+								dateAvailable: [...confirmSelected],
+							},
+							!accessToken && { headers: { Authorization: '@' } },
+						);
+						console.log('확정하기 후 반응: ', response.data);
+						setConfirmed(new Set([...confirmSelected]));
+						setConfirming(false);
+					} else {
+						const response = await axios.patch(
+							`${process.env.REACT_APP_API_URL}/confirm/update`,
+							{
+								promiseId: promiseId.split('_')[0],
+								place: place,
+								notice: notion,
+								dateAvailable: [...confirmSelected],
+							},
+							!accessToken && { headers: { Authorization: '@' } },
+						);
+						console.log('updated ', response.data);
+						setConfirmed(new Set([...confirmSelected]));
+						setConfirming(false);
+					}
+				}
+			}
+			setReset(!reset);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
 
 	const getMyName = async () => {
 		try {
@@ -138,6 +294,8 @@ const ApmtDetail = () => {
 				if (response.data.total <= 1) setShareModal(true);
 				setPromiseTotal(response.data.total);
 				setSelectedInfo(response.data.count);
+
+				getConfirmed(response.data.weekvsdate === 'W');
 			} else {
 				// navigate(`/`, {});
 				setWrongAddressModal(true);
@@ -174,6 +332,8 @@ const ApmtDetail = () => {
 				// navigate(`/`, {});
 				setWrongAddressModal(true);
 			}
+
+			getConfirmed(response.data.weekvsdate === 'W');
 			//
 		} catch (error) {
 			const errorResponse = error.response;
@@ -239,7 +399,47 @@ const ApmtDetail = () => {
 
 	return (
 		<div style={{ height: 'auto' }}>
-			{/* 약속 세부 */}
+			{confirming && (
+				<div className={styles.confirmDiv}>
+					<div className={styles.desDiv}>확정할 날짜를 모두 선택해 주세요.</div>
+					<div
+						className={styles.confirmBtn}
+						style={{
+							backgroundColor: '#FFFFFF',
+							color: '#8E66EE',
+							border: '1px solid #8E66EE',
+						}}
+						onClick={() => {
+							setConfirmSelected(new Set(confirmed));
+							setConfirming(false);
+						}}
+					>
+						닫기
+					</div>
+					{confirmSelected
+						.difference(confirmed)
+						.union(confirmed.difference(confirmSelected)).size != 0 && (
+						<div style={{ width: 10 }}></div>
+					)}
+					{confirmSelected
+						.difference(confirmed)
+						.union(confirmed.difference(confirmSelected)).size != 0 && (
+						<div
+							className={styles.confirmBtn}
+							onClick={() => {
+								if (confirmSelected.size === 0) {
+									// 확정 취소
+								} else {
+									setConfirmModal(true);
+								}
+								setConfirming(false);
+							}}
+						>
+							선택 완료
+						</div>
+					)}
+				</div>
+			)}
 			{!(!week && time) && (
 				<div
 					className={styles.apmtHeader}
@@ -284,7 +484,7 @@ const ApmtDetail = () => {
 							{svgList.apmtDetail.shareIcon}
 						</div>
 					</div>
-					{(accessToken && imIn) || nonmemberId !== -1 ? (
+					{((accessToken && imIn) || nonmemberId !== -1) && !confirming ? (
 						<div className={styles.header}>
 							<div className={`${styles.headerBtn} ${styles.white}`}>
 								{windowWidth < 580
@@ -294,7 +494,13 @@ const ApmtDetail = () => {
 									: '약속에서 빠지기'}
 							</div>
 							{!editing && canConfirm && (
-								<div className={`${styles.headerBtn} ${styles.purple}`}>
+								<div
+									className={`${styles.headerBtn} ${styles.purple}`}
+									onClick={() => {
+										setConfirming(true);
+										console.log(confirmed);
+									}}
+								>
 									{windowWidth < 700 ? '확정' : '확정하기'}
 								</div>
 							)}
@@ -314,14 +520,16 @@ const ApmtDetail = () => {
 							</div>
 						</div>
 					) : (
-						<div className={styles.header}>
-							<div
-								className={`${styles.headerBtn} ${styles.purple}`}
-								onClick={() => setPartiModal('show')}
-							>
-								참여하기
+						!confirming && (
+							<div className={styles.header}>
+								<div
+									className={`${styles.headerBtn} ${styles.purple}`}
+									onClick={() => setPartiModal('show')}
+								>
+									참여하기
+								</div>
 							</div>
-						</div>
+						)
 					)}
 				</div>
 			)}
@@ -379,6 +587,13 @@ const ApmtDetail = () => {
 							reset={reset}
 							setReset={setReset}
 							nonmemberId={nonmemberId}
+							confirming={confirming}
+							confirmSelected={confirmSelected}
+							setConfirmSelected={setConfirmSelected}
+							confirmed={confirmed}
+							showConfirmModal={showConfirmModal}
+							setShowConfirmModal={setShowConfirmModal}
+							setModalPosition={setModalPosition}
 						/>
 					)}
 					{/* {week && !time && <div>주에서 날짜 선택</div>} */}
@@ -395,6 +610,13 @@ const ApmtDetail = () => {
 							reset={reset}
 							setReset={setReset}
 							nonmemberId={nonmemberId}
+							confirming={confirming}
+							confirmSelected={confirmSelected}
+							setConfirmSelected={setConfirmSelected}
+							confirmed={confirmed}
+							showConfirmModal={showConfirmModal}
+							setShowConfirmModal={setShowConfirmModal}
+							setModalPosition={setModalPosition}
 						/>
 					)}
 					{/* {!week && !time && <div>달력에서 날짜 선택</div>} */}
@@ -670,6 +892,310 @@ const ApmtDetail = () => {
 						</div>
 					)}
 				</ApmtShareModal>
+			)}
+			{confirmModal && (
+				<ApmtShareModal
+					title={''}
+					onClose={() => {
+						setConfirmModal(false);
+						setConfirmSelected(new Set(confirmed));
+					}}
+				>
+					<div className={styles.modalHeader}>약속 확정하기</div>
+					<div className={styles.modalContent}>
+						<div className={styles.whenContent}>
+							<div className={styles.icon}>{svgList.confirm.when}</div>
+							<div className={styles.whenText}>
+								{Array.from(confirmSelected).map((item, index) => {
+									if (week) {
+										let day = '';
+										switch (item) {
+											case 'MON':
+												day = '월';
+												break;
+											case 'TUE':
+												day = '화';
+												break;
+											case 'WED':
+												day = '수';
+												break;
+											case 'THU':
+												day = '목';
+												break;
+											case 'FRI':
+												day = '금';
+												break;
+											case 'SAT':
+												day = '토';
+												break;
+											case 'SUN':
+												day = '일';
+												break;
+										}
+										return (
+											`${day}` +
+											(index === confirmSelected.size - 1 ? ' ' : ', ')
+										);
+									}
+
+									const date = new Date(item);
+									console.log(item);
+									const year =
+										String(date.getFullYear())[2] +
+										String(date.getFullYear())[3];
+									const month = date.getMonth() + 1;
+									const day = date.getDate();
+									const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][
+										date.getDay()
+									];
+									return (
+										<div>{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}</div>
+									);
+								})}
+							</div>
+							<div
+								className={styles.icon}
+								onClick={() => {
+									setConfirming(true);
+									setConfirmModal(false);
+								}}
+							>
+								{svgList.loginIcon.pencilBtn}
+							</div>
+						</div>
+						<div className={styles.inputContent}>
+							<div className={styles.icon}>{svgList.confirm.where}</div>
+							<div className={styles.modalInput}>
+								<input
+									className={styles.inputItem}
+									style={{ marginBottom: 0 }}
+									placeholder="위치"
+									value={place}
+									onChange={(e) => {
+										setPlace(e.target.value);
+									}}
+								/>
+								<div
+									style={{
+										position: 'absolute',
+										cursor: 'pointer',
+										top: 2,
+										right: 2,
+									}}
+									onClick={() => {
+										setPlace('');
+									}}
+								>
+									{svgList.loginIcon.delBtn}
+								</div>
+							</div>
+						</div>
+						<div className={styles.inputContent}>
+							<div className={styles.icon}>{svgList.confirm.notion}</div>
+							<div className={styles.modalInput}>
+								<input
+									className={styles.inputItem}
+									style={{ marginBottom: 0 }}
+									placeholder="공지 (ex. 매주 모입시다)"
+									value={notion}
+									onChange={(e) => {
+										setNotion(e.target.value);
+									}}
+								/>
+								<div
+									style={{
+										position: 'absolute',
+										cursor: 'pointer',
+										top: 2,
+										right: 2,
+									}}
+									onClick={() => {
+										setNotion('');
+									}}
+								>
+									{svgList.loginIcon.delBtn}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className={styles.modalBtnView}>
+						<div
+							className={styles.confirmModalBtn}
+							style={{ color: '#8E66EE' }}
+							onClick={() => {
+								setConfirmModal(false);
+								setConfirmSelected(new Set(confirmed));
+							}}
+						>
+							취소
+						</div>
+						<div style={{ width: 10 }}></div>
+						<div
+							className={styles.confirmModalBtn}
+							style={{ backgroundColor: '#8E66EE', color: 'white' }}
+							onClick={() => {
+								// console.log(confirmSelected);
+								confirm();
+								setConfirmModal(false);
+							}}
+						>
+							완료
+						</div>
+					</div>
+				</ApmtShareModal>
+			)}
+			{(showConfirmModal == 'hover' || showConfirmModal == 'click') && (
+				<div
+					style={{
+						position: 'absolute',
+						top: modalPosition[1] + 10,
+						left: modalPosition[0] + 10,
+					}}
+					className={styles.modalBody}
+				>
+					<div className={styles.modalContent}>
+						<div className={styles.whenContent}>
+							<div className={styles.icon}>{svgList.confirm.when}</div>
+							<div className={styles.whenText}>
+								{Array.from(confirmSelected).map((item, index) => {
+									{
+										/* {['MON', 'WED'].map((item, index) => { */
+									}
+									if (week) {
+										let day = '';
+										switch (item) {
+											case 'MON':
+												day = '월';
+												break;
+											case 'TUE':
+												day = '화';
+												break;
+											case 'WED':
+												day = '수';
+												break;
+											case 'THU':
+												day = '목';
+												break;
+											case 'FRI':
+												day = '금';
+												break;
+											case 'SAT':
+												day = '토';
+												break;
+											case 'SUN':
+												day = '일';
+												break;
+										}
+										return (
+											`${day}` +
+											(index === confirmSelected.size - 1 ? ' ' : ', ')
+										);
+									}
+
+									const date = new Date(item);
+									console.log(item);
+									const year =
+										String(date.getFullYear())[2] +
+										String(date.getFullYear())[3];
+									const month = date.getMonth() + 1;
+									const day = date.getDate();
+									const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][
+										date.getDay()
+									];
+									return (
+										<div>{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}</div>
+									);
+								})}
+							</div>
+							{canConfirm && (
+								<div
+									className={styles.icon}
+									onClick={() => {
+										setConfirming(true);
+										setShowConfirmModal('no');
+									}}
+								>
+									{svgList.loginIcon.pencilBtn}
+								</div>
+							)}
+						</div>
+						<div className={styles.inputContent}>
+							<div className={styles.icon}>{svgList.confirm.where}</div>
+							<div className={styles.modalInput}>
+								<input
+									className={styles.inputItem}
+									style={{ marginBottom: 0 }}
+									placeholder="위치"
+									value={place}
+									disabled={true}
+								/>
+								<div
+									style={{
+										position: 'absolute',
+										cursor: 'pointer',
+										top: 2,
+										right: 2,
+									}}
+									onClick={() => {
+										setShowConfirmModal('no');
+										setConfirmModal(true);
+									}}
+								>
+									{svgList.loginIcon.pencilBtn}
+								</div>
+							</div>
+						</div>
+						<div className={styles.inputContent}>
+							<div className={styles.icon}>{svgList.confirm.notion}</div>
+							<div className={styles.modalInput}>
+								<input
+									className={styles.inputItem}
+									style={{ marginBottom: 0 }}
+									placeholder="공지 (ex. 매주 모입시다)"
+									value={notion}
+									disabled={true}
+								/>
+								<div
+									style={{
+										position: 'absolute',
+										cursor: 'pointer',
+										top: 2,
+										right: 2,
+									}}
+									onClick={() => {
+										setShowConfirmModal('no');
+										setConfirmModal(true);
+									}}
+								>
+									{svgList.loginIcon.pencilBtn}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className={styles.modalBtnView}>
+						<div
+							className={styles.confirmModalBtn}
+							style={{ color: '#8E66EE' }}
+							onClick={() => {
+								setConfirmModal(false);
+								setConfirmSelected(new Set(confirmed));
+							}}
+						>
+							취소
+						</div>
+						<div style={{ width: 10 }}></div>
+						<div
+							className={styles.confirmModalBtn}
+							style={{ backgroundColor: '#8E66EE', color: 'white' }}
+							onClick={() => {
+								// confirm();
+								setConfirmModal(false);
+							}}
+						>
+							완료
+						</div>
+					</div>
+				</div>
 			)}
 			{wrongAddressModal && (
 				<OnlyShowModal>

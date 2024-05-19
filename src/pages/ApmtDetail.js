@@ -14,6 +14,7 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
 import { getDay } from 'date-fns';
+import { tr } from 'date-fns/locale';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -62,6 +63,8 @@ const ApmtDetail = () => {
 	const [confirmSelected, setConfirmSelected] = useState(new Set()); // 저장 전 변동된 확정 목록
 	const [place, setPlace] = useState(''); // 장소
 	const [notion, setNotion] = useState(''); // 공지
+
+	const [selectConfirmDate, setSelectConfirmDate] = useState([]);
 
 	const [reset, setReset] = useState(true);
 
@@ -394,6 +397,19 @@ const ApmtDetail = () => {
 			setCopyModal(true);
 		} catch (error) {
 			// alert('클립보드 복사에 실패하였습니다.');
+		}
+	};
+
+	const sortDaysOfWeek = (days) => {
+		if (week) {
+			const dayOrder = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+			// 요일 이름을 순서대로 정렬
+			return days.sort((a, b) => {
+				return dayOrder.indexOf(a) - dayOrder.indexOf(b);
+			});
+		} else {
+			return days.sort();
 		}
 	};
 
@@ -905,53 +921,61 @@ const ApmtDetail = () => {
 					<div className={styles.modalContent}>
 						<div className={styles.whenContent}>
 							<div className={styles.icon}>{svgList.confirm.when}</div>
-							<div className={styles.whenText}>
-								{Array.from(confirmSelected).map((item, index) => {
-									if (week) {
-										let day = '';
-										switch (item) {
-											case 'MON':
-												day = '월';
-												break;
-											case 'TUE':
-												day = '화';
-												break;
-											case 'WED':
-												day = '수';
-												break;
-											case 'THU':
-												day = '목';
-												break;
-											case 'FRI':
-												day = '금';
-												break;
-											case 'SAT':
-												day = '토';
-												break;
-											case 'SUN':
-												day = '일';
-												break;
+							<div className={styles.whenText} style={{ flex: 1 }}>
+								{sortDaysOfWeek(Array.from(confirmSelected)).map(
+									(item, index) => {
+										if (week) {
+											let day = '';
+											switch (item) {
+												case 'MON':
+													day = '월';
+													break;
+												case 'TUE':
+													day = '화';
+													break;
+												case 'WED':
+													day = '수';
+													break;
+												case 'THU':
+													day = '목';
+													break;
+												case 'FRI':
+													day = '금';
+													break;
+												case 'SAT':
+													day = '토';
+													break;
+												case 'SUN':
+													day = '일';
+													break;
+											}
+											return (
+												`${day}` +
+												(index === confirmSelected.size - 1 ? ' ' : ', ')
+											);
 										}
-										return (
-											`${day}` +
-											(index === confirmSelected.size - 1 ? ' ' : ', ')
-										);
-									}
 
-									const date = new Date(item);
-									console.log(item);
-									const year =
-										String(date.getFullYear())[2] +
-										String(date.getFullYear())[3];
-									const month = date.getMonth() + 1;
-									const day = date.getDate();
-									const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][
-										date.getDay()
-									];
-									return (
-										<div>{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}</div>
-									);
-								})}
+										const date = new Date(item);
+										console.log(item);
+										const year =
+											String(date.getFullYear())[2] +
+											String(date.getFullYear())[3];
+										const month = date.getMonth() + 1;
+										const day = date.getDate();
+										const dayOfWeek = [
+											'일',
+											'월',
+											'화',
+											'수',
+											'목',
+											'금',
+											'토',
+										][date.getDay()];
+										return (
+											<div>{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}</div>
+										);
+									},
+								)}
 							</div>
 							<div
 								className={styles.icon}
@@ -966,7 +990,7 @@ const ApmtDetail = () => {
 						<div className={styles.inputContent}>
 							<div className={styles.icon}>{svgList.confirm.where}</div>
 							<div className={styles.modalInput}>
-								<input
+								<textarea
 									className={styles.inputItem}
 									style={{ marginBottom: 0 }}
 									placeholder="위치"
@@ -993,7 +1017,7 @@ const ApmtDetail = () => {
 						<div className={styles.inputContent}>
 							<div className={styles.icon}>{svgList.confirm.notion}</div>
 							<div className={styles.modalInput}>
-								<input
+								<textarea
 									className={styles.inputItem}
 									style={{ marginBottom: 0 }}
 									placeholder="공지 (ex. 매주 모입시다)"
@@ -1052,148 +1076,177 @@ const ApmtDetail = () => {
 						left: modalPosition[0] + 10,
 					}}
 					className={styles.modalBody}
+					onClick={(e) => {
+						e.stopPropagation();
+						setShowConfirmModal('click');
+					}}
 				>
 					<div className={styles.modalContent}>
 						<div className={styles.whenContent}>
 							<div className={styles.icon}>{svgList.confirm.when}</div>
-							<div className={styles.whenText}>
-								{Array.from(confirmSelected).map((item, index) => {
-									{
-										/* {['MON', 'WED'].map((item, index) => { */
-									}
-									if (week) {
-										let day = '';
-										switch (item) {
-											case 'MON':
-												day = '월';
-												break;
-											case 'TUE':
-												day = '화';
-												break;
-											case 'WED':
-												day = '수';
-												break;
-											case 'THU':
-												day = '목';
-												break;
-											case 'FRI':
-												day = '금';
-												break;
-											case 'SAT':
-												day = '토';
-												break;
-											case 'SUN':
-												day = '일';
-												break;
+							<div
+								className={styles.whenText}
+								style={week && { flexDirection: 'row' }}
+							>
+								{sortDaysOfWeek(Array.from(confirmSelected)).map(
+									(item, index) => {
+										{
+											/* {['MON', 'WED'].map((item, index) => { */
 										}
-										return (
-											`${day}` +
-											(index === confirmSelected.size - 1 ? ' ' : ', ')
-										);
-									}
+										if (week) {
+											let day = '';
+											switch (item) {
+												case 'MON':
+													day = '월';
+													break;
+												case 'TUE':
+													day = '화';
+													break;
+												case 'WED':
+													day = '수';
+													break;
+												case 'THU':
+													day = '목';
+													break;
+												case 'FRI':
+													day = '금';
+													break;
+												case 'SAT':
+													day = '토';
+													break;
+												case 'SUN':
+													day = '일';
+													break;
+											}
+											return (
+												<div style={{ display: 'flex', marginRight: 10 }}>
+													<div
+														style={{
+															paddingTop: 1,
+														}}
+														onClick={() => {
+															setSelectConfirmDate((prev) => {
+																if (prev.includes(item)) {
+																	return prev.filter((im) => im !== item);
+																}
+																return [...prev, item];
+															});
+														}}
+													>
+														{selectConfirmDate.includes(item)
+															? svgList.confirm.checkboxChecked
+															: svgList.confirm.checkBoxNotChecked}
+													</div>
+													{day}
+												</div>
+											);
+										}
 
-									const date = new Date(item);
-									console.log(item);
-									const year =
-										String(date.getFullYear())[2] +
-										String(date.getFullYear())[3];
-									const month = date.getMonth() + 1;
-									const day = date.getDate();
-									const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][
-										date.getDay()
-									];
-									return (
-										<div>{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}</div>
-									);
-								})}
+										const date = new Date(item);
+										console.log(item);
+										const year =
+											String(date.getFullYear())[2] +
+											String(date.getFullYear())[3];
+										const month = date.getMonth() + 1;
+										const day = date.getDate();
+										const dayOfWeek = [
+											'일',
+											'월',
+											'화',
+											'수',
+											'목',
+											'금',
+											'토',
+										][date.getDay()];
+										return (
+											<div
+												style={{ display: 'flex', justifyContent: 'center' }}
+											>
+												<div
+													style={{ marginRight: 4, paddingTop: 1 }}
+													onClick={() => {
+														setSelectConfirmDate((prev) => {
+															if (prev.includes(item)) {
+																return prev.filter((im) => im !== item);
+															}
+															return [...prev, item];
+														});
+													}}
+												>
+													{new Set(selectConfirmDate).has(item)
+														? svgList.confirm.checkboxChecked
+														: svgList.confirm.checkBoxNotChecked}
+												</div>
+												{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}
+											</div>
+										);
+									},
+								)}
 							</div>
 							{canConfirm && (
 								<div
 									className={styles.icon}
-									onClick={() => {
-										setConfirming(true);
+									style={{ paddingTop: 1, paddingLeft: 6 }}
+									onClick={(e) => {
+										e.stopPropagation();
+
 										setShowConfirmModal('no');
+										setConfirming(true);
 									}}
 								>
 									{svgList.loginIcon.pencilBtn}
 								</div>
 							)}
 						</div>
-						<div className={styles.inputContent}>
+						<div className={styles.whenContent}>
 							<div className={styles.icon}>{svgList.confirm.where}</div>
-							<div className={styles.modalInput}>
-								<input
-									className={styles.inputItem}
-									style={{ marginBottom: 0 }}
-									placeholder="위치"
-									value={place}
-									disabled={true}
-								/>
-								<div
-									style={{
-										position: 'absolute',
-										cursor: 'pointer',
-										top: 2,
-										right: 2,
-									}}
-									onClick={() => {
-										setShowConfirmModal('no');
-										setConfirmModal(true);
-									}}
-								>
-									{svgList.loginIcon.pencilBtn}
-								</div>
-							</div>
+							<div className={styles.whenText}>{place}</div>
 						</div>
-						<div className={styles.inputContent}>
+						<div className={styles.whenContent}>
 							<div className={styles.icon}>{svgList.confirm.notion}</div>
-							<div className={styles.modalInput}>
-								<input
-									className={styles.inputItem}
-									style={{ marginBottom: 0 }}
-									placeholder="공지 (ex. 매주 모입시다)"
-									value={notion}
-									disabled={true}
-								/>
-								<div
-									style={{
-										position: 'absolute',
-										cursor: 'pointer',
-										top: 2,
-										right: 2,
-									}}
-									onClick={() => {
-										setShowConfirmModal('no');
-										setConfirmModal(true);
-									}}
-								>
-									{svgList.loginIcon.pencilBtn}
-								</div>
-							</div>
+							<div className={styles.whenText}>{notion}</div>
 						</div>
 					</div>
-					<div className={styles.modalBtnView}>
+					<div className={styles.modalBtnView} style={{ paddingTop: 20 }}>
 						<div
 							className={styles.confirmModalBtn}
 							style={{ color: '#8E66EE' }}
-							onClick={() => {
-								setConfirmModal(false);
-								setConfirmSelected(new Set(confirmed));
+							onClick={(e) => {
+								e.stopPropagation();
+								setShowConfirmModal('no');
+								setConfirmModal(true);
 							}}
 						>
-							취소
+							세부사항
+							<br /> 수정하기
 						</div>
 						<div style={{ width: 10 }}></div>
 						<div
 							className={styles.confirmModalBtn}
-							style={{ backgroundColor: '#8E66EE', color: 'white' }}
+							style={{ color: '#8E66EE' }}
 							onClick={() => {
 								// confirm();
 								setConfirmModal(false);
+								// 확정 취소 모달 띄우기
 							}}
 						>
-							완료
+							확정
+							<br />
+							취소하기
 						</div>
+					</div>
+					<div
+						className={styles.confirmModalBtn}
+						style={{
+							backgroundColor: '#8E66EE',
+							color: 'white',
+							paddingTop: 15,
+							paddingBottom: 15,
+							marginTop: 8,
+							minWidth: 250,
+						}}
+					>
+						내 캘린더에 복사하기
 					</div>
 				</div>
 			)}

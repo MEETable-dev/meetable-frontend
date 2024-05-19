@@ -171,7 +171,8 @@ const CalendarWeekWithoutTime = (props) => {
 		} else if (confirming) {
 			setDragStart(date);
 			setIsDragging(true);
-			if (confirmSelected.has(format(date, 'yyyy-MM-dd'))) setAdding(false);
+			if (confirmSelected.has(DaysOfWeek[getDay(new Date(date))]))
+				setAdding(false);
 			else setAdding(true);
 		} else {
 			if (confirmed.has(DaysOfWeek[getDay(new Date(date))])) {
@@ -324,7 +325,7 @@ const CalendarWeekWithoutTime = (props) => {
 
 					let A = start;
 					while (isBefore(A, addDays(end, 1))) {
-						let day = format(A, 'yyyy-MM-dd');
+						let day = DaysOfWeek[getDay(A)];
 						// console.log(day);
 						if (adding)
 							setConfirmAdding((prevState) => new Set([...prevState, day]));

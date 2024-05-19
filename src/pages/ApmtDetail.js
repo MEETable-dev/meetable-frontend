@@ -13,8 +13,6 @@ import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
-import { getDay } from 'date-fns';
-import { tr } from 'date-fns/locale';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -41,7 +39,7 @@ const ApmtDetail = () => {
 	const [canParti, setCanParti] = useState([]); // 올 수 있다고 표기한 사람 목록
 
 	const [filterSelectionNum, setFilterSelectionNum] = useState(1); // 최소 인원 필터 선택값
-	const [filterSelectionTime, setFilterSelectionTime] = useState(0.5); // 최소 시간 필터 선택값
+	// const [filterSelectionTime, setFilterSelectionTime] = useState(0.5); // 최소 시간 필터 선택값
 	const [filterSelectionParti, setFilterSelectionParti] = useState([]); // 필수참여자 필터 선택값
 
 	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
@@ -57,6 +55,7 @@ const ApmtDetail = () => {
 	const [confirmModal, setConfirmModal] = useState(false); // 확정 모달 여부
 	const [showConfirmModal, setShowConfirmModal] = useState('no'); // 확정완료된 일정 모달 보여주기 여부 (no/hover/show)
 	const [modalPosition, setModalPosition] = useState([]);
+	const [cancelConfirmModal, setCancelConfirmModal] = useState(false); // 확정 취소 모달 여부
 
 	const [confirmed, setConfirmed] = useState(new Set()); // 저장되어 있는 확정 날짜들
 	const [confirming, setConfirming] = useState(false); // 확정 일정 선택 중인지 아닌지
@@ -156,6 +155,12 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+			if (errorResponse.data.statusCode === 4044) {
+				setConfirmed(new Set());
+				setConfirmSelected(new Set());
+				setPlace('');
+				setNotion('');
+			}
 		}
 	};
 
@@ -413,6 +418,43 @@ const ApmtDetail = () => {
 		}
 	};
 
+	const cancelConfirm = async () => {
+		try {
+			if (accessToken) {
+				const response = await axios.delete(
+					`${process.env.REACT_APP_API_URL}/confirm/cancel`,
+					{
+						data: {
+							promiseid: promiseId.split('_')[0],
+						},
+					},
+				);
+
+				console.log('deleete', response.data);
+			} else {
+				const response = await axios.delete(
+					`${process.env.REACT_APP_API_URL}/confirm/cancel`,
+					{
+						data: {
+							promiseid: promiseId.split('_')[0],
+						},
+
+						headers: { Authorization: '@' },
+					},
+				);
+				console.log(response.data);
+			}
+
+			setCancelConfirmModal(false);
+			setConfirmModal(false);
+			setShowConfirmModal('no');
+			getApmtInfoReset();
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data.statusCode);
+		}
+	};
+
 	return (
 		<div style={{ height: 'auto' }}>
 			{confirming && (
@@ -434,17 +476,18 @@ const ApmtDetail = () => {
 					</div>
 					{confirmSelected
 						.difference(confirmed)
-						.union(confirmed.difference(confirmSelected)).size != 0 && (
+						.union(confirmed.difference(confirmSelected)).size !== 0 && (
 						<div style={{ width: 10 }}></div>
 					)}
 					{confirmSelected
 						.difference(confirmed)
-						.union(confirmed.difference(confirmSelected)).size != 0 && (
+						.union(confirmed.difference(confirmSelected)).size !== 0 && (
 						<div
 							className={styles.confirmBtn}
 							onClick={() => {
 								if (confirmSelected.size === 0) {
 									// 확정 취소
+									setCancelConfirmModal(true);
 								} else {
 									setConfirmModal(true);
 								}
@@ -1068,7 +1111,7 @@ const ApmtDetail = () => {
 					</div>
 				</ApmtShareModal>
 			)}
-			{(showConfirmModal == 'hover' || showConfirmModal == 'click') && (
+			{(showConfirmModal === 'hover' || showConfirmModal === 'click') && (
 				<div
 					style={{
 						position: 'absolute',
@@ -1086,7 +1129,9 @@ const ApmtDetail = () => {
 							<div className={styles.icon}>{svgList.confirm.when}</div>
 							<div
 								className={styles.whenText}
-								style={week && { flexDirection: 'row' }}
+								style={
+									week ? { flexDirection: 'row' } : { flexDirection: 'column' }
+								}
 							>
 								{sortDaysOfWeek(Array.from(confirmSelected)).map(
 									(item, index) => {
@@ -1226,8 +1271,9 @@ const ApmtDetail = () => {
 							style={{ color: '#8E66EE' }}
 							onClick={() => {
 								// confirm();
-								setConfirmModal(false);
+								// setConfirmModal(false);
 								// 확정 취소 모달 띄우기
+								setCancelConfirmModal(true);
 							}}
 						>
 							확정
@@ -1237,18 +1283,67 @@ const ApmtDetail = () => {
 					</div>
 					<div
 						className={styles.confirmModalBtn}
-						style={{
-							backgroundColor: '#8E66EE',
-							color: 'white',
-							paddingTop: 15,
-							paddingBottom: 15,
-							marginTop: 8,
-							minWidth: 250,
-						}}
+						style={
+							selectConfirmDate.length === 0
+								? {
+										backgroundColor: '#D0D0D0',
+										borderColor: '#D0D0D0',
+										color: 'white',
+										paddingTop: 15,
+										paddingBottom: 15,
+										marginTop: 8,
+										minWidth: 250,
+								  }
+								: {
+										backgroundColor: '#8E66EE',
+										color: 'white',
+										paddingTop: 15,
+										paddingBottom: 15,
+										marginTop: 8,
+										minWidth: 250,
+								  }
+						}
 					>
 						내 캘린더에 복사하기
 					</div>
 				</div>
+			)}
+			{cancelConfirmModal && (
+				<ApmtShareModal
+					title={'확정을 취소하시겠어요?'}
+					onClose={() => setCancelConfirmModal(false)}
+				>
+					<div className={styles.modalHeader}>
+						확정을 취소하시겠어요?
+						<div style={{ height: 8 }}></div>
+						약속에 참여 중인 모두에게 확정 취소됩니다.
+					</div>
+					<div className={styles.modalBtnView} style={{ paddingTop: 0 }}>
+						<div
+							className={styles.modalBtn}
+							style={{
+								marginTop: 24,
+								backgroundColor: 'white',
+								color: '#8E66EE',
+								border: '1px solid #8E66EE',
+								flex: 1,
+							}}
+							onClick={() => setCancelConfirmModal(false)}
+						>
+							아니요
+						</div>
+						<div style={{ width: 8 }}></div>
+						<div
+							className={styles.modalBtn}
+							style={{ marginTop: 24, flex: 2 }}
+							onClick={() => {
+								cancelConfirm();
+							}}
+						>
+							네, 취소할게요
+						</div>
+					</div>
+				</ApmtShareModal>
 			)}
 			{wrongAddressModal && (
 				<OnlyShowModal>

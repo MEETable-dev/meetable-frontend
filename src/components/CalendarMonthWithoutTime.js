@@ -25,7 +25,6 @@ import {
 	add,
 	isSameMonth,
 } from 'date-fns';
-import { AiOutlineCalendar } from 'react-icons/ai';
 import CustomColor from 'hooks/CustomColor';
 
 const CalendarMonthWithoutTime = (props) => {

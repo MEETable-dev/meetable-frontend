@@ -22,9 +22,9 @@ const NewApmt = () => {
   const [selectedElement2, setSelectedElement2] = useState('F'); // 날짜만 vs 시간
 	const [selectedElement3, setSelectedElement3] = useState('T'); // 나만 vs 누구든
 
-	const [selectDate, setSelectDate] = useState(new Set());
 	const [startTime, setStartTime] = useState(0);
 	const [endTime, setEndTime] = useState(24);
+	const [selectedDate, setSelectedDate] = useState(new Set());
 
 	const [amptName, setAmptName] = useState('약속');
 	const [nickname, setNickname] = useState('');
@@ -54,9 +54,7 @@ const NewApmt = () => {
 			try {
 				const formattedStartTime = formatTime(startTime);
 				const formattedEndTime = formatTime(endTime);
-				const formattedDates = Array.from(selectDate).map((date) =>
-					format(date, 'yyyy-MM-dd'),
-				);
+				const formattedDates = Array.from(selectedDate);
 				console.log(formattedDates);
 
 				// header
@@ -116,32 +114,6 @@ const NewApmt = () => {
 		}
 	};
 
-	// 날짜 변경 핸들러
-	const handleDateChange = (newDate) => {
-		setSelectDate((prevSelectDate) => {
-			const dateString = format(newDate, 'yyyy-MM-dd');
-			const updatedSelectDate = new Set(prevSelectDate);
-
-			// 이미 선택된 날짜들을 문자열로 변환하여 비교
-			const formattedDates = Array.from(updatedSelectDate).map((date) =>
-				format(date, 'yyyy-MM-dd'),
-			);
-
-			if (formattedDates.includes(dateString)) {
-				// 이미 선택된 날짜면 삭제
-				updatedSelectDate.forEach((date) => {
-					if (format(date, 'yyyy-MM-dd') === dateString) {
-						updatedSelectDate.delete(date);
-					}
-				});
-			} else {
-				// 새로운 날짜면 추가
-				updatedSelectDate.add(newDate);
-			}
-			return updatedSelectDate;
-		});
-	};
-
 	const handleStartTimeChange = (e) => {
 		setStartTime(parseInt(e.target.value, 10));
 	};
@@ -185,7 +157,7 @@ const NewApmt = () => {
 	// selectedElement1 값이 변경될 때 selectDate를 초기화
 	useEffect(() => {
 		if (selectedElement1 === 'W') {
-			setSelectDate(new Set());
+			setSelectedDate(new Set());
 		}
 	}, [selectedElement1]);
 
@@ -258,8 +230,9 @@ const NewApmt = () => {
 									<CalendarNewApmtDrag
 										spaceX={4}
 										spaceY={4}
-										selectedDates={selectDate}
-										onDateChange={handleDateChange}
+										// onDateChange={handleDateChange}
+										selectedDate={selectedDate}
+										setSelectedDate={setSelectedDate}
 									/>
 								</div>
 							) : null}

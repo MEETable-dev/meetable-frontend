@@ -13,6 +13,7 @@ import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
+import { format } from 'date-fns';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -78,6 +79,17 @@ const ApmtDetail = () => {
 		window.addEventListener('resize', handleResize);
 		window.addEventListener('click', handleClick);
 		window.addEventListener('contextmenu', handleClick);
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				setPartiModal('no');
+				setAddDescription('out');
+				setShareModal(false);
+				setCopyModal(false);
+				setConfirmModal(false);
+				setCancelConfirmModal(false);
+				setShowConfirmModal('no');
+			}
+		});
 
 		return () => {
 			window.removeEventListener('resize', handleResize);
@@ -103,7 +115,7 @@ const ApmtDetail = () => {
 
 	useEffect(() => {
 		getApmtInfoReset();
-	}, [reset]);
+	}, [reset, selectWeek]);
 
 	// useEffect(() => {
 	// 	const getConfirm = async () => {
@@ -283,9 +295,13 @@ const ApmtDetail = () => {
 	const getApmtInfo = async () => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
-					promiseId.split('_')[0]
-				}`,
+				week
+					? `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+							promiseId.split('_')[0]
+					  }`
+					: `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+							promiseId.split('_')[0]
+					  }?month=${format(selectWeek, 'yyyy-MM')}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);
@@ -318,9 +334,13 @@ const ApmtDetail = () => {
 	const getApmtInfoReset = async () => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
-					promiseId.split('_')[0]
-				}`,
+				week
+					? `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+							promiseId.split('_')[0]
+					  }`
+					: `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+							promiseId.split('_')[0]
+					  }?month=${format(selectWeek, 'yyyy-MM')}`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
 			console.log(response.data);

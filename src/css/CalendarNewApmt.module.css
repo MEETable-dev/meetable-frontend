@@ -116,11 +116,13 @@
 .txtDate {
   color: #222222;
   font-size: 12px;
+  user-select: none;
 }
 
 .txtSelectedDate {
   color: #FFFFFF;
   font-size: 12px;
+  user-select: none;
 }
 
 .dateBlock {

@@ -204,9 +204,11 @@ color: #222222;
     display: flex;
     flex-direction: column;
     margin-bottom: 5px;
-    align-items: center;
+    align-items: flex-start;
     font-size: 15px;
     color: #222222;
+    width: 100%;
+    margin-left: 30px;
 }
 
 .timeSelect {
@@ -216,6 +218,19 @@ border-radius: 5px;
 width: 40px;
 height: 25px;
 margin-right: 3px;
+}
+
+.repeatNum {
+    color: #8E66EE;
+    border: 1px solid #D0D0D0; /* border-color 속성을 border로 변경 */
+    border-radius: 5px;
+    width: 30px;
+    height: 25px;
+    margin-right: 3px;
+    outline: none; /* 클릭 시 생기는 기본 outline 제거 */
+    appearance: none; /* 기본 스타일 제거 */
+    -webkit-appearance: none; /* 크롬, 사파리 등 웹킷 브라우저에서 기본 스타일 제거 */
+    -moz-appearance: none; /* 파이어폭스에서 기본 스타일 제거 */
 }
 
 .calendar {

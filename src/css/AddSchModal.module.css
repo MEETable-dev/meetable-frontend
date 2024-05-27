@@ -200,6 +200,15 @@ font-size: 15px;
 color: #222222;
 }
 
+.repeatDetails {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+    align-items: center;
+    font-size: 15px;
+    color: #222222;
+}
+
 .timeSelect {
 color: #8E66EE;
 border-color: #D0D0D0;

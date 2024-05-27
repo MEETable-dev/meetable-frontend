@@ -469,7 +469,7 @@ const Layout = (props) => {
 				console.log(errorResponse.data);
 			}
 		};
-		getData();
+		if (accessToken) getData();
 	}, []);
 
 	useEffect(() => {
@@ -486,7 +486,7 @@ const Layout = (props) => {
 				console.log(errorResponse.data);
 			}
 		};
-		getTrashData();
+		if (accessToken) getTrashData();
 	}, []);
 
 	const getTrashData = async () => {

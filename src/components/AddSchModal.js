@@ -17,11 +17,13 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
     const navigate = useNavigate();
   
-    const [selectedElement1, setSelectedElement1] = useState('W'); // 요일 vs 날짜
+    const [isRepeat, setIsRepeat] = useState('N'); // 요일 vs 날짜
     const [daySelect, setDaySelect] = useState(false); // 달력 나와있는지 아닌지
     const [selectedColor, setSelectedColor] = useState('red');
 
     const [selectDate, setSelectDate] = useState(new Set());
+
+    const [timeByDate, setTimeByDate] = useState({}); // 날짜별 시간 상태 관리
     
     const [startTime, setStartTime] = useState(0);
     const [startMinute, setStartMinute] = useState(0);
@@ -53,7 +55,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                 `${process.env.REACT_APP_API_URL}/promise/create`,
                 {
                     promise_name: amptName,
-                    weekvsdate: selectedElement1,
+                    weekvsdate: isRepeat,
                     start_time: formattedStartTime,
                     end_time: formattedEndTime,
                     date: formattedDates
@@ -126,23 +128,43 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
         });
     };
 
-    const handleStartTimeChange = (e) => {
-        setStartTime(parseInt(e.target.value, 10));
-    };
-    const handleStartMinuteChange = (e) => {
-        setStartMinute(parseInt(e.target.value, 10));
-    };
-    const handleEndTimeChange = (e) => {
-        setEndTime(parseInt(e.target.value, 10));
-    };
-    const handleEndMinuteChange = (e) => {
-        setEndMinute(parseInt(e.target.value, 10));
+    const handleTimeChange = (date, field, value) => {
+        const dateString = format(date, 'yyyy-MM-dd');
+        setTimeByDate((prevTimeByDate) => {
+            const newTimeByDate = {
+                ...prevTimeByDate,
+                [dateString]: {
+                    ...prevTimeByDate[dateString],
+                    [field]: value,
+                },
+            };
+    
+            const { startTime, startMinute, endTime, endMinute } = newTimeByDate[dateString];
+    
+            if (field === 'startTime' || field === 'startMinute') {
+                const newStartTime = field === 'startTime' ? value : startTime;
+                const newStartMinute = field === 'startMinute' ? value : startMinute;
+    
+                if (newStartTime > endTime || (newStartTime === endTime && newStartMinute > endMinute)) {
+                    newTimeByDate[dateString].endTime = newStartTime;
+                    newTimeByDate[dateString].endMinute = newStartMinute;
+                }
+            } else if (field === 'endTime' || field === 'endMinute') {
+                const newEndTime = field === 'endTime' ? value : endTime;
+                const newEndMinute = field === 'endMinute' ? value : endMinute;
+    
+                if (newEndTime < startTime || (newEndTime === startTime && newEndMinute < startMinute)) {
+                    newTimeByDate[dateString].startTime = newEndTime;
+                    newTimeByDate[dateString].startMinute = newEndMinute;
+                }
+            }
+            return newTimeByDate;
+        });
     };
 
     const handleRepeatTimeChange = (e) => {
         setRepeatTime(parseInt(e.target.value, 10));
     };
-
 
     const startTimeOptions = Array.from({ length: 24 }, (_, i) => (
         <option key={i} value={i} disabled={i > endTime}>
@@ -183,6 +205,19 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
         setDaySelect(!daySelect);
     };
 
+    // 추가
+    const handleContentClick = (e) => {
+        e.stopPropagation();
+        if (daySelect) {
+            handleDaySelect();
+        }
+      };
+    
+    const handleCalendarClick = (e) => {
+        e.stopPropagation();
+    };
+
+
     const handleAmptNameChange = (e) => {
         setAmptName(e.target.value);
     };
@@ -213,7 +248,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
     return (
     <div ref={ref}>
         <div className={styles.modalOverlay} onClick={onClose}>
-            <div className={`${styles.modalContent}`} onClick={(e) => e.stopPropagation()}>
+            <div className={`${styles.modalContent}`} onClick={handleContentClick}>
                 <h2>일정 추가하기</h2>
 
                 {/* 색 고르기 */}
@@ -258,7 +293,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                                 </div>
                             </div>
                             {daySelect ? (
-                                <div className={styles.calendar}>
+                                <div className={styles.calendar} onClick={handleCalendarClick}>
                                     <CalendarNewApmt
                                         spaceX={4}
                                         spaceY={4}
@@ -269,54 +304,58 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                             ) : null}
 
                             {/* 선택된 날짜들 각각에 대한 컴포넌트 */}
-                            {Array.from(selectDate).map((date, index) => (
-                                <div key={index} className={styles.oneDate}>
-                                    <div className={styles.timeCollectInput}>
-                                        <div className={styles.dateFont}>{format(date, 'yyyy년 MM월 dd일')}</div>
-                                    </div>
-                                    <div className={styles.timeCollectInput}>
-                                        {/* 시간 선택 드롭다운 */}
-                                        <div className={styles.timeSelectContainer}>
-                                            {/* 부터 */}
-                                            <select
-                                                className={styles.timeSelect}
-                                                value={startTime}
-                                                onChange={handleStartTimeChange}
-                                            >
-                                                {startTimeOptions}
-                                            </select>
-                                            <span>시 </span>
+                            {Array.from(selectDate).map((date, index) => {
+                                const dateString = format(date, 'yyyy-MM-dd');
+                                const { startTime = 0, startMinute = 0, endTime = 23, endMinute = 55 } = timeByDate[dateString] || {};
+                                return (
+                                    <div key={index} className={styles.oneDate}>
+                                        <div className={styles.timeCollectInput}>
+                                            <div className={styles.dateFont}>{format(date, 'yyyy년 MM월 dd일')}</div>
+                                        </div>
+                                        <div className={styles.timeCollectInput}>
+                                            {/* 시간 선택 드롭다운 */}
+                                            <div className={styles.timeSelectContainer}>
+                                                {/* 부터 */}
+                                                <select
+                                                    className={styles.timeSelect}
+                                                    value={startTime}
+                                                    onChange={(e) => handleTimeChange(date, 'startTime', parseInt(e.target.value, 10))}
+                                                >
+                                                    {startTimeOptions}
+                                                </select>
+                                                <span>시 </span>
 
-                                            <select
-                                                className={styles.timeSelect}
-                                                value={startMinute}
-                                                onChange={handleStartMinuteChange}
-                                            >
-                                                {startMinuteOptions}
-                                            </select>
-                                            <span>분 ~ </span>
+                                                <select
+                                                    className={styles.timeSelect}
+                                                    value={startMinute}
+                                                    onChange={(e) => handleTimeChange(date, 'startMinute', parseInt(e.target.value, 10))}
+                                                >
+                                                    {startMinuteOptions}
+                                                </select>
+                                                <span>분 ~ </span>
 
-                                            {/* 까지 */}
-                                            <select
-                                                className={styles.timeSelect}
-                                                value={endTime}
-                                                onChange={handleEndTimeChange}
-                                            >
-                                                {endTimeOptions}
-                                            </select>
-                                            <span>시 </span>
-                                            <select
-                                                className={styles.timeSelect}
-                                                value={endMinute}
-                                                onChange={handleEndMinuteChange}
-                                            >
-                                                {endMinuteOptions}
-                                            </select>
-                                            <span>분</span>
+                                                {/* 까지 */}
+                                                <select
+                                                    className={styles.timeSelect}
+                                                    value={endTime}
+                                                    onChange={(e) => handleTimeChange(date, 'endTime', parseInt(e.target.value, 10))}
+                                                >
+                                                    {endTimeOptions}
+                                                </select>
+                                                <span>시 </span>
+                                                <select
+                                                    className={styles.timeSelect}
+                                                    value={endMinute}
+                                                    onChange={(e) => handleTimeChange(date, 'endMinute', parseInt(e.target.value, 10))}
+                                                >
+                                                    {endMinuteOptions}
+                                                </select>
+                                                <span>분</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -326,12 +365,12 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                             {svgList.addSchModal.retryIcon} 
                         </div>
                         <div className={styles.contentInput}>
-                            <div className={styles.timeCollectInput}>
+                            <div className={styles.timeCollectInput} style={{ marginTop: '5px' }}>
                                 <button
                                     className={styles.selectBtn}
-                                    onClick={() => setSelectedElement1('W')}
+                                    onClick={() => setIsRepeat('N')}
                                 >
-                                    {selectedElement1 === 'W' ? (
+                                    {isRepeat === 'N' ? (
                                         <div>{svgList.newAmpt.btnSelected}</div>
                                     ) : (
                                         <div>{svgList.newAmpt.btnNone}</div>
@@ -343,9 +382,9 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                             <div className={styles.timeCollectInput}>
                                 <button
                                     className={styles.selectBtn}
-                                    onClick={() => setSelectedElement1('D')}
+                                    onClick={() => setIsRepeat('Y')}
                                 >
-                                    {selectedElement1 === 'D' ? (
+                                    {isRepeat === 'Y' ? (
                                         <div>{svgList.newAmpt.btnSelected}</div>
                                     ) : (
                                         <div>{svgList.newAmpt.btnNone}</div>
@@ -362,6 +401,49 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
                                     <span>주마다 반복</span>
                                 </div>
                             </div>
+                            {isRepeat === 'Y' ?
+                                <div className={styles.repeatDetails}>
+                                    <div className={styles.timeCollectInput}>
+                                        <button
+                                            className={styles.selectBtn}
+                                            onClick={() => setIsRepeat('N')}
+                                        >
+                                            {isRepeat === 'N' ? (
+                                                <div>{svgList.newAmpt.btnSelected}</div>
+                                            ) : (
+                                                <div>{svgList.newAmpt.btnNone}</div>
+                                            )}
+                                        </button>
+                                        <div>선택1</div>
+                                    </div>
+                                    <div className={styles.timeCollectInput}>
+                                        <button
+                                            className={styles.selectBtn}
+                                            onClick={() => setIsRepeat('N')}
+                                        >
+                                            {isRepeat === 'N' ? (
+                                                <div>{svgList.newAmpt.btnSelected}</div>
+                                            ) : (
+                                                <div>{svgList.newAmpt.btnNone}</div>
+                                            )}
+                                        </button>
+                                        <div>선택2</div>
+                                    </div>
+                                    <div className={styles.timeCollectInput}>
+                                        <button
+                                            className={styles.selectBtn}
+                                            onClick={() => setIsRepeat('N')}
+                                        >
+                                            {isRepeat === 'N' ? (
+                                                <div>{svgList.newAmpt.btnSelected}</div>
+                                            ) : (
+                                                <div>{svgList.newAmpt.btnNone}</div>
+                                            )}
+                                        </button>
+                                        <div>선택3</div>
+                                    </div>
+                                </div>
+                                : null}
                         </div>
                     </div>
 

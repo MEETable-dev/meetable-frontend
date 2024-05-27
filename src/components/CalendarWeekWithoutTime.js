@@ -47,7 +47,19 @@ const CalendarWeekWithoutTime = (props) => {
 
 	const DaysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-	const updateAndDelete = async (adding, selectingDate) => {
+	let confirming = props.confirming;
+	let confirmSelected = props.confirmSelected;
+	let setConfirmSelected = props.setConfirmSelected;
+	let confirmed = props.confirmed;
+
+	let showConfirmModal = props.showConfirmModal;
+	let setShowConfirmModal = props.setShowConfirmModal;
+	let setModalPosition = props.setModalPosition;
+
+	const [confirmAdding, setConfirmAdding] = useState(new Set()); // 확정 선택 중 목록
+	const [confirmRemoving, setConfirmRemoving] = useState(new Set()); // 확정 선택 중 목록
+
+	const updateAndDelete = async (adding, selectingDate, selectDate) => {
 		const result = [];
 		if (adding) {
 			selectingDate.difference(selectDate).forEach((dateStr) => {
@@ -61,47 +73,49 @@ const CalendarWeekWithoutTime = (props) => {
 
 		console.log(result);
 		// 업데이트 로직 넣기
-		try {
-			if (adding) {
-				const response = await axios.post(
-					`${process.env.REACT_APP_API_URL}/promise/time`,
-					{
-						promiseId: promiseId.split('_')[0],
-						weekAvailable: result,
-					},
-					!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
-				);
-				console.log(response.data);
-			} else {
-				if (accessToken) {
-					const response = await axios.delete(
-						`${process.env.REACT_APP_API_URL}/promise/deletetime`,
+		if (!confirming) {
+			try {
+				if (adding) {
+					const response = await axios.post(
+						`${process.env.REACT_APP_API_URL}/promise/time`,
 						{
-							data: {
-								promiseId: promiseId.split('_')[0],
-								weekToDelete: result,
-							},
+							promiseId: promiseId.split('_')[0],
+							weekAvailable: result,
 						},
+						!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
 					);
 					console.log(response.data);
 				} else {
-					const response = await axios.delete(
-						`${process.env.REACT_APP_API_URL}/promise/deletetime`,
-						{
-							data: {
-								promiseId: promiseId.split('_')[0],
-								weekToDelete: result,
+					if (accessToken) {
+						const response = await axios.delete(
+							`${process.env.REACT_APP_API_URL}/promise/deletetime`,
+							{
+								data: {
+									promiseId: promiseId.split('_')[0],
+									weekToDelete: result,
+								},
 							},
-							headers: { Authorization: `@${nonmemberId}` },
-						},
-					);
-					console.log(response.data);
+						);
+						console.log(response.data);
+					} else {
+						const response = await axios.delete(
+							`${process.env.REACT_APP_API_URL}/promise/deletetime`,
+							{
+								data: {
+									promiseId: promiseId.split('_')[0],
+									weekToDelete: result,
+								},
+								headers: { Authorization: `@${nonmemberId}` },
+							},
+						);
+						console.log(response.data);
+					}
 				}
+				setReset(!reset);
+			} catch (error) {
+				const errorResponse = error.response;
+				console.log(errorResponse.data.statusCode);
 			}
-			setReset(!reset);
-		} catch (error) {
-			const errorResponse = error.response;
-			console.log(errorResponse.data.statusCode);
 		}
 		return result;
 	};
@@ -148,12 +162,28 @@ const CalendarWeekWithoutTime = (props) => {
 		if (!isDragging && (nonmemberId !== -1 || accessToken)) getMyParti();
 	}, [setReset, nonmemberId]);
 
-	const handleMouseDown = (date) => {
+	const handleMouseDown = (date, event) => {
 		if (editing) {
 			setDragStart(date);
 			setIsDragging(true);
 			if (selectDate.has(format(date, 'yyyy-MM-dd'))) setAdding(false);
 			else setAdding(true);
+		} else if (confirming) {
+			setDragStart(date);
+			setIsDragging(true);
+			if (confirmSelected.has(DaysOfWeek[getDay(new Date(date))]))
+				setAdding(false);
+			else setAdding(true);
+		} else {
+			if (confirmed.has(DaysOfWeek[getDay(new Date(date))])) {
+				setTimeout(() => {
+					setShowConfirmModal('click');
+					console.log(event.clientX, event.clientY);
+					setModalPosition([event.clientX, event.clientY]);
+				}, 50);
+			} else {
+				// 참가자 고정?
+			}
 		}
 	};
 
@@ -168,7 +198,7 @@ const CalendarWeekWithoutTime = (props) => {
 					// selectingDate.difference(selectDate).forEach((dateStr) => {
 					// 	console.log(DaysOfWeek[getDay(new Date(dateStr))]);
 					// });
-					updateAndDelete(true, selectingDate);
+					updateAndDelete(true, selectingDate, selectDate);
 					setSelectDate(
 						(prevState) => new Set([...prevState, ...selectingDate]),
 					);
@@ -177,7 +207,7 @@ const CalendarWeekWithoutTime = (props) => {
 					// removingDate.intersection(selectDate).forEach((dateStr) => {
 					// 	console.log(DaysOfWeek[getDay(new Date(dateStr))]);
 					// });
-					updateAndDelete(false, removingDate);
+					updateAndDelete(false, removingDate, selectDate);
 
 					setSelectDate((prevState) => {
 						return new Set(
@@ -188,10 +218,32 @@ const CalendarWeekWithoutTime = (props) => {
 			}
 			setSelectingDate(new Set());
 			setRemovingDate(new Set());
+		} else if (confirming) {
+			setDragEnd(date);
+			setIsDragging(false);
+			if (isSameDay(dragStart, date)) onDateClick(date);
+			else {
+				if (adding) {
+					updateAndDelete(true, confirmAdding, confirmSelected);
+					setConfirmSelected(
+						(prevState) => new Set([...prevState, ...confirmAdding]),
+					);
+				} else {
+					updateAndDelete(false, confirmRemoving, confirmSelected);
+					setConfirmSelected((prevState) => {
+						return new Set(
+							[...prevState].filter((element) => !confirmRemoving.has(element)),
+						);
+					});
+				}
+			}
+			setConfirmAdding(new Set());
+			setConfirmRemoving(new Set());
 		}
+		console.log('confirmSelected', confirmSelected);
 	};
 
-	const handleMouseMove = (date) => {
+	const handleMouseMove = (date, event) => {
 		if (editing) {
 			if (isDragging && !isSameDay(dragEnd, date)) {
 				setDragEnd(date);
@@ -241,6 +293,66 @@ const CalendarWeekWithoutTime = (props) => {
 		} else {
 			// console.log(selectedInfo[`${DaysOfWeek[getDay(date)]}`]);
 			getCanParti(date);
+			if (confirming) {
+				if (isDragging && !isSameDay(dragEnd, date)) {
+					setDragEnd(date);
+					setConfirmAdding(new Set());
+					setConfirmRemoving(new Set());
+
+					let start = new Date();
+					let end = new Date();
+					if (getDay(dragStart) <= getDay(date)) {
+						if (isBefore(dragStart, date)) {
+							// 오른쪽아래
+							start = dragStart;
+							end = date;
+						} else {
+							// 오른쪽위
+							start = addDays(startOfWeek(date), getDay(dragStart));
+							end = addDays(startOfWeek(dragStart), getDay(date));
+						}
+					} else {
+						if (isBefore(date, dragStart)) {
+							// 왼쪽위
+							start = date;
+							end = dragStart;
+						} else {
+							// 왼쪽아래
+							start = addDays(startOfWeek(dragStart), getDay(date));
+							end = addDays(startOfWeek(date), getDay(dragStart));
+						}
+					}
+
+					let A = start;
+					while (isBefore(A, addDays(end, 1))) {
+						let day = DaysOfWeek[getDay(A)];
+						// console.log(day);
+						if (adding)
+							setConfirmAdding((prevState) => new Set([...prevState, day]));
+						// console.log(selectingDate)
+						else
+							setConfirmRemoving((prevState) => new Set([...prevState, day]));
+
+						if (getDay(A) == getDay(end)) {
+							A = addDays(A, 7 - getDay(end) + getDay(start));
+							continue;
+						}
+						A = addDays(A, 1);
+					}
+				}
+			} else {
+				if (confirmed.has(DaysOfWeek[getDay(new Date(date))])) {
+					if (showConfirmModal == 'no') {
+						setShowConfirmModal('hover');
+						console.log(event.clientX, event.clientY);
+						setModalPosition([event.clientX, event.clientY]);
+					}
+				} else {
+					if (showConfirmModal == 'hover') {
+						setShowConfirmModal('no');
+					}
+				}
+			}
 		}
 	};
 
@@ -294,6 +406,28 @@ const CalendarWeekWithoutTime = (props) => {
 							  !removingDate.has(format(day, 'yyyy-MM-dd'))
 								? `${styles.col} ${styles.day} ${styles.selected}`
 								: `${styles.col} ${styles.day} ${styles.valid}`
+							: confirming
+							? (confirmSelected.has(DaysOfWeek[getDay(day)]) ||
+									confirmAdding.has(DaysOfWeek[getDay(day)])) &&
+							  !confirmRemoving.has(DaysOfWeek[getDay(day)])
+								? `${styles.col} ${styles.day} ${styles.confirmSelected}`
+								: color === 'valid'
+								? `${styles.col} ${styles.day} ${styles.valid}`
+								: color === 'E0CEFF'
+								? `${styles.col} ${styles.day} ${styles.Lv1}`
+								: color === 'BEA1FE'
+								? `${styles.col} ${styles.day} ${styles.Lv2}`
+								: color === 'A988F0'
+								? `${styles.col} ${styles.day} ${styles.Lv3}`
+								: color === '8D63E8'
+								? `${styles.col} ${styles.day} ${styles.Lv4}`
+								: color === '6330DE'
+								? `${styles.col} ${styles.day} ${styles.Lv5}`
+								: color === '4B1CBC'
+								? `${styles.col} ${styles.day} ${styles.Lv6}`
+								: `${styles.col} ${styles.day} ${styles.Lv7}`
+							: confirmed.has(DaysOfWeek[getDay(cloneDay)])
+							? `${styles.col} ${styles.day} ${styles.confirmSelected}`
 							: // 아닐 때는 선택 인원수에 따라 8단계의 배경색
 							color === 'valid'
 							? `${styles.col} ${styles.day} ${styles.valid}`
@@ -314,9 +448,9 @@ const CalendarWeekWithoutTime = (props) => {
 					// id={`${styles.selected}`}
 					style={getStyles()}
 					key={day}
-					onMouseDown={() => handleMouseDown(cloneDay)}
+					onMouseDown={(e) => handleMouseDown(cloneDay, e)}
 					onMouseUp={() => handleMouseUp(cloneDay)}
-					onMouseMove={() => handleMouseMove(cloneDay)}
+					onMouseMove={(e) => handleMouseMove(cloneDay, e)}
 					// onClick={() => {
 					//   // setSelectWeek(cloneDay);
 					//   console.log(format(cloneDay, 'yyyy-MM-dd-HH-mm-ss'))
@@ -432,18 +566,45 @@ const CalendarWeekWithoutTime = (props) => {
 		}
 	};
 	const onDateClick = (day) => {
-		if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
-			updateAndDelete(false, new Set([format(day, 'yyyy-MM-dd')]));
-			setSelectDate((prevState) => {
-				prevState.delete(format(day, 'yyyy-MM-dd'));
-				return new Set([...prevState]);
-			});
+		if (confirming) {
+			if (confirmSelected.has(DaysOfWeek[getDay(day)])) {
+				updateAndDelete(
+					false,
+					new Set([DaysOfWeek[getDay(day)]]),
+					confirmSelected,
+				);
+				setConfirmSelected((prevState) => {
+					prevState.delete(DaysOfWeek[getDay(day)]);
+					return new Set([...prevState]);
+				});
+			} else {
+				updateAndDelete(
+					true,
+					new Set([DaysOfWeek[getDay(day)]]),
+					confirmSelected,
+				);
+				setConfirmSelected(
+					(prevState) => new Set([...prevState, DaysOfWeek[getDay(day)]]),
+				);
+			}
 		} else {
-			updateAndDelete(true, new Set([day]));
-			// console.log(new Set([format(day, 'yyyy-MM-dd')]).difference(selectDate));
-			setSelectDate(
-				(prevState) => new Set([...prevState, format(day, 'yyyy-MM-dd')]),
-			);
+			if (selectDate.has(format(day, 'yyyy-MM-dd'))) {
+				updateAndDelete(
+					false,
+					new Set([format(day, 'yyyy-MM-dd')]),
+					selectDate,
+				);
+				setSelectDate((prevState) => {
+					prevState.delete(format(day, 'yyyy-MM-dd'));
+					return new Set([...prevState]);
+				});
+			} else {
+				updateAndDelete(true, new Set([day]), selectDate);
+				// console.log(new Set([format(day, 'yyyy-MM-dd')]).difference(selectDate));
+				setSelectDate(
+					(prevState) => new Set([...prevState, format(day, 'yyyy-MM-dd')]),
+				);
+			}
 		}
 	};
 	return (

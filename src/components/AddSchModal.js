@@ -25,9 +25,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 
 	const [selectDate, setSelectDate] = useState(new Set());
 	const [selectEndDate, setSelectEndDate] = useState(new Date());
-	//추가
-	// 날짜 객체를 원소로 갖는 새로운 Set 생성
-	const selectedDatesSet = new Set([selectEndDate]);
+	const selectedDatesSet = new Set([selectEndDate]); // 날짜 객체를 원소로 갖는 새로운 Set 생성
 
 	const [timeByDate, setTimeByDate] = useState({}); // 날짜별 시간 상태 관리
 
@@ -43,7 +41,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 	const [placeName, setPlaceName] = useState('');
 	const [memo, setMemo] = useState('');
 
-	const createAmpt = async () => {
+	const createSchedule = async () => {
 		try {
 			const formattedStartTime = formatTime(startTime);
 			const formattedEndTime = formatTime(endTime);
@@ -627,7 +625,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 							/>
 							<SubmitBtn
 								text="완료"
-								onClick={createAmpt}
+								onClick={createSchedule}
 								isActive={amptName && selectDate.size !== 0}
 								className={`${styles.createBtn}`}
 							/>

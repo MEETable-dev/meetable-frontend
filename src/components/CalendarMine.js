@@ -55,6 +55,10 @@ const CalendarMine = (props) => {
                 </svg>
               )}
             </div>
+            {/* ex!! 백앤드 연결 후 정보 불러와서 날짜별로 유효한 일정만 추가하기!!!!! 아래는 예제 */}
+            <div className={styles.eachSch}>일정1</div>
+            <div className={styles.eachSch}>일정2</div>
+            <div className={styles.eachSch}>일정3</div>
           </div>
         );
         day = addDays(day, 1);

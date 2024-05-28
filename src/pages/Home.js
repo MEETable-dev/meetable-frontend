@@ -1,4 +1,5 @@
 import CalendarMine from '../components/CalendarMine';
+import HomeSchDetail from '../components/HomeSchDetail';
 import { useState } from 'react';
 
 const Home = () => {
@@ -7,7 +8,11 @@ const Home = () => {
   return (
     <div>
       홈
-      <CalendarMine selectWeek={selectWeek} setSelectWeek={setSelectWeek} />
+      <div style={{display:"flex", alignContent:"space-between"}}>
+        <CalendarMine selectWeek={selectWeek} setSelectWeek={setSelectWeek} />
+        <div style={{width:"10px"}}></div>
+        <HomeSchDetail></HomeSchDetail>
+      </div>
     </div>
   );
 };

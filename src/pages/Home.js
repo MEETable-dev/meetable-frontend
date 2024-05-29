@@ -89,8 +89,14 @@ const Home = () => {
 				</div>
 				<div className={styles.favBtnView}>
 					{data.map((item, index) => (
-						<div className={styles.favBtn} key={index}>
-							{item ? (
+						<div
+							className={styles.favBtn}
+							key={index}
+							onClick={() => {
+								window.location.href = `/apmtdetail/:${item.promiseCode}`;
+							}}
+						>
+							{item.weekvsdate != 'W' ? (
 								<img
 									src={require('../assets/promiseImgMonth.png')}
 									width={108}

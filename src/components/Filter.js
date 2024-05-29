@@ -33,7 +33,19 @@ const Filter = ({
 	}, []);
 
 	return (
-		<div className={styles.filterBody}>
+		<div
+			className={styles.filterBody}
+			style={
+				windowWidth < 580
+					? {
+							marginLeft: '1.7vw',
+							marginRight: '2vw',
+					  }
+					: windowWidth >= 580 && windowWidth <= 1200
+					? { marginLeft: '1.7vw', marginRight: '0.2vw' }
+					: { marginLeft: '1vw', marginRight: '0.2vw' }
+			}
+		>
 			<div
 				className={styles.filterSection}
 				style={disabled ? { color: '#888888' } : {}}

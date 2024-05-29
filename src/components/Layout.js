@@ -747,9 +747,7 @@ const Layout = (props) => {
 						)}
 					</header>
 				)}
-				<main>
-					<Outlet />
-				</main>
+				<Outlet />
 			</div>
 			{showModal && (
 				<div ref={modalRef} style={modalStyle} className={styles.modal}>

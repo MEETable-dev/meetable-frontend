@@ -1,0 +1,83 @@
+.entire {
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  padding-left: 50px;
+  padding-right: 50px;
+  background-color: white;
+}
+
+.btnView {
+  display: flex;
+  flex-direction: row;
+}
+
+.funcBtnView {
+  display: flex;
+  flex-direction: column;
+}
+
+.bigBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #8E66EE;
+  box-shadow: 0px 0px 5px 0px rgba(34, 34, 34, 0.30);
+  border-radius: 10px;
+  color: #FFF;
+  font-size: 15px;
+  font-weight: 400;
+  width: 260px;
+  height: 80px;
+  padding: 5px 9px;
+}
+
+.smallBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid #D0D0D0;
+  box-shadow: 0px 0px 5px 0px rgba(34, 34, 34, 0.30);
+  color: #222222;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 10px;
+  width: 260px;
+  height: 36px;
+  padding: 5px 9px;
+}
+
+.favBtnView {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.favBtn {
+  margin-right: 10px;
+  border-radius: 10px;
+  border: 1px solid #D0D0D0;
+  background: linear-gradient(180deg, #FFF 68.23%, #DDD 100%);
+  width: 260px;
+  display: flex;
+  position: relative;
+}
+
+.favBtnLabel {
+  position: absolute;
+  bottom: 13px;
+  left:11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #222;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.titleView {
+  margin-top: 30px;
+  margin-bottom: 12px;
+}

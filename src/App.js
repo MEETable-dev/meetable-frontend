@@ -72,6 +72,14 @@ function App() {
 			</Route>
 			<Route element={<Layout head={'trans'} />}>
 				<Route
+					index
+					element={
+						<PrivateRoute member={false} goto={'/:username'}>
+							<NewApmt />
+						</PrivateRoute>
+					}
+				/>
+				<Route
 					path="/apmtdetail/:apmtId"
 					element={
 						<PrivateRoute member={false} goto={'/:username/apmtdetail/:apmtId'}>

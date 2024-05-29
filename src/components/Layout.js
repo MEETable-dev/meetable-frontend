@@ -684,7 +684,7 @@ const Layout = (props) => {
 								window.location.href = '/:username';
 							}}
 						>
-							MEETable
+							{svgList.logoIcon.logo}
 							{devMode && (
 								<div
 									onClick={() => {

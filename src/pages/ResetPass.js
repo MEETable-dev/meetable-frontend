@@ -197,239 +197,269 @@ const ResetPass = () => {
   };
 
   return (
-    <div className={styles.mainBox}>
-      {/* 이메일 인증 전 인증 메일 발송 창 */}
-      { !isAuthEmail ?
-      <div className={styles.loginBox}>
-        <div className={styles.loginLogo}>
-          {/* <p>MEETable</p> */}
-          {svgList.logoIcon.logo}
-        </div>
-        <p className={styles.signup}>비밀번호 바꾸기</p>
-        <div className={styles.content}>
-          <div className={styles.inputHeight}>
-            <InputArea
-              // className={`${}`}
-              placeholder="이메일"
-              value={email}
-              onChange={handleEmailChange}
-              onClear={handleClearEmail}
-            >
-              {email ? svgList.loginIcon.delBtn : null}
-            </InputArea>
+		<div className={styles.entire}>
+			<div className={styles.mainBox}>
+				{/* 이메일 인증 전 인증 메일 발송 창 */}
+				{!isAuthEmail ? (
+					<div className={styles.loginBox}>
+						<div className={styles.loginLogo}>
+							{/* <p>MEETable</p> */}
+							{svgList.logoIcon.logo}
+						</div>
+						<p className={styles.signup}>비밀번호 바꾸기</p>
+						<div className={styles.content}>
+							<div className={styles.inputHeight}>
+								<InputArea
+									// className={`${}`}
+									placeholder="이메일"
+									value={email}
+									onChange={handleEmailChange}
+									onClear={handleClearEmail}
+								>
+									{email ? svgList.loginIcon.delBtn : null}
+								</InputArea>
 
-            { isMember ?
-              <div className={styles.spaceBetween}></div> : null }
+								{isMember ? <div className={styles.spaceBetween}></div> : null}
 
-            {/* 이메일 발송 누르면 뜨게 수정 */}
-            {/* authCode 입력창 */}
-            { isMember && submitted ? // submitted 추가 할말
-              <div className={styles.infoArea}>
-                <div className={styles.inputBlock}>
-                  <input
-                    className={styles.inputAuthCode}
-                    placeholder="인증코드"
-                    autoComplete="off"
-                    value={authCode}
-                    onChange={handleAuthCodeChange}
-                  />
-                  <span className={styles.timeCounter}>
-                    {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
-                  </span>
-                  <span className={styles.btnRegion}>
-                    {authCode && (
-                      <button className={styles.del} type="button" onClick={handleClearAuthCode}>
-                        <div>{svgList.loginIcon.delBtn}</div>
-                      </button>
-                    )}
-                  </span>
-                </div>
-                <div className={styles.underLine}></div>
-              </div> : null }
+								{/* 이메일 발송 누르면 뜨게 수정 */}
+								{/* authCode 입력창 */}
+								{isMember && submitted ? ( // submitted 추가 할말
+									<div className={styles.infoArea}>
+										<div className={styles.inputBlock}>
+											<input
+												className={styles.inputAuthCode}
+												placeholder="인증코드"
+												autoComplete="off"
+												value={authCode}
+												onChange={handleAuthCodeChange}
+											/>
+											<span className={styles.timeCounter}>
+												{Math.floor(timer / 60)}:
+												{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+											</span>
+											<span className={styles.btnRegion}>
+												{authCode && (
+													<button
+														className={styles.del}
+														type="button"
+														onClick={handleClearAuthCode}
+													>
+														<div>{svgList.loginIcon.delBtn}</div>
+													</button>
+												)}
+											</span>
+										</div>
+										<div className={styles.underLine}></div>
+									</div>
+								) : null}
 
-            {/* alertzone */}
-            { submitted && !isValidEmail ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>올바른 이메일 주소가 아니에요.</div>
-                  </div>
-              </div> : null
-            }
-            { submitted && isValidEmail && !isMember ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>회원으로 가입되지 않은 이메일이에요.</div>
-                  </div>
-              </div> : null
-            }
-            { submitted && isValidEmail && isMember && timerExpired ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>인증 시간이 만료되었어요.</div>
-                  </div>
-              </div> : null
-            }
-            { submitted && isValidEmail && isMember && !timerExpired && authCodeSubmitted ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>인증코드가 틀려요.</div>
-                  </div>
-              </div> : null
-            }
-          </div>
+								{/* alertzone */}
+								{submitted && !isValidEmail ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												올바른 이메일 주소가 아니에요.
+											</div>
+										</div>
+									</div>
+								) : null}
+								{submitted && isValidEmail && !isMember ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												회원으로 가입되지 않은 이메일이에요.
+											</div>
+										</div>
+									</div>
+								) : null}
+								{submitted && isValidEmail && isMember && timerExpired ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												인증 시간이 만료되었어요.
+											</div>
+										</div>
+									</div>
+								) : null}
+								{submitted &&
+								isValidEmail &&
+								isMember &&
+								!timerExpired &&
+								authCodeSubmitted ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>인증코드가 틀려요.</div>
+										</div>
+									</div>
+								) : null}
+							</div>
 
-          { !isMember ?
-            <SubmitBtn
-              text="인증 메일 보내기"
-              onClick={sendAuthCode}
-              isActive={email}
-              className={`${styles.btnWidth}`}
-              margin={`0px 0px 0px`}
-            /> : null
-          }
-          { isMember && !authCode ?
-            <SubmitBtn
-              text="인증 메일 다시 보내기"
-              onClick={sendAuthCode}
-              isActive={email}
-              className={`${styles.btnWidth}`}
-              margin={`40px 0px 0px`}
-            /> : null
-          }
-          { isMember && authCode && timerExpired ?
-            <SubmitBtn
-              text="인증 메일 다시 보내기"
-              onClick={sendAuthCode}
-              isActive={email}
-              className={`${styles.btnWidth}`}
-              margin={`40px 0px 0px`}
-            /> : null
-          }
-          { isMember && authCode && !timerExpired ?
-            <SubmitBtn
-              text="인증하기"
-              onClick={confirmAuthCode}
-              isActive={authCode && email}
-              className={`${styles.btnWidth}`}
-              margin={`40px 0px 0px`}
-            /> : null
-          }
-        </div>
+							{!isMember ? (
+								<SubmitBtn
+									text="인증 메일 보내기"
+									onClick={sendAuthCode}
+									isActive={email}
+									className={`${styles.btnWidth}`}
+									margin={`0px 0px 0px`}
+								/>
+							) : null}
+							{isMember && !authCode ? (
+								<SubmitBtn
+									text="인증 메일 다시 보내기"
+									onClick={sendAuthCode}
+									isActive={email}
+									className={`${styles.btnWidth}`}
+									margin={`40px 0px 0px`}
+								/>
+							) : null}
+							{isMember && authCode && timerExpired ? (
+								<SubmitBtn
+									text="인증 메일 다시 보내기"
+									onClick={sendAuthCode}
+									isActive={email}
+									className={`${styles.btnWidth}`}
+									margin={`40px 0px 0px`}
+								/>
+							) : null}
+							{isMember && authCode && !timerExpired ? (
+								<SubmitBtn
+									text="인증하기"
+									onClick={confirmAuthCode}
+									isActive={authCode && email}
+									className={`${styles.btnWidth}`}
+									margin={`40px 0px 0px`}
+								/>
+							) : null}
+						</div>
 
-        <div className={styles.linkLine}>
-          <Link to="/Login" className={styles.loginLink}>
-            로그인하기
-          </Link>
-          <Link className={styles.loginLink}>
-            |
-          </Link>
-          <Link to="/FindEmail" className={styles.loginLink}>
-            이메일 찾기
-          </Link>
-          <Link className={styles.loginLink}>
-            |
-          </Link>
-          <Link to="/EmailAuth" className={styles.loginLink}>
-            가입하기
-          </Link>
-        </div>
-      </div> : null }
+						<div className={styles.linkLine}>
+							<Link to="/Login" className={styles.loginLink}>
+								로그인하기
+							</Link>
+							<Link className={styles.loginLink}>|</Link>
+							<Link to="/FindEmail" className={styles.loginLink}>
+								이메일 찾기
+							</Link>
+							<Link className={styles.loginLink}>|</Link>
+							<Link to="/EmailAuth" className={styles.loginLink}>
+								가입하기
+							</Link>
+						</div>
+					</div>
+				) : null}
 
-      {/* 이메일 인증 후 다음 변경 창 */}
-      { isAuthEmail && !isValidPWD ?
-      <div className={styles.loginBox}>
-        <div className={styles.loginLogo}>
-          {/* <p>MEETable</p> */}
-          {svgList.logoIcon.logo}
-        </div>
-        <p className={styles.signup}>비밀번호 바꾸기</p>
-        <div className={styles.content}>
-          <div className={styles.inputHeight2}>
-            <InputArea
-              className={`${styles.lockEmail}`}
-              placeholder="이메일"
-              value={savedEmail}
-              onClear={handleToggleEmailEdit}
-            >
-              {svgList.loginIcon.pencilBtn}
-            </InputArea>
+				{/* 이메일 인증 후 다음 변경 창 */}
+				{isAuthEmail && !isValidPWD ? (
+					<div className={styles.loginBox}>
+						<div className={styles.loginLogo}>
+							{/* <p>MEETable</p> */}
+							{svgList.logoIcon.logo}
+						</div>
+						<p className={styles.signup}>비밀번호 바꾸기</p>
+						<div className={styles.content}>
+							<div className={styles.inputHeight2}>
+								<InputArea
+									className={`${styles.lockEmail}`}
+									placeholder="이메일"
+									value={savedEmail}
+									onClear={handleToggleEmailEdit}
+								>
+									{svgList.loginIcon.pencilBtn}
+								</InputArea>
 
-            <div className={styles.spaceBetween}></div>
+								<div className={styles.spaceBetween}></div>
 
-            <InputArea
-              className={`${isVisible2 ? styles.visible : styles.invisible}`}
-              placeholder="새 비밀번호"
-              value={PWD2}
-              type={isVisible2 ? "text" : "password"}
-              onChange={handlePWD2Change}
-              onClear={handleIsVisible2}
-            >
-              {isVisible2 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-            </InputArea>
-            <div className={styles.spaceBetween}></div>
-            <InputArea
-              className={`${isVisible3 ? styles.visible : styles.invisible}`}
-              placeholder="새 비밀번호 확인"
-              value={PWD3}
-              type={isVisible3 ? "text" : "password"}
-              onChange={handlePWD3Change}
-              onClear={handleIsVisible3}
-            >
-              {isVisible3 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-            </InputArea>
+								<InputArea
+									className={`${
+										isVisible2 ? styles.visible : styles.invisible
+									}`}
+									placeholder="새 비밀번호"
+									value={PWD2}
+									type={isVisible2 ? 'text' : 'password'}
+									onChange={handlePWD2Change}
+									onClear={handleIsVisible2}
+								>
+									{isVisible2
+										? svgList.ModalIcon.eyeSlash
+										: svgList.ModalIcon.eyeOpen}
+								</InputArea>
+								<div className={styles.spaceBetween}></div>
+								<InputArea
+									className={`${
+										isVisible3 ? styles.visible : styles.invisible
+									}`}
+									placeholder="새 비밀번호 확인"
+									value={PWD3}
+									type={isVisible3 ? 'text' : 'password'}
+									onChange={handlePWD3Change}
+									onClear={handleIsVisible3}
+								>
+									{isVisible3
+										? svgList.ModalIcon.eyeSlash
+										: svgList.ModalIcon.eyeOpen}
+								</InputArea>
 
-            {/* alertzone */}
-            { !isLongPWD ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>비밀번호는 8자 이상이어야 해요.</div>
-                  </div>
-              </div> : null
-            }
-            { isLongPWD && !isSamePWD ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>비밀번호가 서로 일치하지 않아요.</div>
-                  </div>
-              </div> : null
-            }
-            { changeSamePWD ?
-              <div className={styles.alertZone}>
-                  <div className={``}>
-                      <div className={styles.message}>새 비밀번호는 기존 비밀번호와 달라야 해요.</div>
-                  </div>
-              </div> : null
-            }
-          </div>
+								{/* alertzone */}
+								{!isLongPWD ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												비밀번호는 8자 이상이어야 해요.
+											</div>
+										</div>
+									</div>
+								) : null}
+								{isLongPWD && !isSamePWD ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												비밀번호가 서로 일치하지 않아요.
+											</div>
+										</div>
+									</div>
+								) : null}
+								{changeSamePWD ? (
+									<div className={styles.alertZone}>
+										<div className={``}>
+											<div className={styles.message}>
+												새 비밀번호는 기존 비밀번호와 달라야 해요.
+											</div>
+										</div>
+									</div>
+								) : null}
+							</div>
 
-          <SubmitBtn
-            text="완료하기"
-            onClick={handleChangePWDInfo}
-            isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
-            className={`${styles.btnWidth}`}
-            margin={`10px 0px 0px`}
-          />
-        </div>
-      </div> : null
-      }
+							<SubmitBtn
+								text="완료하기"
+								onClick={handleChangePWDInfo}
+								isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
+								className={`${styles.btnWidth}`}
+								margin={`10px 0px 0px`}
+							/>
+						</div>
+					</div>
+				) : null}
 
-      {/* 비밀번호 변경 완료 알림 창 */}
-      { isAuthEmail && isValidPWD ? 
-      <div className={styles.loginBox2}>
-        <p className={styles.pwChanged}>비밀번호가 변경되었어요.</p>
-        <div className={styles.content}>
-          <SubmitBtn
-            text="로그인하기"
-            onClick={()=>{window.location.href = '/login'}}
-            isActive={isValidPWD}
-            className={`${styles.btnWidth}`}
-            margin={`-5px 0px 0px`}
-          />
-        </div>
-      </div> : null
-      }
-    </div>
-  );
+				{/* 비밀번호 변경 완료 알림 창 */}
+				{isAuthEmail && isValidPWD ? (
+					<div className={styles.loginBox2}>
+						<p className={styles.pwChanged}>비밀번호가 변경되었어요.</p>
+						<div className={styles.content}>
+							<SubmitBtn
+								text="로그인하기"
+								onClick={() => {
+									window.location.href = '/login';
+								}}
+								isActive={isValidPWD}
+								className={`${styles.btnWidth}`}
+								margin={`-5px 0px 0px`}
+							/>
+						</div>
+					</div>
+				) : null}
+			</div>
+		</div>
+	);
 };
 
 export default ResetPass;

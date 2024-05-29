@@ -126,7 +126,11 @@ const ApmtDetail = () => {
 	useEffect(() => {
 		setPromiseId(window.location.href.split('tail/')[1].replace(':', ''));
 		console.log(promiseId);
-		if (window.location.href.split('tail/')[1].replace(':', '')) {
+		if (
+			/^[0-9]+_[a-zA-Z]{5}$/.test(
+				window.location.href.split('tail/')[1].replace(':', ''),
+			)
+		) {
 			getApmtInfo();
 			getParticipantsInfo();
 			if (accessToken) {

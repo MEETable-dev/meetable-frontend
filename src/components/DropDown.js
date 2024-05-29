@@ -81,12 +81,14 @@ const DropDown = ({
 									className={styles.optionList}
 									style={disabled ? { color: '#888888' } : {}}
 								>
-									{selection.includes(option) ? (
+									{selection.includes(option) ? ( // id와 type이 같은 걸 포함하고 있는지
 										<div>{svgList.apmtDetail.checkboxChecked}</div>
 									) : (
 										<div>{svgList.apmtDetail.checkboxEmpty}</div>
 									)}
-									<div style={{ marginTop: 1, marginLeft: 4 }}>{option}</div>
+									<div style={{ marginTop: 1, marginLeft: 4 }}>
+										{option.split('-')[2]}
+									</div>{' '}
 								</div>
 							))}
 						</div>

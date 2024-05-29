@@ -42,6 +42,12 @@ const ApmtDetail = () => {
 	const [filterSelectionNum, setFilterSelectionNum] = useState(1); // 최소 인원 필터 선택값
 	// const [filterSelectionTime, setFilterSelectionTime] = useState(0.5); // 최소 시간 필터 선택값
 	const [filterSelectionParti, setFilterSelectionParti] = useState([]); // 필수참여자 필터 선택값
+	const [filterSelectionPartiIdMembers, setFilterSelectionPartiIdMembers] =
+		useState([]);
+	const [
+		filterSelectionPartiIdNonmembers,
+		setFilterSelectionPartiIdNonmembers,
+	] = useState([]);
 
 	const [imIn, setImIn] = useState(false); // 내가 이 약속에 참여중인지 아닌지
 	const [myName, setMyName] = useState(''); // 내 이름
@@ -67,6 +73,25 @@ const ApmtDetail = () => {
 	const [selectConfirmDate, setSelectConfirmDate] = useState([]);
 
 	const [reset, setReset] = useState(true);
+
+	useEffect(() => {
+		console.log(filterSelectionParti);
+		setFilterSelectionPartiIdMembers([]);
+		setFilterSelectionPartiIdNonmembers([]);
+		filterSelectionParti.forEach((item, index) => {
+			if (item.split('-')[1] == 'nonmember') {
+				setFilterSelectionPartiIdNonmembers((prev) => [
+					...prev,
+					item.split('-')[0],
+				]);
+			} else {
+				setFilterSelectionPartiIdMembers((prev) => [
+					...prev,
+					item.split('-')[0],
+				]);
+			}
+		});
+	}, [filterSelectionParti]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -115,7 +140,13 @@ const ApmtDetail = () => {
 
 	useEffect(() => {
 		getApmtInfoReset();
-	}, [reset, selectWeek]);
+	}, [
+		reset,
+		selectWeek,
+		filterSelectionNum,
+		filterSelectionPartiIdNonmembers,
+		filterSelectionPartiIdMembers,
+	]);
 
 	// useEffect(() => {
 	// 	const getConfirm = async () => {
@@ -317,7 +348,15 @@ const ApmtDetail = () => {
 				setPromiseName(response.data.promise_name);
 				if (response.data.total <= 1) setShareModal(true);
 				setPromiseTotal(response.data.total);
-				setSelectedInfo(response.data.count);
+				if (filterSelectionNum != 1) {
+					let count = response.data.count;
+					console.log('count here', count);
+					for (let key in count) {
+						if (count[key] < filterSelectionNum) count[key] = 0;
+					}
+					console.log('count edited', count);
+					setSelectedInfo(count);
+				} else setSelectedInfo(response.data.count);
 
 				getConfirmed(response.data.weekvsdate === 'W');
 			} else {
@@ -337,13 +376,39 @@ const ApmtDetail = () => {
 				week
 					? `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
 							promiseId.split('_')[0]
+					  }${
+							filterSelectionPartiIdMembers.length != 0 ||
+							filterSelectionPartiIdNonmembers.length != 0
+								? '?'
+								: ''
+					  }${
+							filterSelectionPartiIdMembers.length != 0
+								? 'memberIds=' + filterSelectionPartiIdMembers.join(',')
+								: ''
+					  }${
+							filterSelectionPartiIdMembers.length != 0 &&
+							filterSelectionPartiIdNonmembers.length != 0
+								? '&'
+								: ''
+					  }${
+							filterSelectionPartiIdNonmembers.length != 0
+								? 'nonMemberIds=' + filterSelectionPartiIdNonmembers.join(',')
+								: ''
 					  }`
 					: `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
 							promiseId.split('_')[0]
-					  }?month=${format(selectWeek, 'yyyy-MM')}`,
+					  }?month=${format(selectWeek, 'yyyy-MM')}${
+							filterSelectionPartiIdMembers.length != 0
+								? '&memberIds=' + filterSelectionPartiIdMembers.join(',')
+								: ''
+					  }${
+							filterSelectionPartiIdNonmembers.length != 0
+								? '&nonMemberIds=' + filterSelectionPartiIdNonmembers.join(',')
+								: ''
+					  }`,
 				!accessToken && { headers: { Authorization: '@' } },
 			);
-			console.log(response.data);
+			console.log('baseinfo', response.data);
 			setPromiseCode(response.data.promise_code);
 			if (
 				response.data.promise_code.toLowerCase() ===
@@ -355,7 +420,13 @@ const ApmtDetail = () => {
 				else setTime(true);
 				setPromiseName(response.data.promise_name);
 				setPromiseTotal(response.data.total);
-				setSelectedInfo(response.data.count);
+				if (filterSelectionNum != 1) {
+					let count = response.data.count;
+					for (let key in count) {
+						if (count[key] < filterSelectionNum) count[key] = 0;
+					}
+					setSelectedInfo(count);
+				} else setSelectedInfo(response.data.count);
 			} else {
 				// navigate(`/`, {});
 				setWrongAddressModal(true);
@@ -380,7 +451,10 @@ const ApmtDetail = () => {
 			console.log(response.data);
 			setPromisePartis([]);
 			response.data.map((item, index) => {
-				setPromisePartis((prev) => [...prev, item.name]);
+				setPromisePartis((prev) => [
+					...prev,
+					`${item.id}-${item.type}-${item.name}`,
+				]);
 			});
 		} catch (error) {
 			const errorResponse = error.response;
@@ -477,6 +551,25 @@ const ApmtDetail = () => {
 
 	return (
 		<div style={{ height: 'auto' }}>
+			{`${
+				filterSelectionPartiIdMembers.length != 0 ||
+				filterSelectionPartiIdNonmembers.length != 0
+					? '?'
+					: ''
+			}${
+				filterSelectionPartiIdMembers.length != 0
+					? 'memberIds=' + filterSelectionPartiIdMembers.join(',')
+					: ''
+			}${
+				filterSelectionPartiIdMembers.length != 0 &&
+				filterSelectionPartiIdNonmembers.length != 0
+					? '&'
+					: ''
+			}${
+				filterSelectionPartiIdNonmembers.length != 0
+					? 'nonMemberIds=' + filterSelectionPartiIdNonmembers.join(',')
+					: ''
+			}`}
 			{confirming && (
 				<div className={styles.confirmDiv}>
 					<div className={styles.desDiv}>확정할 날짜를 모두 선택해 주세요.</div>
@@ -746,6 +839,7 @@ const ApmtDetail = () => {
 					selectionParti={filterSelectionParti}
 					onSelectParti={(option) => {
 						if (filterSelectionParti.includes(option)) {
+							// option의 id와 type이 같은 걸 포함하고 있는지
 							setFilterSelectionParti((prev) =>
 								[...prev].filter((element) => element !== option),
 							);

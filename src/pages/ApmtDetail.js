@@ -551,25 +551,6 @@ const ApmtDetail = () => {
 
 	return (
 		<div style={{ height: 'auto' }}>
-			{`${
-				filterSelectionPartiIdMembers.length != 0 ||
-				filterSelectionPartiIdNonmembers.length != 0
-					? '?'
-					: ''
-			}${
-				filterSelectionPartiIdMembers.length != 0
-					? 'memberIds=' + filterSelectionPartiIdMembers.join(',')
-					: ''
-			}${
-				filterSelectionPartiIdMembers.length != 0 &&
-				filterSelectionPartiIdNonmembers.length != 0
-					? '&'
-					: ''
-			}${
-				filterSelectionPartiIdNonmembers.length != 0
-					? 'nonMemberIds=' + filterSelectionPartiIdNonmembers.join(',')
-					: ''
-			}`}
 			{confirming && (
 				<div className={styles.confirmDiv}>
 					<div className={styles.desDiv}>확정할 날짜를 모두 선택해 주세요.</div>

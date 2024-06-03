@@ -359,52 +359,199 @@ const AllApmt = () => {
   }
 
   
-  return ( <div style={{height:'100%'}}>
-    <div className={styles.container}>
-    <div className={styles.innerContainer}>
-      <div className={styles.headBtnContainer}>
-        <button onClick={()=>
-              window.location.href = '/:username/newapmt'
-            } className={styles.newApmt}>{<AiOutlineFileAdd size={24} />}<div className={styles.btnText}>새 약속 잡기</div></button>
-        <button className={styles.syncApmt}>{<IoSyncOutline size={24} />}<div className={styles.btnText}>비회원으로 참여한 약속 불러오기</div></button>
-      </div>
-      <div className={styles.searchContent}>{<RiSearchLine size="18px" color='#888' className={styles.icon} style={{ marginLeft: '5px' }}></RiSearchLine>}<input value={searchApmtVal} className={styles.searchContentInput} placeholder='찾기' 
-      onChange={(e) => {setSearchApmtVal(e.target.value)}}></input>
-      {searchApmtVal && <TiDelete size={20} color="#D9D9D9" className={styles.x} onClick={()=>{setSearchApmtVal('')}}/>}</div>
-      {!showTrash ? (<><div className={styles.folderContainer}>
-        <div className={styles.folderHeader}>즐겨찾기<div className={styles.icon} onClick={handleFavoritesDownClick}>{favoritesDown ? <GoChevronDown size={24}></GoChevronDown> : <GoChevronUp size={24}></GoChevronUp>}</div>
-        </div>
-        <div className={favoritesDown ? styles.folderInnerContainer : styles.hidden} >
-          {favoritesDown && <ApmtList data={bookmarkData} fav={true} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName}  modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />}
-        </div>
-      </div>
-      <div className={styles.folderContainer}>
-        <div className={styles.folderHeader}>내 약속<div><div className={styles.selectAllContainer}>
-          { selectAll ? <div className={styles.selectAll} onClick={()=> {handleSelectAll()}}>{svgList.folder.checkFilled}</div> 
-        :<div className={styles.selectAll} onClick={()=>{handleSelectAll(true)}}>{svgList.folder.check}</div>}전체선택</div></div></div>
-        <div className={styles.folderInnerContainer} >
-        <ApmtList data={ApmtData} fav={false} searchApmtVal={searchApmtVal} isTrash={false} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash} />
-        </div>
-      </div></>)
-
-      :(<div className={styles.folderContainer}>
-      <div className={styles.folderHeader}><div className={styles.TrashOutIcon} onClick={()=>{setShowTrash(false)}}>{svgList.folder.outofTrashBtn}</div><div className={styles.emptyTrashCanContainer} onClick ={()=>setShowNotionModal('BA')}>{svgList.smallTrashIcon} 휴지통 비우기</div>
-      </div>
-      <ApmtList data={TrashData} fav={false} isTrash ={true} selectedItemList={selectedItemList} changeName={changeName} modifyName={modifyName} setModifyName={setModifyName} bookmark={bookmark} unBookmark={unBookmark} openModal={openModal} handleShowTrash={handleShowTrash}  />
-      </div>
-      )}
-      {showModal && <div ref={modalRef} style={modalStyle} className={styles.modal}>
-        <ContextMenuModal onClose={closeModal} type={showModal} showTrash={showTrash} selectedItemList={selectedItemList}/>
-      </div>}
-      {showNotionModal !=='' && <div ref={notionModalRef}>
-        <NotionModal onClose={closeNotionModal} contextClose={closeModal} type={showNotionModal} selectedItemList={selectedItemList} setShowNotionModal={setShowNotionModal} backoutApmt={backoutApmt} moveApmtToTrash={moveApmtToTrash} backoutAll={backoutAll} />
-      </div>}
-    </div>
-    </div>
-
-
-  </div>
-  );
+  return (
+		<div style={{ height: '100%' }}>
+			<div className={styles.container}>
+				<div className={styles.innerContainer}>
+					<div className={styles.headBtnContainer}>
+						<button
+							onClick={() => (window.location.href = '/:user/newapmt')}
+							className={styles.newApmt}
+						>
+							{<AiOutlineFileAdd size={24} />}
+							<div className={styles.btnText}>새 약속 잡기</div>
+						</button>
+						<button className={styles.syncApmt}>
+							{<IoSyncOutline size={24} />}
+							<div className={styles.btnText}>
+								비회원으로 참여한 약속 불러오기
+							</div>
+						</button>
+					</div>
+					<div className={styles.searchContent}>
+						{
+							<RiSearchLine
+								size="18px"
+								color="#888"
+								className={styles.icon}
+								style={{ marginLeft: '5px' }}
+							></RiSearchLine>
+						}
+						<input
+							value={searchApmtVal}
+							className={styles.searchContentInput}
+							placeholder="찾기"
+							onChange={(e) => {
+								setSearchApmtVal(e.target.value);
+							}}
+						></input>
+						{searchApmtVal && (
+							<TiDelete
+								size={20}
+								color="#D9D9D9"
+								className={styles.x}
+								onClick={() => {
+									setSearchApmtVal('');
+								}}
+							/>
+						)}
+					</div>
+					{!showTrash ? (
+						<>
+							<div className={styles.folderContainer}>
+								<div className={styles.folderHeader}>
+									즐겨찾기
+									<div
+										className={styles.icon}
+										onClick={handleFavoritesDownClick}
+									>
+										{favoritesDown ? (
+											<GoChevronDown size={24}></GoChevronDown>
+										) : (
+											<GoChevronUp size={24}></GoChevronUp>
+										)}
+									</div>
+								</div>
+								<div
+									className={
+										favoritesDown ? styles.folderInnerContainer : styles.hidden
+									}
+								>
+									{favoritesDown && (
+										<ApmtList
+											data={bookmarkData}
+											fav={true}
+											searchApmtVal={searchApmtVal}
+											isTrash={false}
+											selectedItemList={selectedItemList}
+											changeName={changeName}
+											modifyName={modifyName}
+											setModifyName={setModifyName}
+											bookmark={bookmark}
+											unBookmark={unBookmark}
+											openModal={openModal}
+											handleShowTrash={handleShowTrash}
+										/>
+									)}
+								</div>
+							</div>
+							<div className={styles.folderContainer}>
+								<div className={styles.folderHeader}>
+									내 약속
+									<div>
+										<div className={styles.selectAllContainer}>
+											{selectAll ? (
+												<div
+													className={styles.selectAll}
+													onClick={() => {
+														handleSelectAll();
+													}}
+												>
+													{svgList.folder.checkFilled}
+												</div>
+											) : (
+												<div
+													className={styles.selectAll}
+													onClick={() => {
+														handleSelectAll(true);
+													}}
+												>
+													{svgList.folder.check}
+												</div>
+											)}
+											전체선택
+										</div>
+									</div>
+								</div>
+								<div className={styles.folderInnerContainer}>
+									<ApmtList
+										data={ApmtData}
+										fav={false}
+										searchApmtVal={searchApmtVal}
+										isTrash={false}
+										selectedItemList={selectedItemList}
+										changeName={changeName}
+										modifyName={modifyName}
+										setModifyName={setModifyName}
+										bookmark={bookmark}
+										unBookmark={unBookmark}
+										openModal={openModal}
+										handleShowTrash={handleShowTrash}
+									/>
+								</div>
+							</div>
+						</>
+					) : (
+						<div className={styles.folderContainer}>
+							<div className={styles.folderHeader}>
+								<div
+									className={styles.TrashOutIcon}
+									onClick={() => {
+										setShowTrash(false);
+									}}
+								>
+									{svgList.folder.outofTrashBtn}
+								</div>
+								<div
+									className={styles.emptyTrashCanContainer}
+									onClick={() => setShowNotionModal('BA')}
+								>
+									{svgList.smallTrashIcon} 휴지통 비우기
+								</div>
+							</div>
+							<ApmtList
+								data={TrashData}
+								fav={false}
+								isTrash={true}
+								selectedItemList={selectedItemList}
+								changeName={changeName}
+								modifyName={modifyName}
+								setModifyName={setModifyName}
+								bookmark={bookmark}
+								unBookmark={unBookmark}
+								openModal={openModal}
+								handleShowTrash={handleShowTrash}
+							/>
+						</div>
+					)}
+					{showModal && (
+						<div ref={modalRef} style={modalStyle} className={styles.modal}>
+							<ContextMenuModal
+								onClose={closeModal}
+								type={showModal}
+								showTrash={showTrash}
+								selectedItemList={selectedItemList}
+							/>
+						</div>
+					)}
+					{showNotionModal !== '' && (
+						<div ref={notionModalRef}>
+							<NotionModal
+								onClose={closeNotionModal}
+								contextClose={closeModal}
+								type={showNotionModal}
+								selectedItemList={selectedItemList}
+								setShowNotionModal={setShowNotionModal}
+								backoutApmt={backoutApmt}
+								moveApmtToTrash={moveApmtToTrash}
+								backoutAll={backoutAll}
+							/>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default AllApmt;

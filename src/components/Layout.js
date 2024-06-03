@@ -18,6 +18,7 @@ import { IoMdArrowDropup } from 'react-icons/io';
 import { setToken } from '../store/modules/user';
 import { useAppDispatch } from 'store';
 import axios from 'axios';
+import ApmtShareModal from './ApmtShareModal';
 import MyInfoModal from '../components/MyInfoModal';
 import PWChangeModal from '../components/PWChangeModal';
 import useCustomColor from 'hooks/CustomColor';
@@ -37,7 +38,7 @@ const Layout = (props) => {
 	const { resizing, size, startResizing, stopResizing, updateSize, reset } =
 		useResizeSidebar(sidebarInitialSize, sidebarMinWidth, sidebarMaxWidth);
 	const accessToken = useSelector((state) => state.user.accessToken);
-	const [sidebarShown, setsidebarShown] = useState(false);
+	const [sidebarShown, setsidebarShown] = useState(true);
 
 	const [searchApmtVal, setSearchApmtVal] = useState('');
 	const [writeNameVal, setWriteNameVal] = useState('');
@@ -45,6 +46,7 @@ const Layout = (props) => {
 	const [showHeaderModal, setShowHeaderModal] = useState('');
 	const [showNotionModal, setShowNotionModal] = useState('');
 	const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+	const [openFindModal, setOpenFindModal] = useState(false);
 
 	const [bookmarkData, setBookmarkData] = useState([]);
 	const [ApmtData, setApmtData] = useState([]);
@@ -67,6 +69,7 @@ const Layout = (props) => {
 	const inputRef = useRef();
 	const notionModalRef = useRef();
 	const [devMode, setDevMode] = useState(false);
+	const [link, setLink] = useState('');
 
 	const [mypageModal, setMypageModal] = useState(null); // New state for tracking open modal
 	const toggleModal = (modalId) => {
@@ -93,7 +96,7 @@ const Layout = (props) => {
 	const handleShowTrash = useCallback(
 		(e) => {
 			setShowTrash(true);
-			navigate('/:username/allapmt', { state: { showTrash: true } });
+			navigate('/:user/allapmt', { state: { showTrash: true } });
 			setsidebarShown(false);
 		},
 		[showTrash],
@@ -540,7 +543,7 @@ const Layout = (props) => {
 						<div className={styles.sidebarMain}>
 							<div
 								className={styles.newApmt}
-								onClick={() => (window.location.href = '/:username/newapmt')}
+								onClick={() => (window.location.href = '/:user/newapmt')}
 							>
 								{<AiOutlineFileAdd size={20} />}
 								<div className={styles.btnText}>새 약속 잡기</div>
@@ -552,6 +555,15 @@ const Layout = (props) => {
 								<div className={styles.btnText}>
 									비회원으로 참여한 {size < 300 && <div></div>} 약속 불러오기
 								</div>
+							</div>
+
+							<div
+								// className={styles.smallBtn}
+								className={size >= 300 ? styles.syncApmt : styles.syncApmtSmall}
+								onClick={() => setOpenFindModal(true)}
+							>
+								{svgList.folder.link} <div style={{ width: 4 }} />
+								링크나 코드로 약속 참여하기
 							</div>
 							<div className={styles.searchContent}>
 								<RiSearchLine
@@ -581,7 +593,7 @@ const Layout = (props) => {
 							<div
 								className={styles.btnArea}
 								onClick={() => {
-									window.location.href = '/:username/allapmt';
+									window.location.href = '/:user/allapmt';
 								}}
 							>
 								<div
@@ -681,7 +693,7 @@ const Layout = (props) => {
 						<div
 							className={styles.headerCenter}
 							onClick={() => {
-								window.location.href = '/:username';
+								window.location.href = '/:user';
 							}}
 						>
 							{svgList.logoIcon.logo}
@@ -699,7 +711,7 @@ const Layout = (props) => {
 							<div className={styles.headerBtnRight}>
 								<div
 									onClick={() => {
-										window.location.href = '/:username/allapmt';
+										window.location.href = '/:user/allapmt';
 									}}
 								>
 									{' '}
@@ -727,7 +739,7 @@ const Layout = (props) => {
 											console.log(code);
 											localStorage.setItem(
 												'originURL',
-												`3000/:username/apmtdetail/:${code}`,
+												`3000/:user/apmtdetail/:${code}`,
 											);
 										}
 										window.location.href = `/login`;
@@ -800,6 +812,99 @@ const Layout = (props) => {
 				<PWChangeModal onClose={() => toggleModal(null)}>
 					비밀번호 변경 모달
 				</PWChangeModal>
+			)}
+			{openFindModal && (
+				<ApmtShareModal
+					onClose={() => {
+						setOpenFindModal(false);
+					}}
+				>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'center',
+							alignItems: 'center',
+							textAlign: 'center',
+							color: '#222222',
+							fontSize: 15,
+							fontWeight: 400,
+							marginTop: 10,
+						}}
+					>
+						링크나 코드로 약속 참여하기
+					</div>
+					<div
+						style={{
+							position: 'relative',
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'center',
+							alignItems: 'center',
+							textAlign: 'center',
+						}}
+					>
+						<input
+							// placeholdercolor 설정 : #888888
+							type="text"
+							style={{
+								width: '100%',
+								marginTop: 20,
+								padding: '3px 20px 3px 1px',
+								border: 'none',
+								borderBottom: '1px solid #D0D0D0',
+								fontSize: 15,
+								color: '#222222',
+								fontWeight: 400,
+								outline: 'none',
+							}}
+							placeholder="약속의 링크나 코드"
+							value={link}
+							onChange={(e) => setLink(e.target.value.trim())}
+						/>
+						<div
+							style={{
+								position: 'absolute',
+								right: 0,
+								bottom: 4,
+								cursor: 'pointer',
+							}}
+							onClick={() => {
+								setLink('');
+							}}
+						>
+							{svgList.loginIcon.delBtn}
+						</div>
+					</div>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#8E66EE',
+							width: 260,
+							borderRadius: 5,
+							padding: 12,
+							color: 'white',
+							fontSize: 15,
+							fontWeight: 400,
+							cursor: 'pointer',
+							marginTop: 42,
+						}}
+						onClick={() => {
+							if (link.toLowerCase().includes('tail/')) {
+								window.open(
+									':user/apmtdetail/:' +
+										link.split('tail/')[1].replace(':', ''),
+								);
+							} else {
+								window.open(':user/apmtdetail/:' + link);
+							}
+						}}
+					>
+						확인
+					</div>
+				</ApmtShareModal>
 			)}
 		</div>
 	);

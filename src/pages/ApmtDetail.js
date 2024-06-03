@@ -300,7 +300,7 @@ const ApmtDetail = () => {
 	const getMyName = async () => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_API_URL}/promise/username`,
+				`${process.env.REACT_APP_API_URL}/promise/user`,
 			);
 			console.log(response.data);
 			setMyName(response.data.name);
@@ -1069,7 +1069,7 @@ const ApmtDetail = () => {
 								<div id={styles.bar}>|</div>
 								<div
 									onClick={() => {
-										window.location.href = `/:username/apmtdetail/:`;
+										window.location.href = `/:user/apmtdetail/:`;
 									}}
 								>
 									로그인

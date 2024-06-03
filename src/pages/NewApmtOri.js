@@ -84,7 +84,7 @@ const NewApmt = () => {
 					// 새로운 링크로 리디렉션
 					const promiseCode = response.data.promiseCode;
 					// console.log(promiseCode);
-					navigate(`/:username/ApmtDetail/:${promiseCode}`, {
+					navigate(`/:user/ApmtDetail/:${promiseCode}`, {
 						state: { promiseCode: promiseCode },
 					}); // 링크 맞나 확인 필요
 				} else {
@@ -394,7 +394,7 @@ const NewApmt = () => {
 			<div className={styles.mobileSignUp}>
 				<div
 					onClick={() => {
-						window.location.href = `/:username/apmtdetail/:`;
+						window.location.href = `/:user/apmtdetail/:`;
 					}}
 				>
 					로그인

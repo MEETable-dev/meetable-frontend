@@ -24,7 +24,7 @@ function App() {
 				<Route
 					path="/login"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<Login />
 						</PrivateRoute>
 					}
@@ -32,7 +32,7 @@ function App() {
 				<Route
 					path="/emailauth"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<EmailAuth />
 						</PrivateRoute>
 					}
@@ -40,7 +40,7 @@ function App() {
 				<Route
 					path="/enterinfo"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<EnterInfo />
 						</PrivateRoute>
 					}
@@ -48,7 +48,7 @@ function App() {
 				<Route
 					path="/policy"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<Policy />
 						</PrivateRoute>
 					}
@@ -56,7 +56,7 @@ function App() {
 				<Route
 					path="/findemail"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<FindEmail />
 						</PrivateRoute>
 					}
@@ -64,7 +64,7 @@ function App() {
 				<Route
 					path="/resetpass"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<ResetPass />
 						</PrivateRoute>
 					}
@@ -74,7 +74,7 @@ function App() {
 				<Route
 					index
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<NewApmt />
 						</PrivateRoute>
 					}
@@ -82,7 +82,7 @@ function App() {
 				<Route
 					path="/apmtdetail/:apmtId"
 					element={
-						<PrivateRoute member={false} goto={'/:username/apmtdetail/:apmtId'}>
+						<PrivateRoute member={false} goto={'/:user/apmtdetail/:apmtId'}>
 							<ApmtDetail />
 						</PrivateRoute>
 					}
@@ -90,12 +90,12 @@ function App() {
 				<Route
 					path="/newapmt"
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<NewApmt />
 						</PrivateRoute>
 					}
 				/>
-				<Route path="/:username">
+				<Route path="/:user">
 					<Route
 						path="apmtdetail/:apmtId"
 						element={
@@ -118,12 +118,12 @@ function App() {
 				<Route
 					index
 					element={
-						<PrivateRoute member={false} goto={'/:username'}>
+						<PrivateRoute member={false} goto={'/:user'}>
 							<NewApmt />
 						</PrivateRoute>
 					}
 				/>
-				<Route path="/:username">
+				<Route path="/:user">
 					<Route
 						index
 						element={

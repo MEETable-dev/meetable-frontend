@@ -7,6 +7,7 @@ import { AiOutlineFileAdd } from 'react-icons/ai';
 import { IoSyncOutline } from 'react-icons/io5';
 import { AiFillStar } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
+import HomeSchDetail from '../components/HomeSchDetail';
 
 const Home = () => {
 	const [reset, setReset] = useState(false);
@@ -125,7 +126,11 @@ const Home = () => {
 				</div>
 			</div>
 			<div className={styles.titleView}>내 캘린더</div>
-			<CalendarMine selectWeek={selectWeek} setSelectWeek={setSelectWeek} />
+			<div style={{ display: 'flex', flexDirection: 'row' }}>
+				<CalendarMine selectWeek={selectWeek} setSelectWeek={setSelectWeek} />
+				<div style={{ width: 10 }} />
+				<HomeSchDetail></HomeSchDetail>
+			</div>
 			{openModal && (
 				<ApmtShareModal
 					onClose={() => {

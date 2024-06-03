@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
-import styles from '../css/AddSchModal.module.css';
+import styles from '../css/HomeSchDetail.module.css';
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
@@ -13,11 +13,11 @@ import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewApmt from "../components/CalendarNewApmt";
 import InputArea from '../components/InputArea';
 
-const AddSchModal = ({ onClose, changePW }, ref) => {
+const HomeSchDetail = ({ onClose, changePW }, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
     const navigate = useNavigate();
   
-    const [isRepeat, setIsRepeat] = useState('F'); // F vs T
+    const [isRepeat, setIsRepeat] = useState('N'); // 요일 vs 날짜
     const [repeatDetail, setRepeatDetail] = useState('A');
 	const [daySelect, setDaySelect] = useState(false); // 달력 나와있는지 아닌지
 	const [endDaySelect, setEndDaySelect] = useState(false); // 종료날짜 달력 나와있는지 아닌지
@@ -43,31 +43,12 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 
 	const createSchedule = async () => {
 		try {
+			const formattedStartTime = formatTime(startTime);
+			const formattedEndTime = formatTime(endTime);
 			const formattedDates = Array.from(selectDate).map((date) =>
 				format(date, 'yyyy-MM-dd'),
 			);
 			console.log(formattedDates);
-			const colorOption = colors.findIndex(color => color.name === selectedColor);
-			const scheduleTimes = Array.from(selectDate).map(date => {
-				const dateString = format(date, 'yyyy-MM-dd');
-				const {
-				  startTime = 0,
-				  startMinute = 0,
-				  endTime = 23,
-				  endMinute = 55,
-				} = timeByDate[dateString] || {};
-			  
-				// 시간과 분을 문자열로 포맷팅하여 'hh:mm:ss' 형식으로 만듦
-				const formattedStartTime = `${String(startTime).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}:00`;
-				const formattedEndTime = `${String(endTime).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}:00`;
-			  
-				// 날짜와 시작/종료 시간을 결합하여 최종 문자열을 만듦
-				return `${dateString} ${formattedStartTime} ${formattedEndTime}`;
-			});
-			const reptitionCycle = (isRepeat === 'T') ? repeatTime : 0;
-			const isContinuous = (isRepeat === 'T' && repeatDetail === 'A') ? 'T' : 'F';
-			const reptitionTime = (isRepeat === 'T' && repeatDetail === 'B') ? repeatNum : 0;
-			const endDate = (isRepeat === 'T' && repeatDetail === 'C') ? format(selectEndDate, 'yyyy-MM-dd') : 0; // 아닐 경우엔 어떻게??
 
 			// header
 			const config = {
@@ -76,23 +57,23 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 				},
 			};
 			const response = await axios.post(
-				`${process.env.REACT_APP_API_URL}/calendar/add`,
+				`${process.env.REACT_APP_API_URL}/promise/create`,
 				{
-					color: colorOption, // 0부터 시작? 1부터 시작?? - 일단은 0부터로..
-					name: amptName,
-					place: placeName,
-					memo: memo,
-					isreptition: isRepeat,
-					scheduleTimes: scheduleTimes,
-					reptitioncycle: reptitionCycle,
-					iscontinuous: isContinuous,
-					reptition_time: reptitionTime,
-					end_date: endDate
+					promise_name: amptName,
+					weekvsdate: isRepeat,
+					start_time: formattedStartTime,
+					end_time: formattedEndTime,
+					date: formattedDates,
 				},
+				config,
 			); // config 객체를 요청과 함께 전달
 			console.log(response.data);
-			// 모달 닫히거나 생성되었다 알람 띄우기..?
-			onClose();
+
+			// 새로운 링크로 리디렉션
+			const promiseCode = response.data.promiseCode;
+			navigate(`/ApmtDetail/:${promiseCode}`, {
+				state: { promiseCode: promiseCode },
+			}); // 링크 맞나 확인 필요
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
@@ -312,7 +293,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 
 	return (
 		<div ref={ref}>
-			<div className={styles.modalOverlay} onClick={onClose}>
+			<div>
 				<div
 					className={`${styles.modalContent}`}
 					onClick={handleContentClick}
@@ -483,9 +464,9 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 								>
 									<button
 										className={styles.selectBtn}
-										onClick={() => setIsRepeat('F')}
+										onClick={() => setIsRepeat('N')}
 									>
-										{isRepeat === 'F' ? (
+										{isRepeat === 'N' ? (
 											<div>{svgList.newAmpt.btnSelected}</div>
 										) : (
 											<div>{svgList.newAmpt.btnNone}</div>
@@ -497,9 +478,9 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 								<div className={styles.timeCollectInput}>
 									<button
 										className={styles.selectBtn}
-										onClick={() => setIsRepeat('T')}
+										onClick={() => setIsRepeat('Y')}
 									>
-										{isRepeat === 'T' ? (
+										{isRepeat === 'Y' ? (
 											<div>{svgList.newAmpt.btnSelected}</div>
 										) : (
 											<div>{svgList.newAmpt.btnNone}</div>
@@ -516,7 +497,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 										<span>주마다 반복</span>
 									</div>
 								</div>
-								{isRepeat === 'T' ? (
+								{isRepeat === 'Y' ? (
 									<div className={styles.repeatDetails}>
 										<div className={styles.timeCollectInput}>
 											<button
@@ -579,7 +560,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 												</div>
 											</div> : null
 										)}
-										{(isRepeat === 'T') && (repeatDetail === 'C') && (endDaySelect) ? (
+										{(isRepeat === 'Y') && (repeatDetail === 'C') && (endDaySelect) ? (
 											<div
 												className={styles.calendarEnd}
 												onClick={handleCalendarClick}
@@ -656,4 +637,4 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 	);
 };
 
-export default React.forwardRef(AddSchModal);
+export default React.forwardRef(HomeSchDetail);

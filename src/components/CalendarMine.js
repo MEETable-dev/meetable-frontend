@@ -60,8 +60,13 @@ const CalendarMine = (props) => {
   }, [mypageModal]);
 
   const toggleModal = (modalId) => {
+    if (mypageModal !== null && modalId === null) {
+      // 모달이 닫힐 때 페이지를 새로고침합니다.
+      window.location.reload();
+    }
     setMypageModal(mypageModal === modalId ? null : modalId);
   };
+  
 
   const Body = ({ selectWeek }) => {
     const monthStart = startOfMonth(selectWeek);

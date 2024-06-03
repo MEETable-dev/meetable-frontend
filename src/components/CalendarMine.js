@@ -2,37 +2,83 @@ import { useState, useEffect } from 'react';
 import styles from '../css/CalendarMine.module.css';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns'
 import { AiOutlineCalendar } from "react-icons/ai";
+import AddSchModal from "../components/AddSchModal"
+import axios from "axios";;
 
-import AddSchModal from "../components/AddSchModal";
-
-const not = '2023-12-05';
+const colors = [
+  { name: 'red', backgroundColor: '#FFC1C1' },
+  { name: 'orange', backgroundColor: '#FFD3B4' },
+  { name: 'yellow', backgroundColor: '#FFF48F' },
+  { name: 'green', backgroundColor: '#A3E399' },
+  { name: 'lightblue', backgroundColor: '#9AE0EA' },
+  { name: 'blue', backgroundColor: '#9BB3E1' },
+  { name: 'purple', backgroundColor: '#D29CE6' },
+  { name: 'pink', backgroundColor: '#FDA7FF' },
+];
 
 const CalendarMine = (props) => {
-  let selectWeek = props.selectWeek;
-  let setSelectWeek = props.setSelectWeek;
+  const { selectWeek, setSelectWeek } = props;
+  const [schedules, setSchedules] = useState({});
+
+  const getSchInfo = async (month) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/calendar/scheduleinfo`, {
+        params: { month: month }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data.statusCode);
+    }
+  };
+
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      const month = format(selectWeek, 'yyyy-MM');
+      const fetchedSchedules = await getSchInfo(month);
+      setSchedules(fetchedSchedules);
+    };
+
+    fetchSchedules();
+  }, [selectWeek]);
 
   // 새로운 상태 hoveredDay 추가
   const [hoveredDay, setHoveredDay] = useState(null);
 
   const [mypageModal, setMypageModal] = useState(null); // New state for tracking open modal
+
+  // 모달 상태 변화 감지 -> 효과 X...
+  useEffect(() => {
+    if (mypageModal === 'serviceTerms') {
+      console.log("모달이 열렸습니다.");
+      // 모달이 열릴 때 실행할 추가 작업
+    } else {
+      console.log("모달이 닫혔습니다.");
+      // 모달이 닫힐 때 실행할 추가 작업
+    }
+  }, [mypageModal]);
+
   const toggleModal = (modalId) => {
     setMypageModal(mypageModal === modalId ? null : modalId);
   };
 
-  const Body = ({ selectWeek, selectDate }) => {
+  const Body = ({ selectWeek }) => {
     const monthStart = startOfMonth(selectWeek);
     const monthEnd = endOfMonth(selectWeek);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
 
-    let day = startDate;
     const rows = [];
+    let day = startDate;
 
     while (day <= endDate) {
       let days = [];
       for (let i = 0; i < 7; i++) {
         const dayKey = format(day, 'yyyy-MM-dd');
         const formattedDate = format(day, 'd');
+        const daySchedules = schedules[dayKey] || [];
+
         const isNotThisMonth = format(day, 'M') !== format(monthStart, 'M'); // Check if the day is not in the current month
         const dateHeaderClass = `${format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'dateHeaderToday' : 'dateHeader'}`;
     
@@ -56,17 +102,17 @@ const CalendarMine = (props) => {
               )}
             </div>
             {/* ex!! 백앤드 연결 후 정보 불러와서 날짜별로 유효한 일정만 추가하기!!!!! 아래는 예제 */}
-            <div className={styles.eachSch}>일정1</div>
-            <div className={styles.eachSch}>일정2</div>
-            <div className={styles.eachSch}>일정3</div>
+            {daySchedules.map((schedule, index) => (
+              <div key={index} className={styles.eachSch} style={{ backgroundColor: colors[schedule.color].backgroundColor }}>
+                {schedule.name}
+              </div>
+            ))}
           </div>
         );
         day = addDays(day, 1);
       }
       rows.push(
-        <div className={styles.dayContent} key={day}>
-          {days}
-        </div>
+        <div className={styles.dayContent} key={day}>{days}</div>
       );
     }
 
@@ -150,9 +196,6 @@ const CalendarMine = (props) => {
       <div className={styles.DaysOfWeek}>{DivDates}</div>
       <div className={styles.body}><Body selectWeek={selectWeek} selectDate={selectDate} onDateClick={onDateClick} /></div>
     </div>
-    {/* <ConfirmedApmt />
-    <CustomedSched /> */}
-
 
     {/* 일정 추가 모달 띄우기 */}
     {mypageModal === 'serviceTerms' && <AddSchModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
@@ -160,66 +203,5 @@ const CalendarMine = (props) => {
     </AddSchModal>}
   </div>
 };
-
-
-//---------
-// import { useState, useEffect } from 'react';
-// import styles from '../css/CalendarMine.module.css';
-// import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameWeek, subDays, addDays, parse, isBefore } from 'date-fns';
-
-// const CalendarMine = (props) => {
-//   // 상태와 props 정의
-//   let { selectWeek, setSelectWeek } = props;
-
-//   // 새로운 상태 hoveredDay 추가
-//   const [hoveredDay, setHoveredDay] = useState(null);
-
-//   const Body = ({ selectWeek, selectDate }) => {
-//     const monthStart = startOfMonth(selectWeek);
-//     const monthEnd = endOfMonth(selectWeek);
-//     const startDate = startOfWeek(monthStart);
-//     const endDate = endOfWeek(monthEnd);
-
-//     let day = startDate;
-//     const rows = [];
-
-//     while (day <= endDate) {
-//       let days = [];
-//       for (let i = 0; i < 7; i++) {
-//         const dayKey = format(day, 'yyyy-MM-dd');
-//         days.push(
-//           <div
-//             className={styles.eachDay}
-//             key={day}
-//             onMouseEnter={() => setHoveredDay(dayKey)}
-//             onMouseLeave={() => setHoveredDay(null)}
-//           >
-//             <div className={styles.col}>
-//               <div className={styles.dateHeader}>{format(day, 'd')}</div>
-//               {/* 조건부 렌더링으로 hoveredDay와 현재 day가 같을 때 버튼 표시 */}
-//               {hoveredDay === dayKey && (
-//                 <button className={styles.hoverButton}>버튼</button>
-//               )}
-//             </div>
-//           </div>
-//         );
-//         day = addDays(day, 1);
-//       }
-//       rows.push(
-//         <div className={styles.dayContent} key={day}>
-//           {days}
-//         </div>
-//       );
-//     }
-
-//     return <div className={styles.body}>{rows}</div>;
-//   };
-
-//   // 나머지 컴포넌트 코드는 변경 없음
-
-//   return (
-//     // 컴포넌트 반환 JSX 코드는 변경 없음
-//   );
-// };
 
 export default CalendarMine;

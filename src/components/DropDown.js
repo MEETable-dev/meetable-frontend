@@ -9,6 +9,7 @@ const DropDown = ({
 	btnName,
 	openState,
 	setOpenState,
+	disabled,
 }) => {
 	switch (type) {
 		case 'radio':
@@ -16,10 +17,23 @@ const DropDown = ({
 				<div className={styles.dropDownBody}>
 					<div
 						onClick={() => {
-							setOpenState(!openState);
+							if (!disabled) setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
-						style={{ width: '4vw', maxWidth: 40, minWidth: 20 }}
+						style={
+							disabled
+								? {
+										width: '4vw',
+										maxWidth: 40,
+										minWidth: 20,
+										color: '#888888',
+								  }
+								: {
+										width: '4vw',
+										maxWidth: 40,
+										minWidth: 20,
+								  }
+						}
 					>
 						{btnName} {svgList.apmtDetail.toggle}
 					</div>
@@ -29,7 +43,7 @@ const DropDown = ({
 							{options.map((option, index) => (
 								<div
 									key={index}
-									onClick={() => onSelect(option)}
+									onClick={() => {if(!disabled) onSelect(option)}}
 									className={styles.optionList}
 								>
 									{selection == option ? (
@@ -48,9 +62,10 @@ const DropDown = ({
 				<div className={styles.dropDownBody}>
 					<div
 						onClick={() => {
-							setOpenState(!openState);
+							if (!disabled) setOpenState(!openState);
 						}}
 						className={styles.headerBtn}
+						style={disabled ? { color: '#888888' } : {}}
 					>
 						{btnName}
 					</div>
@@ -60,15 +75,20 @@ const DropDown = ({
 							{options.map((option, index) => (
 								<div
 									key={index}
-									onClick={() => onSelect(option)}
+									onClick={() => {
+										if (!disabled) onSelect(option);
+									}}
 									className={styles.optionList}
+									style={disabled ? { color: '#888888' } : {}}
 								>
-									{selection.includes(option) ? (
+									{selection.includes(option) ? ( // id와 type이 같은 걸 포함하고 있는지
 										<div>{svgList.apmtDetail.checkboxChecked}</div>
 									) : (
 										<div>{svgList.apmtDetail.checkboxEmpty}</div>
 									)}
-									<div style={{ marginTop: 1, marginLeft: 4 }}>{option}</div>
+									<div style={{ marginTop: 1, marginLeft: 4 }}>
+										{option.split('-')[2]}
+									</div>{' '}
 								</div>
 							))}
 						</div>

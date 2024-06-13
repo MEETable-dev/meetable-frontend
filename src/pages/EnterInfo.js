@@ -94,6 +94,7 @@ const EnterInfo = () => {
   // };
 
   const handleIsValidPW = ()=>{
+    console.log("password length: ", password.length);
     if ( 1<= password.length  && password.length< 8){
       setIsValidPW(false);
       setErrorMessage(true);
@@ -147,39 +148,86 @@ const EnterInfo = () => {
 
 
 
-return ( <div className={styles.loginBox}>
-  <div className={styles.loginLogo}>
-    <p>MEETable</p>
-    <form className={styles.content}>
-      <InputArea2 autocomplete="username" name="name" placeholder="이름" value={username} onChange = {onChangeUsername}>
-      </InputArea2>
-      <LockedInputArea autoComplete="email" name="email" type="id"  value = {email} 
-      onClick={handleEmailEditClick}>{svgList.loginIcon.pencilBtn}
-      </LockedInputArea> 
-      <InputArea2 autoComplete="new-password" name="password" type={passwordType.type} placeholder="비밀번호" value={password} onChange = {onChangePassword}
-      onClear ={handlePasswordType}>
-      { passwordType.visible ?  <BsEyeSlash size="24px" color="#888888"></BsEyeSlash> :<SlEye size="24px" color="#888888"></SlEye>}
-      </InputArea2>
-      <InputArea2  autoComplete="new-password" name="Checkpassword" type={checkPasswordType.type} placeholder="비밀번호 확인"  value={checkPassword} onChange = {onChangeCheckPassword}
-      onClear={handleCheckPasswordType}>{ checkPasswordType.visible ?  <BsEyeSlash size="24px" color="#888888"></BsEyeSlash> :<SlEye size="24px" color="#888888"></SlEye>}
-      </InputArea2> 
-      <div className={styles.alertZone}>
-        <div className={`${styles.errorMsg} ${ !isValidPW && password !=='' ? '' : styles.hidden}`}>
-          <div className = {styles.message}>비밀번호는 8자 이상이어야 해요.</div>
-        </div>
-        <div className={`${styles.errorMsg} ${ ! isPWSame && isValidPW && isValid ? '' : styles.hidden}`}>
-          <div className = {styles.message}>비밀번호가 일치하지 않아요.</div>
-        </div>
-      </div>
-      <SubmitBtn2 text="회원가입" isActive={isValid} onClick={getSignToken}></SubmitBtn2>
-
-    </form>
-
-
-
-
-  </div>
-</div>);
+return (
+	<div className={styles.entire}>
+		<div className={styles.loginBox}>
+			<div className={styles.loginLogo}>
+				<Link to="/">{svgList.logoIcon.logo}</Link>
+				<form className={styles.content}>
+					<InputArea2
+						autocomplete="username"
+						name="name"
+						placeholder="이름"
+						value={username}
+						onChange={onChangeUsername}
+					></InputArea2>
+					<LockedInputArea
+						autoComplete="email"
+						name="email"
+						type="id"
+						value={email}
+						onClick={handleEmailEditClick}
+					>
+						{svgList.loginIcon.pencilBtn}
+					</LockedInputArea>
+					<InputArea2
+						autoComplete="new-password"
+						name="password"
+						type={passwordType.type}
+						placeholder="비밀번호"
+						value={password}
+						onChange={onChangePassword}
+						onClear={handlePasswordType}
+					>
+						{passwordType.visible ? (
+							<BsEyeSlash size="24px" color="#888888"></BsEyeSlash>
+						) : (
+							<SlEye size="24px" color="#888888"></SlEye>
+						)}
+					</InputArea2>
+					<InputArea2
+						autoComplete="new-password"
+						name="Checkpassword"
+						type={checkPasswordType.type}
+						placeholder="비밀번호 확인"
+						value={checkPassword}
+						onChange={onChangeCheckPassword}
+						onClear={handleCheckPasswordType}
+					>
+						{checkPasswordType.visible ? (
+							<BsEyeSlash size="24px" color="#888888"></BsEyeSlash>
+						) : (
+							<SlEye size="24px" color="#888888"></SlEye>
+						)}
+					</InputArea2>
+					<div className={styles.alertZone}>
+						<div
+							className={`${styles.errorMsg} ${
+								!isValidPW && password !== '' ? '' : styles.hidden
+							}`}
+						>
+							<div className={styles.message}>
+								비밀번호는 8자 이상이어야 해요.
+							</div>
+						</div>
+						<div
+							className={`${styles.errorMsg} ${
+								!isPWSame && isValidPW && isValid ? '' : styles.hidden
+							}`}
+						>
+							<div className={styles.message}>비밀번호가 일치하지 않아요.</div>
+						</div>
+					</div>
+					<SubmitBtn2
+						text="회원가입"
+						isActive={isValid && isValidPW && isPWSame}
+						onClick={getSignToken}
+					></SubmitBtn2>
+				</form>
+			</div>
+		</div>
+	</div>
+);
 };
 
 export default EnterInfo;

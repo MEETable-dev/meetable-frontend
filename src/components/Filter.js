@@ -12,6 +12,7 @@ const Filter = ({
 	onSelectTime,
 	selectionParti,
 	onSelectParti,
+	disabled,
 }) => {
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -32,8 +33,23 @@ const Filter = ({
 	}, []);
 
 	return (
-		<div className={styles.filterBody}>
-			<div className={styles.filterSection}>
+		<div
+			className={styles.filterBody}
+			style={
+				windowWidth < 580
+					? {
+							marginLeft: '1.7vw',
+							marginRight: '2vw',
+					  }
+					: windowWidth >= 580 && windowWidth <= 1200
+					? { marginLeft: '1.7vw', marginRight: '0.2vw' }
+					: { marginLeft: '1vw', marginRight: '0.2vw' }
+			}
+		>
+			<div
+				className={styles.filterSection}
+				style={disabled ? { color: '#888888' } : {}}
+			>
 				최소{windowWidth <= 450 ? <br /> : ' '}인원
 				<DropDown
 					// options={[2, 1, 20, 45, 40, 40]}
@@ -44,11 +60,15 @@ const Filter = ({
 					btnName={selectionNum}
 					openState={openNumFilter}
 					setOpenState={setOpenNumFilter}
+					disabled={disabled}
 				/>
 				명
 			</div>
 			{false && (
-				<div className={styles.filterSection}>
+				<div
+					className={styles.filterSection}
+					style={disabled ? { color: '#888888' } : {}}
+				>
 					최소{windowWidth <= 450 ? <br /> : ' '}시간
 					<DropDown
 						// options={[2, 1, 20, 45]}
@@ -62,11 +82,19 @@ const Filter = ({
 						btnName={selectionNum}
 						openState={openNumFilter}
 						setOpenState={setOpenNumFilter}
+						disabled={disabled}
 					/>
 					시간
 				</div>
 			)}
-			<div className={styles.filterSection} style={{ textAlign: 'center' }}>
+			<div
+				className={styles.filterSection}
+				style={
+					disabled
+						? { color: '#888888', textAlign: 'center' }
+						: { textAlign: 'center' }
+				}
+			>
 				필수{windowWidth <= 450 ? <br /> : ''}참여자{' '}
 				<DropDown
 					options={options}
@@ -76,6 +104,7 @@ const Filter = ({
 					btnName={'지정'}
 					openState={openPersonFilter}
 					setOpenState={setOpenPersonFilter}
+					disabled={disabled}
 				/>
 			</div>
 		</div>

@@ -90,112 +90,112 @@ const PWChangeModal = ({ onClose }, ref) => {
 
     return (
     <div ref={ref}>
-        <div className={styles.modalOverlay}>
+        <div className={styles.modalOverlay} onClick={onClose}>
             { !isValidPWD ?
-                    <div className={styles.modalContentLong}>
-                        <button className={styles.closeButton} onClick={onClose}>
-                            <div className={styles.closeX}>
-                                {svgList.policyIcon.closeBtn}
-                            </div>
-                        </button>
-                        <h2>비밀번호 바꾸기</h2>
-                        <div className={styles.modalBody}>
-                            <div className={styles.inputBox}>
-                                <div className={styles.inputHeight}>
-                                    <InputArea
-                                        className={`${isVisible1 ? styles.visible : styles.invisible}`}
-                                        placeholder="현재 비밀번호"
-                                        value={PWD1}
-                                        type={isVisible1 ? "text" : "password"}
-                                        onChange={handlePWD1Change}
-                                        onClear={handleIsVisible1}
-                                    >
-                                        {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-                                    </InputArea>
-                                        {/* alertzone 추가 */}
-                                        {/* <div className={styles.alertZone}>
-                                            <div className={`${isValidCurrentPWD && currentPWDSubmitted ? '' : styles.hidden}`}>
-                                                <div className={styles.message}>인증 코드가 틀려요.</div>
-                                            </div>
-                                        </div> */}
-                                    <div className={styles.spaceBetween}></div>
-                                    <InputArea
-                                        className={`${isVisible2 ? styles.visible : styles.invisible}`}
-                                        placeholder="새 비밀번호"
-                                        value={PWD2}
-                                        type={isVisible2 ? "text" : "password"}
-                                        onChange={handlePWD2Change}
-                                        onClear={handleIsVisible2}
-                                    >
-                                        {isVisible2 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-                                    </InputArea>
-                                    <div className={styles.spaceBetween}></div>
-                                    <InputArea
-                                        className={`${isVisible3 ? styles.visible : styles.invisible}`}
-                                        placeholder="새 비밀번호 확인"
-                                        value={PWD3}
-                                        type={isVisible3 ? "text" : "password"}
-                                        onChange={handlePWD3Change}
-                                        onClear={handleIsVisible3}
-                                    >
-                                        {isVisible3 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
-                                    </InputArea>
+                <div className={styles.modalContentLong} onClick={(e) => e.stopPropagation()}>
+                    <button className={styles.closeButton} onClick={onClose}>
+                        <div className={styles.closeX}>
+                            {svgList.policyIcon.closeBtn}
+                        </div>
+                    </button>
+                    <h2>비밀번호 바꾸기</h2>
+                    <div className={styles.modalBody}>
+                        <div className={styles.inputBox}>
+                            <div className={styles.inputHeight}>
+                                <InputArea
+                                    className={`${isVisible1 ? styles.visible : styles.invisible}`}
+                                    placeholder="현재 비밀번호"
+                                    value={PWD1}
+                                    type={isVisible1 ? "text" : "password"}
+                                    onChange={handlePWD1Change}
+                                    onClear={handleIsVisible1}
+                                >
+                                    {isVisible1 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
                                     {/* alertzone 추가 */}
-                                    { newPWDSubmitted ?
-                                        <div className={styles.alertZone}>
-                                            <div className={``}>
-                                                <div className={styles.message}>비밀번호가 틀려요.</div>
-                                            </div>
-                                        </div> : null
-                                    }
-                                    { !newPWDSubmitted && !isLongPWD ?
-                                        <div className={styles.alertZone}>
-                                            <div className={``}>
-                                                <div className={styles.message}>비밀번호는 8자 이상이어야 해요.</div>
-                                            </div>
-                                        </div> : null
-                                    }
-                                    { !newPWDSubmitted && isLongPWD && !isSamePWD ?
+                                    {/* <div className={styles.alertZone}>
+                                        <div className={`${isValidCurrentPWD && currentPWDSubmitted ? '' : styles.hidden}`}>
+                                            <div className={styles.message}>인증 코드가 틀려요.</div>
+                                        </div>
+                                    </div> */}
+                                <div className={styles.spaceBetween}></div>
+                                <InputArea
+                                    className={`${isVisible2 ? styles.visible : styles.invisible}`}
+                                    placeholder="새 비밀번호"
+                                    value={PWD2}
+                                    type={isVisible2 ? "text" : "password"}
+                                    onChange={handlePWD2Change}
+                                    onClear={handleIsVisible2}
+                                >
+                                    {isVisible2 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
+                                <div className={styles.spaceBetween}></div>
+                                <InputArea
+                                    className={`${isVisible3 ? styles.visible : styles.invisible}`}
+                                    placeholder="새 비밀번호 확인"
+                                    value={PWD3}
+                                    type={isVisible3 ? "text" : "password"}
+                                    onChange={handlePWD3Change}
+                                    onClear={handleIsVisible3}
+                                >
+                                    {isVisible3 ? svgList.ModalIcon.eyeSlash : svgList.ModalIcon.eyeOpen}
+                                </InputArea>
+                                {/* alertzone 추가 */}
+                                { newPWDSubmitted ?
                                     <div className={styles.alertZone}>
                                         <div className={``}>
-                                            <div className={styles.message}>비밀번호가 서로 일치하지 않아요.</div>
+                                            <div className={styles.message}>비밀번호가 틀려요.</div>
                                         </div>
                                     </div> : null
-                                    }
-                                    { changeSamePWD ?
+                                }
+                                { !newPWDSubmitted && !isLongPWD ?
                                     <div className={styles.alertZone}>
                                         <div className={``}>
-                                            <div className={styles.message}>새 비밀번호는 기존 비밀번호와 달라야 해요.</div>
+                                            <div className={styles.message}>비밀번호는 8자 이상이어야 해요.</div>
                                         </div>
                                     </div> : null
-                                    }
+                                }
+                                { !newPWDSubmitted && isLongPWD && !isSamePWD ?
+                                <div className={styles.alertZone}>
+                                    <div className={``}>
+                                        <div className={styles.message}>비밀번호가 서로 일치하지 않아요.</div>
+                                    </div>
+                                </div> : null
+                                }
+                                { changeSamePWD ?
+                                <div className={styles.alertZone}>
+                                    <div className={``}>
+                                        <div className={styles.message}>새 비밀번호는 기존 비밀번호와 달라야 해요.</div>
+                                    </div>
+                                </div> : null
+                                }
 
-                                </div>
-                                
                             </div>
-        
-                            <SubmitBtn
-                                text="완료하기"
-                                onClick={handleChangePWDInfo}
-                                isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
-                                // className={`${''}`}
-                                margin={`10px 0px 0px`}
-                            />
-        
+                            
                         </div>
-                    </div> :
-                    <div className={styles.modalContent}>
-                        <h2 className={styles.normalFont}>비밀번호가 변경되었어요.</h2>
-                        <div className={styles.modalBody}>
-                            <SubmitBtn
-                                text="확인"
-                                onClick={onClose}
-                                isActive={isValidPWD}
-                                // className={`${''}`}
-                                margin={`10px 0px 0px`}
-                            />
-                        </div>
+    
+                        <SubmitBtn
+                            text="완료하기"
+                            onClick={handleChangePWDInfo}
+                            isActive={PWD2 && PWD3 && isLongPWD && isSamePWD}
+                            // className={`${''}`}
+                            margin={`10px 0px 0px`}
+                        />
+    
                     </div>
+                </div> :
+                <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                    <h2 className={styles.normalFont}>비밀번호가 변경되었어요.</h2>
+                    <div className={styles.modalBody}>
+                        <SubmitBtn
+                            text="확인"
+                            onClick={onClose}
+                            isActive={isValidPWD}
+                            // className={`${''}`}
+                            margin={`10px 0px 0px`}
+                        />
+                    </div>
+                </div>
             }
         </div>
     </div>

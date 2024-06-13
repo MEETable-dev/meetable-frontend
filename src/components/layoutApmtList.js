@@ -1,10 +1,11 @@
-import styles from 'css/AllApmt.module.css';
+import styles from 'css/Layout.module.css';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import React from "react";
-import ApmtItem from './ApmtItem';
-import TrashCanIcon from './TrashCanIcon';
+import LayoutApmtItem from './layoutApmtItem';
+import SmallTrashCan from './SmallTrashCan';
 
-const ApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedItemList, changeName, modifyName, setModifyName, bookmark, unBookmark, openModal, handleShowTrash }) => {
+
+const LayoutApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedItemList, changeName, modifyName, setModifyName, bookmark, unBookmark, openModal, handleShowTrash }) => {
   console.log("ApmtList rendered");
   // console.log("selectedItemList in ApmtList: ", selectedItemList);
   // console.log("data:", data);
@@ -22,17 +23,13 @@ const ApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedItemList,
   // const parsedList = selectedItemList.map(code => code.split('-')[0]);
 
   return (
-    <div className={styles.ApmtListContainer}>
-      {!isTrash && !fav ? <TrashCanIcon onClick={handleShowTrash} openModal={openModal}></TrashCanIcon> : ''}
+    <div className={styles.LayoutApmtListContainer}>
+      {!isTrash && !fav ? <SmallTrashCan onClick={handleShowTrash} openModal={openModal}></SmallTrashCan> : ''}
       {filteredApmts.map((item, index) => {
-        // 각 항목의 ID가 selectedItemList에 있는지 확인하여 isSelected 설정
-        // // console.log(parsedList);
-        // console.log("!!!!!!promiseCode: ", item.promiseCode);
-        // console.log("!!!!!!parsedList: ", parsedList);
         const isSelected = selectedItemList.includes(item.promiseCode);
         
         return (
-          <ApmtItem
+          <LayoutApmtItem
             isTrash={isTrash}
             key={item.promiseCode}
             name={item.promiseName}
@@ -54,4 +51,4 @@ const ApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedItemList,
   );
 };
 
-export default React.memo(ApmtList);
+export default React.memo(LayoutApmtList);

@@ -33,13 +33,13 @@
 
 .optionList {
   display: flex;
-  justify-content: center;
   flex-direction: row;
   color: #222;
   font-size: 13px;
   font-weight: 500;
   text-wrap: nowrap;
   cursor: pointer;
+  user-select: none;
 }
 
 .optionSelected {

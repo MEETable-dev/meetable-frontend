@@ -85,6 +85,7 @@
   border-radius: 5px;
   padding: 5px 8px;
   margin-right: 8px;
+  user-select: none;
 }
 
 .purple {
@@ -93,6 +94,7 @@
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
+  border: 1px solid #8E66EE;
 }
 
 .white {
@@ -188,7 +190,10 @@
   color: #222;
   font-size: 15px;
   font-weight: 500;
-  min-width: 260px;
+  min-width: 280px;
+  flex-wrap: nowrap;
+  background-color: #fff;
+  padding-right: 20px;
 }
 
 .inputItem:focus {
@@ -212,6 +217,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 
@@ -220,4 +226,128 @@
   font-size: 13px;
   font-weight: 500;
   margin: 0 10px;
+}
+
+.wrongAddTitle {
+  color: #222222;
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.wrongAddContent {
+  color:#222222;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 46px;
+}
+
+.wrongAddBtn {
+  color: #6330DE;
+  font-size: 18px;
+  font-weight: 400;
+  text-decoration-line: underline;
+  margin-bottom: 20px; 
+  cursor: pointer;
+}
+
+.modalContent {
+  margin-top: 26px;
+}
+
+.whenContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 4px 0;
+}
+
+.icon {
+  margin-right: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.whenText {
+  display: flex;
+  /* flex:1; */
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  flex-direction: column;
+  max-width: 260px;
+  flex-wrap: wrap;
+}
+
+.inputContent {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+.modalInput {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalBtnView {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 30px;
+}
+
+.confirmModalBtn {
+  display: flex;
+  flex:1;
+  border-radius: 5px;
+  border: 1px solid #8E66EE;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 7px 7px;
+  cursor: pointer;
+}
+
+.confirmDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 12px;
+  margin-bottom: 40px;
+}
+
+.desDiv {
+  flex:1;
+  font-size: 15px;
+  font-weight: 400;
+  color:#000
+}
+
+.confirmBtn {
+  padding: 4px 6px;
+  border-radius: 5px;
+  background-color: #8E66EE;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.modalBody {
+  border-radius: 10px;
+  padding: 0px 20px 26px 20px;
+  border: 1px solid #D0D0D0;
+  background-color: #fff;
 }

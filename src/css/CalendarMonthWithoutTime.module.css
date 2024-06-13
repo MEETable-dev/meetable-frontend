@@ -50,6 +50,7 @@
   font-weight: 500;
   padding: 3px 5px;
   left: 4px;
+  cursor: pointer;
 }
 
 .bodyContainer {
@@ -94,6 +95,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  cursor: default;
 }
 
 .dateHeader {
@@ -123,11 +125,20 @@
   flex-direction: column;
 }
 
+
 .disabled {
   background: #888888;
+  cursor:context-menu;
 }
+
 .disabled:hover {
   box-shadow: none;
+  cursor:context-menu;
+
+}
+
+.confirmSelected {
+  background-color:#40C06F;
 }
 
 .valid {
@@ -138,14 +149,38 @@
   background-color: #8E66EE;
 }
 
-.txtDate {
-  color: #222222;
+.Lv1 {
+  background-color: #E0CEFF;
 }
 
-.txtSelectedDate {
-  color: #FFFFFF;
+.Lv2 {
+  background-color: #BEA1FE;
 }
 
-.uni {
-  background-color: red;
+.Lv3 {
+  background-color: #A988F0;
+}
+
+.Lv4 {
+  background-color: #8D63E8;
+}
+
+.Lv5 {
+  background-color: #6330DE;
+}
+
+.Lv6 {
+  background-color: #4B1CBC;
+}
+
+.Lv7 {
+  background-color: #400099;
+}
+
+
+.howmany {
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
 }

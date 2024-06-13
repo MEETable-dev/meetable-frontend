@@ -1,7 +1,6 @@
-
-const useCustomColor = (total_people, select_people, num_color = 7) => {
+const CustomColor = (total_people, select_people, num_color = 7) => {
 	let color = [
-		'D0D0D0',
+		'valid',
 		'E0CEFF',
 		'BEA1FE',
 		'A988F0',
@@ -20,7 +19,7 @@ const useCustomColor = (total_people, select_people, num_color = 7) => {
 	}
 
 	// return outputIdx;
-	return '#' + color[outputIdx];
+	return color[outputIdx];
 };
 
-export default useCustomColor;
+export default CustomColor;

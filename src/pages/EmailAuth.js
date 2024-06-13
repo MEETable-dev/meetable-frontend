@@ -144,101 +144,143 @@ const EmailAuth = () => {
   };
 
   return (
-    <div className={styles.mainBox}>
-      <div className={styles.loginBox}>
-        <div className={styles.loginLogo}>
-          {/* <p>MEETable</p> */}
-          {svgList.logoIcon.logo}
-        </div>
-        <p className={styles.signup}>가입하기</p>
-        <form className={styles.content} onSubmit={handleEmailSubmit}>
-          <InputArea
-            className={`${emailSubmitted && !errorMessage ? styles.lockEmail : ''}`}
-            placeholder="이메일"
-            value={email}
-            onChange={handleEmailChange}
-            onClear={emailSubmitted && !errorMessage ? handleToggleEmailEdit : handleClearEmail}
-          >
-            {emailSubmitted && !errorMessage ? svgList.loginIcon.pencilBtn : svgList.loginIcon.delBtn}
-          </InputArea>
-          <div className={styles.alertZone}>
-            <div className={`${styles.errorMsg} ${emailSubmitted ? '' : styles.hidden}`}>
-              { emailSubmitted && ( !errorMessage ?
-                <div className={styles.infoArea}>
-                  <div className={styles.inputBlock}>
-                    <input
-                      className={styles.inputAuthCode}
-                      placeholder="인증코드"
-                      autoComplete="off"
-                      value={authCode}
-                      onChange={handleAuthCodeChange}
-                    />
-                    <span className={styles.timeCounter}>
-                      {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
-                    </span>
-                    <span className={styles.btnRegion}>
-                      {authCode && (
-                        <button className={styles.del} type="button" onClick={handleClearAuthCode}>
-                          <div>{svgList.loginIcon.delBtn}</div>
-                        </button>
-                      )}
-                    </span>
-                  </div>
-                  <div className={styles.underLine}></div>
-                </div>
-                  :
-                <div className={styles.message}>올바른 이메일 주소가 아니에요.</div> )}                
-            </div>
-            <div className={styles.alertZone}>
-              <div className={`${styles.errorMsg} ${authCodeSubmitted && emailSubmitted ? '' : styles.hidden}`}>
-              {timerExpired && (
-                <div className={styles.message}>인증 시간이 만료되었어요.</div>
-              )}
-              </div>
-              <div className={`${styles.errorMsg} ${authCodeSubmitted && emailSubmitted ? '' : styles.hidden} ${isVaildAuthCode ? styles.hidden : ''} ${timerExpired ? styles.hidden : ''}`}>
-                <div className={styles.message}>인증 코드가 틀려요.</div>
-              </div>
-            </div>
+		<div className={styles.entire}>
+			<div className={styles.mainBox}>
+				<div className={styles.loginBox}>
+					<div className={styles.loginLogo}>
+						{/* <p>MEETable</p> */}
+						<Link to="/">{svgList.logoIcon.logo}</Link>
+					</div>
+					<p className={styles.signup}>가입하기</p>
+					<form className={styles.content} onSubmit={handleEmailSubmit}>
+						<InputArea
+							className={`${
+								emailSubmitted && !errorMessage ? styles.lockEmail : ''
+							}`}
+							placeholder="이메일"
+							value={email}
+							onChange={handleEmailChange}
+							onClear={
+								emailSubmitted && !errorMessage
+									? handleToggleEmailEdit
+									: handleClearEmail
+							}
+						>
+							{emailSubmitted && !errorMessage
+								? svgList.loginIcon.pencilBtn
+								: svgList.loginIcon.delBtn}
+						</InputArea>
+						<div className={styles.alertZone}>
+							<div
+								className={`${styles.errorMsg} ${
+									emailSubmitted ? '' : styles.hidden
+								}`}
+							>
+								{emailSubmitted &&
+									(!errorMessage ? (
+										<div className={styles.infoArea}>
+											<div className={styles.inputBlock}>
+												<input
+													className={styles.inputAuthCode}
+													placeholder="인증코드"
+													autoComplete="off"
+													value={authCode}
+													onChange={handleAuthCodeChange}
+												/>
+												<span className={styles.timeCounter}>
+													{Math.floor(timer / 60)}:
+													{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+												</span>
+												<span className={styles.btnRegion}>
+													{authCode && (
+														<button
+															className={styles.del}
+															type="button"
+															onClick={handleClearAuthCode}
+														>
+															<div>{svgList.loginIcon.delBtn}</div>
+														</button>
+													)}
+												</span>
+											</div>
+											<div className={styles.underLine}></div>
+										</div>
+									) : (
+										<div className={styles.message}>
+											올바른 이메일 주소가 아니에요.
+										</div>
+									))}
+							</div>
+							<div className={styles.alertZone}>
+								<div
+									className={`${styles.errorMsg} ${
+										authCodeSubmitted && emailSubmitted ? '' : styles.hidden
+									}`}
+								>
+									{timerExpired && (
+										<div className={styles.message}>
+											인증 시간이 만료되었어요.
+										</div>
+									)}
+								</div>
+								<div
+									className={`${styles.errorMsg} ${
+										authCodeSubmitted && emailSubmitted ? '' : styles.hidden
+									} ${isVaildAuthCode ? styles.hidden : ''} ${
+										timerExpired ? styles.hidden : ''
+									}`}
+								>
+									<div className={styles.message}>인증 코드가 틀려요.</div>
+								</div>
+							</div>
+						</div>
 
-          </div>
-
-          <SubmitBtn
-            text="인증 메일 보내기"
-            onClick={sendVerifyCode}
-            isActive={email}
-            className={`${emailSubmitted && !errorMessage ? styles.hidden : ''} ${styles.btnWidth}`}
-            margin={`${submitButtonMargin} 0px 0px`}
-          />
-          <SubmitBtn
-            text="인증 메일 다시 보내기"
-            onClick={sendVerifyCode}
-            isActive={emailSubmitted && !authCode}
-            className={`${authCode ? styles.hidden : ''} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
-            margin={`${submitButtonMargin} 0px 0px`}
-          />
-          <SubmitBtn
-            text="인증하기"
-            onClick={handleAuthSubmit}
-            isActive={authCode}
-            className={`${authCode ? '' : styles.hidden} ${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
-            margin={`${submitButtonMargin} 0px 0px`}
-          />
-          <SubmitBtn
-            text="인증 메일 다시 보내기"
-            onClick={sendVerifyCode}
-            isActive={timerExpired}
-            className={`${emailSubmitted && !errorMessage ? '' : styles.hidden} ${timerExpired ? '' : styles.hidden} ${styles.btnWidth}`}
-            margin={`${submitButtonMargin} 0px 0px`}
-          />
-        </form>
-        <div className={styles.linkLine}>
-          <Link to="/Login" className={styles.loginLink}>
-            로그인하기
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+						<SubmitBtn
+							text="인증 메일 보내기"
+							onClick={sendVerifyCode}
+							isActive={email}
+							className={`${
+								emailSubmitted && !errorMessage ? styles.hidden : ''
+							} ${styles.btnWidth}`}
+							margin={`${submitButtonMargin} 0px 0px`}
+						/>
+						<SubmitBtn
+							text="인증 메일 다시 보내기"
+							onClick={sendVerifyCode}
+							isActive={emailSubmitted && !authCode}
+							className={`${authCode ? styles.hidden : ''} ${
+								emailSubmitted && !errorMessage ? '' : styles.hidden
+							} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
+							margin={`${submitButtonMargin} 0px 0px`}
+						/>
+						<SubmitBtn
+							text="인증하기"
+							onClick={handleAuthSubmit}
+							isActive={authCode}
+							className={`${authCode ? '' : styles.hidden} ${
+								emailSubmitted && !errorMessage ? '' : styles.hidden
+							} ${timerExpired ? styles.hidden : ''} ${styles.btnWidth}`}
+							margin={`${submitButtonMargin} 0px 0px`}
+						/>
+						<SubmitBtn
+							text="인증 메일 다시 보내기"
+							onClick={sendVerifyCode}
+							isActive={timerExpired}
+							className={`${
+								emailSubmitted && !errorMessage ? '' : styles.hidden
+							} ${timerExpired ? '' : styles.hidden} ${styles.btnWidth}`}
+							margin={`${submitButtonMargin} 0px 0px`}
+						/>
+					</form>
+					<div className={styles.linkLine}>
+						<Link to="/Login" className={styles.loginLink}>
+							로그인하기
+						</Link>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default EmailAuth;

@@ -63,8 +63,8 @@ const MyInfoModal = ({ onClose, changePW }, ref) => {
 
     return (
     <div ref={ref}>
-        <div className={styles.modalOverlay}>
-            <div className={userNameLocked ? styles.modalContent : styles.modalContentLong}>
+        <div className={styles.modalOverlay} onClick={onClose}>
+            <div className={userNameLocked ? styles.modalContent : styles.modalContentLong} onClick={(e) => e.stopPropagation()}>
                 <button className={styles.closeButton} onClick={onClose}>
                     <div className={styles.closeX}>
                     {svgList.policyIcon.closeBtn}

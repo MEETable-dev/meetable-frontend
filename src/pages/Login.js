@@ -103,44 +103,84 @@ const Login = () => {
 
   
 
-return ( <div className={styles.loginBox}>
-  <div className={styles.loginLogo}>
-    <p>MEETable</p>
-    <form className={styles.content}>
-      <InputArea2 autoComplete="email" name="email" type="id" placeholder="meetable2@meetable.com" value = {email} onChange = {onChangeEmail}
-      onClear ={handleClearEmail}>
-      {emailSubmitted && pwSubmitted && !errorMessage ? svgList.loginIcon.delBtn : ''}
-      </InputArea2>
-      <InputArea2 autoComplete="password" name="password" type="password" placeholder="비밀번호" value = {password} onChange = {onChangePassword}
-      onClear={handleClearPw}>
-      {emailSubmitted && pwSubmitted && !errorMessage ? svgList.loginIcon.delBtn: ''}
-      </InputArea2>         
+return (
+	<div className={styles.entire}>
+		<div className={styles.loginBox}>
+			<div className={styles.loginLogo}>
+				<Link to="/">{svgList.logoIcon.logo}</Link>
+			</div>
+			<form className={styles.content}>
+				<InputArea2
+					autoComplete="email"
+					name="email"
+					type="id"
+					placeholder="meetable2@meetable.com"
+					value={email}
+					onChange={onChangeEmail}
+					onClear={handleClearEmail}
+				>
+					{emailSubmitted && pwSubmitted && !errorMessage
+						? svgList.loginIcon.delBtn
+						: ''}
+				</InputArea2>
+				<InputArea2
+					autoComplete="password"
+					name="password"
+					type="password"
+					placeholder="비밀번호"
+					value={password}
+					onChange={onChangePassword}
+					onClear={handleClearPw}
+				>
+					{emailSubmitted && pwSubmitted && !errorMessage
+						? svgList.loginIcon.delBtn
+						: ''}
+				</InputArea2>
 
-      <div className={styles.alertZone}>
-        <div className={`${styles.errorMsg} ${pwSubmitted && emailSubmitted & !isUser ? '' : styles.hidden}`}>
-          <div className = {styles.message}>이메일이나 비밀번호가 잘못되었어요.</div>
-        </div>
-      </div>
-      <div className={styles.inputBlock}>
-        <input className={styles.CheckBox} type="checkbox" value={keepLogin} onChange = {onChangeKeepLogin} ></input>
-        <label>
-          <span >로그인유지</span>
-        </label>
-      </div>
-      <SubmitBtn2 text="로그인" isActive={ExistInput} onClick={handleLoginSubmit} />
-      <div className ={styles.footerBlock}>
-        <Link to="/FindEmail" className={styles.footerLink}>이메일 찾기</Link>
-        <span className={styles.footerLink}>|</span>
-        <Link to="/ResetPass"className={styles.footerLink}>비밀번호 찾기</Link>
-        <span className={styles.footerLink}>|</span>
-        <Link to="/EmailAuth"className={styles.footerLink}>가입하기</Link>
-      </div>
-    </form>
-
-
-  </div>
-
-</div>);
+				<div className={styles.alertZone}>
+					<div
+						className={`${styles.errorMsg} ${
+							pwSubmitted && emailSubmitted & !isUser ? '' : styles.hidden
+						}`}
+					>
+						<div className={styles.message}>
+							이메일이나 비밀번호가 잘못되었어요.
+						</div>
+					</div>
+				</div>
+				<div className={styles.inputBlock}>
+					<input
+						className={styles.CheckBox}
+						type="checkbox"
+						value={keepLogin}
+						onChange={onChangeKeepLogin}
+					></input>
+					<label>
+						<span>로그인유지</span>
+					</label>
+				</div>
+				<SubmitBtn2
+					text="로그인"
+					isActive={ExistInput}
+					onClick={handleLoginSubmit}
+				/>
+				<div className={styles.footerBlock}>
+					<Link to="/FindEmail" className={styles.footerLink}>
+						이메일 찾기
+					</Link>
+					<span className={styles.footerLink}>|</span>
+					<Link to="/ResetPass" className={styles.footerLink}>
+						비밀번호 찾기
+					</Link>
+					<span className={styles.footerLink}>|</span>
+					<Link to="/EmailAuth" className={styles.footerLink}>
+						가입하기
+					</Link>
+				</div>
+			</form>
+		</div>
+	</div>
+);
 };
 
 export default Login;

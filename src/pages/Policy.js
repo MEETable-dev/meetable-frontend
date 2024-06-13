@@ -71,146 +71,202 @@ const Policy = () => {
   }, [isChecked1, isChecked2, isChecked3]);
 
   return (
-    <div className={styles.loginBox}>
-      <div className={styles.loginLogo}>
-        {/* <p>MEETable</p> */}
-        {svgList.logoIcon.logo}
-      </div>
-      {/* <h4>이용약관</h4> */}
-      <h4></h4>
-      <div className={styles.content}>
-        <div className={styles.policyZone}>
+		<div className={styles.entire}>
+			<div className={styles.loginBox}>
+				<div className={styles.loginLogo}>
+					{/* <p>MEETable</p> */}
+					<Link to="/">{svgList.logoIcon.logo}</Link>
+				</div>
+				{/* <h4>이용약관</h4> */}
+				<h4></h4>
+				<div className={styles.content}>
+					<div className={styles.policyZone}>
+						{/* 모두 동의 */}
+						<div className={styles.inputBlock}>
+							<div className={styles.detailArea}>
+								<button
+									type="button"
+									onClick={handleCheckboxChangeAll}
+									className={styles.policyCheckBox}
+								>
+									<div>
+										{isCheckedAll
+											? svgList.policyIcon.checkBoxChcked
+											: svgList.policyIcon.checkBoxNotChecked}
+									</div>
+								</button>
+								<div className={''}>모두 동의합니다.</div>
+							</div>
+						</div>
 
-          {/* 모두 동의 */}
-          <div className={styles.inputBlock}>
-            <div className={styles.detailArea}>
-              <button type="button"
-                onClick={handleCheckboxChangeAll} 
-                className={styles.policyCheckBox}>
-                <div>
-                  {isCheckedAll ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
-                </div>
-              </button>
-              <div className={""}>
-                모두 동의합니다.
-              </div>
-            </div>
-          </div>
+						{/* 구분선 */}
+						<div className={styles.lineArea}>
+							<div className={styles.underLine}></div>
+						</div>
 
-          {/* 구분선 */}
-          <div className={styles.lineArea}>
-            <div className={styles.underLine}></div>
-          </div>
+						{/* 서비스 이용약관 */}
+						<div className={styles.inputBlock}>
+							<div className={styles.detailArea}>
+								<button
+									type="button"
+									onClick={handleCheckboxChange1}
+									className={styles.policyCheckBox}
+								>
+									<div>
+										{isChecked1
+											? svgList.policyIcon.checkBoxChcked
+											: svgList.policyIcon.checkBoxNotChecked}
+									</div>
+								</button>
+								<div className={''}>[필수] 서비스 이용약관</div>
+							</div>
 
-          {/* 서비스 이용약관 */}
-          <div className={styles.inputBlock}>
-            <div className={styles.detailArea}>
-              <button type="button"
-                onClick={handleCheckboxChange1} 
-                className={styles.policyCheckBox}>
-                <div>
-                  {isChecked1 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
-                </div>
-              </button>
-              <div className={""}>
-                [필수] 서비스 이용약관
-              </div>
-            </div>
+							<button
+								type="button"
+								onClick={() => toggleModal('serviceTerms')}
+								className={styles.policyArrow}
+							>
+								<div>{svgList.policyIcon.arrow}</div>
+							</button>
+						</div>
 
-            <button type="button" 
-            onClick={() => toggleModal('serviceTerms')} 
-            className={styles.policyArrow}>
-              <div>
-                {svgList.policyIcon.arrow}
-              </div>
-            </button>
-          </div>
+						{/* 개인정보처리방침 */}
+						<div className={styles.inputBlock}>
+							<div className={styles.detailArea}>
+								<button
+									type="button"
+									onClick={handleCheckboxChange2}
+									className={styles.policyCheckBox}
+								>
+									<div>
+										{isChecked2
+											? svgList.policyIcon.checkBoxChcked
+											: svgList.policyIcon.checkBoxNotChecked}
+									</div>
+								</button>
+								<div className={''}>[필수] 개인정보처리방침</div>
+							</div>
 
+							<button
+								type="button"
+								onClick={() => toggleModal('serviceTerms')}
+								className={styles.policyArrow}
+							>
+								<div>{svgList.policyIcon.arrow}</div>
+							</button>
+						</div>
 
-          {/* 개인정보처리방침 */}
-          <div className={styles.inputBlock}>
-            <div className={styles.detailArea}>
-              <button type="button"
-                onClick={handleCheckboxChange2} 
-                className={styles.policyCheckBox}>
-                <div>
-                  {isChecked2 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
-                </div>
-              </button>
-              <div className={""}>
-                [필수] 개인정보처리방침
-              </div>
-            </div>
+						{/* 마케팅 활용 동의 */}
+						<div className={styles.inputBlock}>
+							<div className={styles.detailArea}>
+								<button
+									type="button"
+									onClick={handleCheckboxChange3}
+									className={styles.policyCheckBox}
+								>
+									<div>
+										{isChecked3
+											? svgList.policyIcon.checkBoxChcked
+											: svgList.policyIcon.checkBoxNotChecked}
+									</div>
+								</button>
+								<div className={''}>[선택] 마케팅 활용 동의</div>
+							</div>
+							<button
+								type="button"
+								onClick={() => toggleModal('marketing')}
+								className={styles.policyArrow}
+							>
+								<div>{svgList.policyIcon.arrow}</div>
+							</button>
+						</div>
+					</div>
+					{/* <Link to={isChecked1 && isChecked2 ? "/login" : ''} className={styles.link}> */}
+					<div
+						className={styles.link}
+						onClick={() => {
+							signup();
+						}}
+					>
+						<SubmitBtn
+							text="동의하기"
+							isActive={isChecked1 && isChecked2}
+							className={styles.submitBtn}
+							margin={'20px 0px 0px'}
+						/>
+					</div>
+					{/* </Link> */}
+				</div>
 
-            <button type="button" 
-              onClick={() => toggleModal('serviceTerms')} 
-              className={styles.policyArrow}>
-              <div>
-                {svgList.policyIcon.arrow}
-              </div>
-            </button>
-          </div>
-
-          {/* 마케팅 활용 동의 */}
-          <div className={styles.inputBlock}>
-            <div className={styles.detailArea}>
-              <button type="button"
-                onClick={handleCheckboxChange3} 
-                className={styles.policyCheckBox}>
-                <div>
-                  {isChecked3 ? svgList.policyIcon.checkBoxChcked : svgList.policyIcon.checkBoxNotChecked}
-                </div>
-              </button>
-              <div className={""}>
-                [선택] 마케팅 활용 동의
-              </div>
-            </div>
-            <button type="button" 
-              onClick={() => toggleModal('marketing')} 
-              className={styles.policyArrow}>
-                <div>
-                  {svgList.policyIcon.arrow}
-                </div>
-            </button>
-          </div>
-        </div>
-        {/* <Link to={isChecked1 && isChecked2 ? "/login" : ''} className={styles.link}> */}
-        <div className={styles.link} 
-            onClick={()=>{signup();}}>
-          <SubmitBtn
-            text="동의하기"
-            isActive={isChecked1 && isChecked2}
-            className={styles.submitBtn}
-            margin={"20px 0px 0px"}
-          />
-        </div>
-        {/* </Link> */}
-      </div>
-
-      {/* Modals */}
-      {openModal === 'serviceTerms' && <PolicyModal title="서비스 이용약관" onClose={() => toggleModal(null)}>
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-        여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
-      </PolicyModal>}
-      {openModal === 'individualInfo' && <PolicyModal title="개인정보처리방침(필수)" onClose={() => toggleModal(null)}>
-        여긴 개인정보처리방침 관련 세부 조항 입니당~~~
-      </PolicyModal>}
-      {openModal === 'marketing' && <PolicyModal title="마케팅 활용 동의" onClose={() => toggleModal(null)}>
-        여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
-      </PolicyModal>}
-
-    </div>
-  );
+				{/* Modals */}
+				{openModal === 'serviceTerms' && (
+					<PolicyModal
+						title="서비스 이용약관"
+						onClose={() => toggleModal(null)}
+					>
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+						여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관
+						관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항
+						입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스
+						이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부
+						조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!! 여긴
+						서비스 이용약관 관련 세부 조항 입니다!!! 여긴 서비스 이용약관 관련
+						세부 조항 입니다!!! 여긴 서비스 이용약관 관련 세부 조항 입니다!!!
+					</PolicyModal>
+				)}
+				{openModal === 'individualInfo' && (
+					<PolicyModal
+						title="개인정보처리방침(필수)"
+						onClose={() => toggleModal(null)}
+					>
+						여긴 개인정보처리방침 관련 세부 조항 입니당~~~
+					</PolicyModal>
+				)}
+				{openModal === 'marketing' && (
+					<PolicyModal
+						title="마케팅 활용 동의"
+						onClose={() => toggleModal(null)}
+					>
+						여긴 마케팅 활용동의 관련 세부 조항 입니당~!~!~!
+					</PolicyModal>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default Policy;

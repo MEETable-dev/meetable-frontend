@@ -5,9 +5,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 640px;
+  /* height: 640px; */
   padding-top: 38px;
-  /* padding-bottom: 36px; */
+  padding-bottom: 36px;
 }
 
 .headerContainer {
@@ -133,9 +133,10 @@ svg:hover {
   align-items: center;
   flex-direction: column;
   border: 1px solid #D0D0D0; /* 0.5 */
-  z-index: 1;
+  /* z-index: 1; */
   box-sizing: border-box;
-  height: 92px;
+  /* height: 92px; */
+  height: 85px;
 }
 
 .eachDay:first-child {
@@ -149,7 +150,7 @@ svg:hover {
 .eachDay:hover {
   outline: 2px solid #8E66EE; /* 1 */
   outline-offset: -2px; /* -1 */
-  z-index: 2;
+  /* z-index: 2; */
 }
 
 .dayContent:first-of-type .eachDay {
@@ -240,4 +241,19 @@ svg:hover {
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.eachSch {
+  background-color: wheat;
+  height: 18px;
+  width: calc(100% - 4px);
+  border-radius: 5px;
+  padding: 1px 3px 0px;
+  font-size: 12px;
+  margin: 1px 0px;
+}
+
+.eachSch:hover {
+  cursor: pointer;
+  outline: 1px solid #8E66EE;
 }

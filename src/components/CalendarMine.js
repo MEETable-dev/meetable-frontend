@@ -208,7 +208,7 @@ const CalendarMine = (props) => {
         <div className={styles.body}><Body selectWeek={selectWeek} selectDate={selectDate} /></div>
       </div>
 
-      {mypageModal === 'serviceTerms' && <AddSchModal onClose={() => toggleModal(null)} changePW={setMypageModal}>
+      {mypageModal === 'serviceTerms' && <AddSchModal onClose={() => toggleModal(null)} defaultDate={selectedDate}>
         내 정보 모달
       </AddSchModal>}
     </div>

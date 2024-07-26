@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useResizeSidebar } from "../hooks/useResizeSidebar";
-import styles from '../css/AddSchModal.module.css';
+import styles from '../css/UpdateSch.module.css';
 import { useSelector } from "react-redux";
 import { useState, useEffect, useRef } from 'react';
 import { svgList } from "../assets/svg";
@@ -27,12 +27,12 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 	const [selectEndDate, setSelectEndDate] = useState(new Date());
 
 	useEffect(() => {
-		if (defaultDate) {
-			const date = new Date(defaultDate); // defaultDate를 Date 객체로 변환
-			setSelectDate(new Set([date])); // 선택된 날짜를 설정
-			setSelectEndDate(date); // 종료 날짜를 설정
-		}
-	}, [defaultDate]);	
+    if (defaultDate) {
+        const date = new Date(defaultDate); // defaultDate를 Date 객체로 변환
+        setSelectDate(new Set([date])); // 선택된 날짜를 설정
+        setSelectEndDate(date); // 종료 날짜를 설정
+    }
+}, [defaultDate]);
 
 	const selectedDatesSet = new Set([selectEndDate]); // 날짜 객체를 원소로 갖는 새로운 Set 생성
 
@@ -321,345 +321,341 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 
 	return (
 		<div ref={ref}>
-			<div className={styles.modalOverlay} onClick={onClose}>
-				<div
-					className={`${styles.modalContent}`}
-					onClick={handleContentClick}
-				>
-					<div className={styles.modalContentScroll}>
-						<h2>일정 추가하기</h2>
+			<div
+				className={`${styles.modalContent}`}
+				onClick={handleContentClick}
+			>
+				<div className={styles.modalContentScroll}>
+					{/* 색 고르기 */}
+					<div className={styles.colorBody}>{renderColorSelection()}</div>
 
-						{/* 색 고르기 */}
-						<div className={styles.colorBody}>{renderColorSelection()}</div>
-
-						<div className={styles.modalBody}>
-						{/* 약속 이름 */}
-						<div className={styles.contentArea}>
-							<div className={styles.contentName}>
-								{svgList.addSchModal.calenderIcon}
-							</div>
-							<div className={styles.contentInput}>
-								<div className={`${styles.timeCollectInput}`}>
-									<InputArea
-										placeholder="일정 이름"
-										value={amptName}
-										onChange={handleAmptNameChange}
-										onClear={handleClearAmptName}
-									>
-										{svgList.loginIcon.delBtn}
-									</InputArea>
-								</div>
-							</div>
+					<div className={styles.modalBody}>
+					{/* 약속 이름 */}
+					<div className={styles.contentArea}>
+						<div className={styles.contentName}>
+							{svgList.addSchModal.calenderIcon}
 						</div>
-
-						{/* 시간 선택 */}
-						<div className={styles.contentArea}>
-							<div className={styles.contentName}>
-								{svgList.addSchModal.clockIcon}
-							</div>
-							<div className={styles.contentInput}>
-								<div className={styles.selectDateArea}>
-									<div className={styles.selectDateContent1}>날짜 선택</div>
-									<div
-										className={styles.selectDateContent2}
-										onClick={handleDaySelect}
-									>
-										{
-											<svg
-												width="14"
-												height="14"
-												viewBox="0 0 14 14"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-											>
-												<path
-													d="M6.2308 7.76913H0.333344V6.23071H6.2308V0.333252H7.76922V6.23071H13.6667V7.76913H7.76922V13.6666H6.2308V7.76913Z"
-													fill="#8E66EE"
-												/>
-											</svg>
-										}
-									</div>
-								</div>
-								{daySelect ? (
-									<div
-										className={styles.calendar}
-										onClick={handleCalendarClick}
-									>
-										<CalendarNewSch
-											spaceX={4}
-											spaceY={4}
-											selectedDates={selectDate}
-											onDateChange={handleDateChange}
-										/>
-									</div>
-								) : null}
-
-								{/* 선택된 날짜들 각각에 대한 컴포넌트 */}
-								{Array.from(selectDate).map((date, index) => {
-									const dateString = format(date, 'yyyy-MM-dd');
-									const {
-										startTime = 0,
-										startMinute = 0,
-										endTime = 23,
-										endMinute = 55,
-									} = timeByDate[dateString] || {};
-									return (
-										<div key={index} className={styles.oneDate}>
-											<div className={styles.timeCollectInput}>
-												<div className={styles.dateFont}>
-													{format(date, 'yyyy년 MM월 dd일')}
-												</div>
-											</div>
-											<div className={styles.timeCollectInput}>
-												{/* 시간 선택 드롭다운 */}
-												<div className={styles.timeSelectContainer}>
-													{/* 부터 */}
-													<select
-														className={styles.timeSelect}
-														value={startTime}
-														onChange={(e) =>
-															handleTimeChange(
-																date,
-																'startTime',
-																parseInt(e.target.value, 10),
-															)
-														}
-													>
-														{startTimeOptions}
-													</select>
-													<span>시 </span>
-
-													<select
-														className={styles.timeSelect}
-														value={startMinute}
-														onChange={(e) =>
-															handleTimeChange(
-																date,
-																'startMinute',
-																parseInt(e.target.value, 10),
-															)
-														}
-													>
-														{startMinuteOptions}
-													</select>
-													<span>분 ~ </span>
-
-													{/* 까지 */}
-													<select
-														className={styles.timeSelect}
-														value={endTime}
-														onChange={(e) =>
-															handleTimeChange(
-																date,
-																'endTime',
-																parseInt(e.target.value, 10),
-															)
-														}
-													>
-														{endTimeOptions}
-													</select>
-													<span>시 </span>
-													<select
-														className={styles.timeSelect}
-														value={endMinute}
-														onChange={(e) =>
-															handleTimeChange(
-																date,
-																'endMinute',
-																parseInt(e.target.value, 10),
-															)
-														}
-													>
-														{endMinuteOptions}
-													</select>
-													<span>분</span>
-												</div>
-											</div>
-										</div>
-									);
-								})}
-							</div>
-						</div>
-
-						{/* 반복 */}
-						<div className={styles.contentArea}>
-							<div className={styles.contentName}>
-								{svgList.addSchModal.retryIcon}
-							</div>
-							<div className={styles.contentInput}>
-								<div
-									className={styles.timeCollectInput}
-									style={{ marginTop: '5px' }}
+						<div className={styles.contentInput}>
+							<div className={`${styles.timeCollectInput}`}>
+								<InputArea
+									placeholder="일정 이름"
+									value={amptName}
+									onChange={handleAmptNameChange}
+									onClear={handleClearAmptName}
 								>
-									<button
-										className={styles.selectBtn}
-										onClick={() => setIsRepeat('F')}
-									>
-										{isRepeat === 'F' ? (
-											<div>{svgList.newAmpt.btnSelected}</div>
-										) : (
-											<div>{svgList.newAmpt.btnNone}</div>
-										)}
-									</button>
-									<div>반복 없음</div>
-								</div>
+									{svgList.loginIcon.delBtn}
+								</InputArea>
+							</div>
+						</div>
+					</div>
 
-								<div className={styles.timeCollectInput}>
-									<button
-										className={styles.selectBtn}
-										onClick={() => setIsRepeat('T')}
-									>
-										{isRepeat === 'T' ? (
-											<div>{svgList.newAmpt.btnSelected}</div>
-										) : (
-											<div>{svgList.newAmpt.btnNone}</div>
-										)}
-									</button>
-									<div className={styles.timeSelectContainer}>
-										<select
-											className={styles.timeSelect}
-											value={repeatTime}
-											onChange={handleRepeatTimeChange}
+					{/* 시간 선택 */}
+					<div className={styles.contentArea}>
+						<div className={styles.contentName}>
+							{svgList.addSchModal.clockIcon}
+						</div>
+						<div className={styles.contentInput}>
+							<div className={styles.selectDateArea}>
+								<div className={styles.selectDateContent1}>날짜 선택</div>
+								<div
+									className={styles.selectDateContent2}
+									onClick={handleDaySelect}
+								>
+									{
+										<svg
+											width="14"
+											height="14"
+											viewBox="0 0 14 14"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
 										>
-											{repeatTimeOptions}
-										</select>
-										<span>주마다 반복</span>
-									</div>
+											<path
+												d="M6.2308 7.76913H0.333344V6.23071H6.2308V0.333252H7.76922V6.23071H13.6667V7.76913H7.76922V13.6666H6.2308V7.76913Z"
+												fill="#8E66EE"
+											/>
+										</svg>
+									}
 								</div>
-								{isRepeat === 'T' ? (
-									<div className={styles.repeatDetails}>
+							</div>
+							{daySelect ? (
+								<div
+									className={styles.calendar}
+									onClick={handleCalendarClick}
+								>
+									<CalendarNewSch
+										spaceX={4}
+										spaceY={4}
+										selectedDates={selectDate}
+										onDateChange={handleDateChange}
+									/>
+								</div>
+							) : null}
+
+							{/* 선택된 날짜들 각각에 대한 컴포넌트 */}
+							{Array.from(selectDate).map((date, index) => {
+								const dateString = format(date, 'yyyy-MM-dd');
+								const {
+									startTime = 0,
+									startMinute = 0,
+									endTime = 23,
+									endMinute = 55,
+								} = timeByDate[dateString] || {};
+								return (
+									<div key={index} className={styles.oneDate}>
 										<div className={styles.timeCollectInput}>
-											<button
-												className={styles.selectBtn}
-												onClick={() => setRepeatDetail('A')}
-											>
-												{repeatDetail === 'A' ? (
-													<div>{svgList.newAmpt.btnSelected}</div>
-												) : (
-													<div>{svgList.newAmpt.btnNone}</div>
-												)}
-											</button>
-											<div>계속 반복</div>
+											<div className={styles.dateFont}>
+												{format(date, 'yyyy년 MM월 dd일')}
+											</div>
 										</div>
-										<div className={styles.timeCollectInput}>
-											<button
-												className={styles.selectBtn}
-												onClick={() => setRepeatDetail('B')}
-											>
-												{repeatDetail === 'B' ? (
-													<div>{svgList.newAmpt.btnSelected}</div>
-												) : (
-													<div>{svgList.newAmpt.btnNone}</div>
-												)}
-											</button>
+										<div className={styles.timeCollectInput2}>
+											{/* 시간 선택 드롭다운 */}
 											<div className={styles.timeSelectContainer}>
-												<input
-													className={styles.repeatNum}
-													value={repeatNum}
-													onChange={handleRepeatNumChange}
-												></input>
-												<span>회 반복</span>
+												{/* 부터 */}
+												<select
+													className={styles.timeSelect}
+													value={startTime}
+													onChange={(e) =>
+														handleTimeChange(
+															date,
+															'startTime',
+															parseInt(e.target.value, 10),
+														)
+													}
+												>
+													{startTimeOptions}
+												</select>
+												<span>시 </span>
+
+												<select
+													className={styles.timeSelect}
+													value={startMinute}
+													onChange={(e) =>
+														handleTimeChange(
+															date,
+															'startMinute',
+															parseInt(e.target.value, 10),
+														)
+													}
+												>
+													{startMinuteOptions}
+												</select>
+												<span>분 ~ </span>
+
+												{/* 까지 */}
+												<select
+													className={styles.timeSelect}
+													value={endTime}
+													onChange={(e) =>
+														handleTimeChange(
+															date,
+															'endTime',
+															parseInt(e.target.value, 10),
+														)
+													}
+												>
+													{endTimeOptions}
+												</select>
+												<span>시 </span>
+												<select
+													className={styles.timeSelect}
+													value={endMinute}
+													onChange={(e) =>
+														handleTimeChange(
+															date,
+															'endMinute',
+															parseInt(e.target.value, 10),
+														)
+													}
+												>
+													{endMinuteOptions}
+												</select>
+												<span>분</span>
 											</div>
 										</div>
-										<div className={styles.timeCollectInput}>
-											<button
-												className={styles.selectBtn}
-												onClick={handleRepeatDetailC}
-											>
-												{repeatDetail === 'C' ? (
-													<div>{svgList.newAmpt.btnSelected}</div>
-												) : (
-													<div>{svgList.newAmpt.btnNone}</div>
-												)}
-											</button>
-											<div>종료일 선택</div>
-										</div>
-										{/* 종료일 달력에서 지정 */}
-										{Array.isArray(selectEndDate) ? selectEndDate.map((date) => (
-											<div className={styles.timeCollectInput}>
-												<div className={styles.dateFont}>
-													{format(date, 'yyyy년 MM월 dd일')}
-												</div>
-											</div>
-										)) : (
-											(repeatDetail === 'C') ?
-											<div className={styles.timeCollectInput}>
-												<div className={styles.dateFont}>
-													{format(selectEndDate, 'yyyy년 MM월 dd일')}
-												</div>
-											</div> : null
-										)}
-										{(isRepeat === 'T') && (repeatDetail === 'C') && (endDaySelect) ? (
-											<div
-												className={styles.calendarEnd}
-												onClick={handleCalendarClick}
-											>
-												<CalendarNewSch
-													spaceX={4}
-													spaceY={4}
-													selectedDates={selectedDatesSet} // Set을 전달
-													onDateChange={handleEndDateChange}
-												/>
-											</div>
-										) : null}
 									</div>
-								) : null}
-							</div>
+								);
+							})}
 						</div>
+					</div>
 
-						{/* 장소 */}
-						<div className={styles.contentArea}>
-							<div className={styles.contentName}>
-								{svgList.addSchModal.mapIcon}
+					{/* 반복 */}
+					<div className={styles.contentArea}>
+						<div className={styles.contentName}>
+							{svgList.addSchModal.retryIcon}
+						</div>
+						<div className={styles.contentInput}>
+							<div
+								className={styles.timeCollectInput}
+								style={{ marginTop: '5px' }}
+							>
+								<button
+									className={styles.selectBtn}
+									onClick={() => setIsRepeat('F')}
+								>
+									{isRepeat === 'F' ? (
+										<div>{svgList.newAmpt.btnSelected}</div>
+									) : (
+										<div>{svgList.newAmpt.btnNone}</div>
+									)}
+								</button>
+								<div>반복 없음</div>
 							</div>
-							<div className={styles.contentInput}>
-								<div className={`${styles.timeCollectInput}`}>
-									<InputArea
-										value={placeName}
-										placeholder={'장소'}
-										onChange={handlePlaceNameChange}
-										onClear={handleClearPlaceName}
+
+							<div className={styles.timeCollectInput}>
+								<button
+									className={styles.selectBtn}
+									onClick={() => setIsRepeat('T')}
+								>
+									{isRepeat === 'T' ? (
+										<div>{svgList.newAmpt.btnSelected}</div>
+									) : (
+										<div>{svgList.newAmpt.btnNone}</div>
+									)}
+								</button>
+								<div className={styles.timeSelectContainer2}>
+									<select
+										className={styles.timeSelect}
+										value={repeatTime}
+										onChange={handleRepeatTimeChange}
 									>
-										{svgList.loginIcon.delBtn}
-									</InputArea>
+										{repeatTimeOptions}
+									</select>
+									<span>주마다 반복</span>
 								</div>
 							</div>
-						</div>
-
-						{/* 메모 */}
-						<div className={styles.contentArea}>
-							<div className={styles.contentName}>
-								{svgList.addSchModal.memoIcon}
-							</div>
-							<div className={styles.contentInput}>
-								<div className={`${styles.timeCollectInput}`}>
-									<InputArea
-										value={memo}
-										placeholder={'메모'}
-										onChange={handleMemoChange}
-										onClear={handleClearMemo}
-									>
-										{svgList.loginIcon.delBtn}
-									</InputArea>
+							{isRepeat === 'T' ? (
+								<div className={styles.repeatDetails}>
+									<div className={styles.timeCollectInput}>
+										<button
+											className={styles.selectBtn}
+											onClick={() => setRepeatDetail('A')}
+										>
+											{repeatDetail === 'A' ? (
+												<div>{svgList.newAmpt.btnSelected}</div>
+											) : (
+												<div>{svgList.newAmpt.btnNone}</div>
+											)}
+										</button>
+										<div>계속 반복</div>
+									</div>
+									<div className={styles.timeCollectInput}>
+										<button
+											className={styles.selectBtn}
+											onClick={() => setRepeatDetail('B')}
+										>
+											{repeatDetail === 'B' ? (
+												<div>{svgList.newAmpt.btnSelected}</div>
+											) : (
+												<div>{svgList.newAmpt.btnNone}</div>
+											)}
+										</button>
+										<div className={styles.timeSelectContainer2}>
+											<input
+												className={styles.repeatNum}
+												value={repeatNum}
+												onChange={handleRepeatNumChange}
+											></input>
+											<span>회 반복</span>
+										</div>
+									</div>
+									<div className={styles.timeCollectInput}>
+										<button
+											className={styles.selectBtn}
+											onClick={handleRepeatDetailC}
+										>
+											{repeatDetail === 'C' ? (
+												<div>{svgList.newAmpt.btnSelected}</div>
+											) : (
+												<div>{svgList.newAmpt.btnNone}</div>
+											)}
+										</button>
+										<div>종료일 선택</div>
+									</div>
+									{/* 종료일 달력에서 지정 */}
+									{Array.isArray(selectEndDate) ? selectEndDate.map((date) => (
+										<div className={styles.timeCollectInput}>
+											<div className={styles.dateFont}>
+												{format(date, 'yyyy년 MM월 dd일')}
+											</div>
+										</div>
+									)) : (
+										(repeatDetail === 'C') ?
+										<div className={styles.timeCollectInput}>
+											<div className={styles.dateFont}>
+												{format(selectEndDate, 'yyyy년 MM월 dd일')}
+											</div>
+										</div> : null
+									)}
+									{(isRepeat === 'T') && (repeatDetail === 'C') && (endDaySelect) ? (
+										<div
+											className={styles.calendarEnd}
+											onClick={handleCalendarClick}
+										>
+											<CalendarNewSch
+												spaceX={4}
+												spaceY={4}
+												selectedDates={selectedDatesSet} // Set을 전달
+												onDateChange={handleEndDateChange}
+											/>
+										</div>
+									) : null}
 								</div>
+							) : null}
+						</div>
+					</div>
+
+					{/* 장소 */}
+					<div className={styles.contentArea}>
+						<div className={styles.contentName}>
+							{svgList.addSchModal.mapIcon}
+						</div>
+						<div className={styles.contentInput}>
+							<div className={`${styles.timeCollectInput}`}>
+								<InputArea
+									value={placeName}
+									placeholder={'장소'}
+									onChange={handlePlaceNameChange}
+									onClear={handleClearPlaceName}
+								>
+									{svgList.loginIcon.delBtn}
+								</InputArea>
 							</div>
 						</div>
+					</div>
 
-						<div className={styles.btnZone}>
-							<SubmitBtn
-								text="취소"
-								onClick={onClose}
-								isActive={true}
-								className={`${styles.cancelBtn}`}
-							/>
-							<SubmitBtn
-								text="완료"
-								onClick={createSchedule}
-								isActive={amptName && selectDate.size !== 0}
-								className={`${styles.createBtn}`}
-							/>
+					{/* 메모 */}
+					<div className={styles.contentArea}>
+						<div className={styles.contentName}>
+							{svgList.addSchModal.memoIcon}
 						</div>
+						<div className={styles.contentInput}>
+							<div className={`${styles.timeCollectInput}`}>
+								<InputArea
+									value={memo}
+									placeholder={'메모'}
+									onChange={handleMemoChange}
+									onClear={handleClearMemo}
+								>
+									{svgList.loginIcon.delBtn}
+								</InputArea>
+							</div>
 						</div>
+					</div>
+
+					<div className={styles.btnZone}>
+						<SubmitBtn
+							text="취소"
+							onClick={onClose}
+							isActive={true}
+							className={`${styles.cancelBtn}`}
+						/>
+						<SubmitBtn
+							text="완료"
+							onClick={createSchedule}
+							isActive={amptName && selectDate.size !== 0}
+							className={`${styles.createBtn}`}
+						/>
+					</div>
 					</div>
 				</div>
 			</div>

@@ -132,11 +132,15 @@ const Home = () => {
 
   const handlePrevDay = () => {
     const newDate = subDays(selectedDate || new Date(), 1);
+	setSelectedDate(newDate);
+	setSelectWeek(newDate);
     handleDateSelect(newDate);
   };
 
   const handleNextDay = () => {
     const newDate = addDays(selectedDate || new Date(), 1);
+	setSelectedDate(newDate);
+	setSelectWeek(newDate);
     handleDateSelect(newDate);
   };
 
@@ -207,7 +211,8 @@ const Home = () => {
         <CalendarMine 
           selectWeek={selectWeek} 
           setSelectWeek={setSelectWeek} 
-          onDateSelect={handleDateSelect} 
+          onDateSelect={handleDateSelect}
+		  selectedDate={selectedDate} // 추가된 부분
         />
         <div style={{ width: 10 }} />
         <div className={styles.homeSchDetail}>

@@ -191,7 +191,16 @@ const CalendarMine = (props) => {
           </div>
         </div>
         <div className={styles.headerRight}>
-          <div className={styles.TodayBtn} onClick={() => { setSelectWeek(new Date()) }}>오늘</div>
+          <div 
+            className={styles.TodayBtn} 
+            onClick={() => { 
+              const today = new Date();
+              setSelectWeek(today); 
+              onDateSelect(today);
+            }}
+          >
+            오늘
+          </div>
         </div>
       </div>
       <div className={styles.bodyContainer}>

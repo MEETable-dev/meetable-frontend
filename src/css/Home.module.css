@@ -85,3 +85,117 @@
   margin-top: 30px;
   margin-bottom: 12px;
 }
+
+.homeSchDetail {
+  width: 291px;
+  background-color: white;
+  padding: 15px 18px 0px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #D0D0D0;
+}
+
+.schList {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.eachSch {
+  /* width: 100%; */
+  border-radius: 7px;
+  margin: 5px 0px 0px;
+  padding: 5px 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.addSch {
+  /* width: 100%; */
+  border-radius: 7px;
+  margin: 5px 0px 0px;
+  padding: 5px 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid #D0D0D0;
+}
+
+.schName {
+  width: 80%;
+  text-align: justify;
+}
+
+.schName > p {
+  display: inline;
+  /* padding-top: 3px; */
+  margin-left: 4px;
+}
+
+.schInfo {
+  background-color: #F0F0F0;
+  border-radius: 10px;
+  /* text-align: center; */
+  padding-bottom: 5px;
+}
+
+.schEdit {
+  background-color: white;
+  /* padding: 15px 18px 0px; */
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #D0D0D0;
+}
+
+.headerCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
+}
+
+.toAnotherMonth {
+  display: flex;
+  align-items: center;
+}
+
+.headerText {
+  color: #222;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.contentArea {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px 20px;
+  justify-content: flex-start;
+  margin: 12px 0px;
+}  
+
+.contentName {
+  display: flex;
+  justify-content: center;
+  /* padding-top: 5px; */
+  /* margin-left: -5px; */
+  /* width: calc(100% - 260px); */
+}
+
+.contentInput {
+  /* width: 260px; */
+  margin-left: 10px; /* 추가 */
+}
+
+.hoverButton {
+  transform: translate(0, 3px);
+  margin-right: 5px;
+}
+

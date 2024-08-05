@@ -671,6 +671,7 @@ const Layout = (props) => {
 			className={resizing ? styles.containerResizing : styles.container}
 			onPointerMove={updateSize}
 			onPointerUp={stopResizing}
+			style={{overflowY: 'scroll' ,}}
 			// style={{backgroundColor:c}}
 		>
 			{accessToken && sidebarShown && (
@@ -783,7 +784,7 @@ const Layout = (props) => {
 									handleShowTrash={handleShowTrash}
 								/>
 							)}
-							<div className={styles.labelContainer}>
+							<div className={styles.labelContainer} >
 								<div className={styles.labels2}>내 약속</div>
 								<div
 									className={styles.btnArea}
@@ -809,6 +810,7 @@ const Layout = (props) => {
 								unBookmark={unBookmark}
 								openModal={openModal}
 								handleShowTrash={handleShowTrash}
+								
 							/>
 						</div>
 					</div>
@@ -1043,6 +1045,7 @@ const Layout = (props) => {
 								window.open(':user/apmtdetail/:' + link);
 							}
 						}}
+						
 					>
 						확인
 					</div>

@@ -66,7 +66,7 @@ const Layout = (props) => {
 	const [pw, setPW] = useState('');
 	const [pullApmtModal, setPullApmtModal] = useState(false);
 	const[pullSuccessModal, setPullSuccessModal] = useState(false);
-	const[neverJoinModal, setNeverJoinModal] = useState(true);
+	const[neverJoinModal, setNeverJoinModal] = useState(false);
 
 
 	//Trash Area
@@ -237,6 +237,7 @@ const Layout = (props) => {
 				closeModal();
 				setApmtName('');
 				setPullSuccessModal(true);
+				setNeverJoinModal(false);
 			}
 			catch(error){
 				const errorResponse = error.response;
@@ -1318,6 +1319,7 @@ const Layout = (props) => {
 					neverJoinModal && (
 						<ApmtShareModal onClose={()=> {
 							closeModal();
+							setApmtName('');
 						}}>
 						<div style={{
 							display: 'flex',

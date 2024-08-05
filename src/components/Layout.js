@@ -962,6 +962,8 @@ const Layout = (props) => {
 					onClose={() => {
 						setOpenFindModal(false);
 					}}
+					onKeyDown={(e)=>{ if(e.keyCode=== 27)
+						{closeModal(); setApmtName('');}}}
 				>
 					<div
 						style={{
@@ -1046,6 +1048,7 @@ const Layout = (props) => {
 							}
 						}}
 						
+
 					>
 						확인
 					</div>
@@ -1053,6 +1056,8 @@ const Layout = (props) => {
 			)}
 			{pullNonRegisteredModal && (
 				<ApmtShareModal
+					onKeyDown={(e)=>{ if(e.keyCode=== 27)
+						{closeModal(); setApmtName('');}}}
 					onClose={() => {
 						closeModal();
 						
@@ -1150,7 +1155,10 @@ const Layout = (props) => {
 				</ApmtShareModal>
 			)}
 			{pullApmtModal &&(
-				<ApmtShareModal onClose={() => {
+				<ApmtShareModal
+				onKeyDown={(e)=>{ if(e.keyCode=== 27)
+					{closeModal(); setApmtName('');}}}
+				 onClose={() => {
 					closeModal();
 				}}
 				>
@@ -1280,7 +1288,10 @@ const Layout = (props) => {
 				</ApmtShareModal>
 				)}
 				{pullSuccessModal && (
-					<ApmtShareModal onClose={()=> {
+					<ApmtShareModal
+					onKeyDown={(e)=>{ if(e.keyCode=== 27)
+						{closeModal(); setApmtName('');}}}
+					 onClose={()=> {
 						closeModal();
 					}}>
 					<div style={{
@@ -1320,7 +1331,10 @@ const Layout = (props) => {
 				)}
 				{
 					neverJoinModal && (
-						<ApmtShareModal onClose={()=> {
+						<ApmtShareModal
+						onKeyDown={(e)=>{ if(e.keyCode=== 27)
+							{closeModal(); setApmtName('');}}}
+						 onClose={()=> {
 							closeModal();
 							setApmtName('');
 						}}>

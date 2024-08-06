@@ -111,7 +111,7 @@ const Layout = (props) => {
 		(e) => {
 			setShowTrash(true);
 			navigate('/:user/allapmt', { state: { showTrash: true } });
-			setsidebarShown(false);
+			setsidebarShown(true);
 		},
 		[showTrash],
 	);
@@ -346,9 +346,11 @@ const Layout = (props) => {
 			event.preventDefault();
 			setModalPosition({ x: event.pageX, y: event.pageY });
 			console.log('showModal: ', showModal);
+			
 			if (selectedItemList && selectedItemList.length > 0) {
 				//이미 아이템이 있는 경우에는 놔둔다.
 				if (selectedItemList.length > 1) {
+					console.log("!!!!!selectedItemList: ", selectedItemList);
 					console.log('multiple objects!!!!!');
 					setModifyName(false);
 					//multiple objects
@@ -395,12 +397,12 @@ const Layout = (props) => {
 		onClose,
 		style,
 		type,
-		showTrash = false,
+		showTrash,
 		selectedItemList,
 	}) => {
 		console.log('ContextMenuModal rendered');
 		return (
-			(!showTrash && type === 'p' && (
+			(type === 'p' && (
 				<div style={style}>
 					<div
 						className={styles.modalBtn}
@@ -431,8 +433,18 @@ const Layout = (props) => {
 					</div>
 				</div>
 			)) ||
-			(!showTrash && type === 'm' && (
+			( type === 'm'  && (
 				<div style={style}>
+										<div
+						className={styles.modalBtn}
+						onClick={() => {
+							setModifyName(true);
+							setShowModal('');
+						}}
+					>
+						이름 변경하기
+					</div>
+					
 					<div
 						className={styles.modalBtn}
 						onClick={() => {
@@ -962,8 +974,6 @@ const Layout = (props) => {
 					onClose={() => {
 						setOpenFindModal(false);
 					}}
-					onKeyDown={(e)=>{ if(e.keyCode=== 27)
-						{closeModal(); setApmtName('');}}}
 				>
 					<div
 						style={{
@@ -1056,8 +1066,6 @@ const Layout = (props) => {
 			)}
 			{pullNonRegisteredModal && (
 				<ApmtShareModal
-					onKeyDown={(e)=>{ if(e.keyCode=== 27)
-						{closeModal(); setApmtName('');}}}
 					onClose={() => {
 						closeModal();
 						
@@ -1156,8 +1164,6 @@ const Layout = (props) => {
 			)}
 			{pullApmtModal &&(
 				<ApmtShareModal
-				onKeyDown={(e)=>{ if(e.keyCode=== 27)
-					{closeModal(); setApmtName('');}}}
 				 onClose={() => {
 					closeModal();
 				}}
@@ -1289,8 +1295,6 @@ const Layout = (props) => {
 				)}
 				{pullSuccessModal && (
 					<ApmtShareModal
-					onKeyDown={(e)=>{ if(e.keyCode=== 27)
-						{closeModal(); setApmtName('');}}}
 					 onClose={()=> {
 						closeModal();
 					}}>
@@ -1332,8 +1336,6 @@ const Layout = (props) => {
 				{
 					neverJoinModal && (
 						<ApmtShareModal
-						onKeyDown={(e)=>{ if(e.keyCode=== 27)
-							{closeModal(); setApmtName('');}}}
 						 onClose={()=> {
 							closeModal();
 							setApmtName('');

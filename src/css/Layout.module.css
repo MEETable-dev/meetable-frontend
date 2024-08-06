@@ -5,6 +5,7 @@
   flex-grow: 1;
   --color-border: #101010;
   --color-border-highlight: #888484;
+  z-index:-10;
 }
 
 .containerResizing {
@@ -30,6 +31,7 @@
   flex-direction: column;
   flex:1;
   overflow-y: scroll;
+  z-index: 100;
   
 }
 
@@ -255,6 +257,7 @@
   flex-direction: column;
   border-radius: 5px;
   overflow: auto;
+  z-index: 300;
 
 }
 
@@ -266,6 +269,7 @@
   background-color: #8E66EE33;
   margin: 3px 0;
   cursor: pointer;
+  z-index: inherit;
 }
 
 .listItems {
@@ -275,6 +279,7 @@
   font-size: 15px;
   font-weight: 500;
   flex: 1;
+  z-index: inherit;
 }
 
 .listItemsContainer:hover {
@@ -289,6 +294,7 @@
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
+    z-index: inherit;
   }
 
   .TrashBoxFocused{
@@ -345,12 +351,14 @@
   font-weight: 500;
   cursor: pointer;
   flex-shrink: 1;
+  z-index: 1000;
 }
 
 .btnArea svg {
   margin-left: 8px;
   margin-right: 4px;
   cursor: pointer;
+  z-index: 1000;
 }
 
 .folderItem {
@@ -373,7 +381,7 @@
   padding: 0.5rem 0.5rem;
   align-content: space-between;
   justify-content: center;
-  z-index: 100;
+  z-index: 10000000;
 }
 
 

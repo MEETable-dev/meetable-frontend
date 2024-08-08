@@ -72,6 +72,20 @@ const Home = () => {
     }
   };
 
+
+  const getDetail = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`,
+      );
+      setData(response.data.bookmark.slice(0, cnt));
+    } catch (error) {
+      const errorResponse = error.response;
+      console.log(errorResponse.data);
+    }
+  };
+
+
   const unBookmark = async (promiseCode) => {
     try {
       const response = await axios.patch(
@@ -135,6 +149,13 @@ const Home = () => {
 
   const handleEditMode = () => {
     setEditMode(!editMode);
+
+    // 선택한 날짜의 스케줄 상세 정보 불러오기 - 실험
+    if (editMode) {
+
+
+    }
+
   };
 
 //   const handleIsOpen = () => {

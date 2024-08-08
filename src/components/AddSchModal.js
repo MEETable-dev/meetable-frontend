@@ -50,6 +50,14 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 	const [placeName, setPlaceName] = useState('');
 	const [memo, setMemo] = useState('');
 
+	useEffect(() => {
+		if (selectDate.size > 1) {
+			setIsRepeat('F');
+			// 다른 반복 옵션들을 비활성화
+			setRepeatDetail('A');
+		}
+	}, [selectDate]);	
+
 	const createSchedule = async () => {
 		try {
 			const formattedDates = Array.from(selectDate).map((date) =>
@@ -504,6 +512,7 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 									<div>반복 없음</div>
 								</div>
 
+								{isRepeat === 'T'  || selectDate.size <= 1 ?
 								<div className={styles.timeCollectInput}>
 									<button
 										className={styles.selectBtn}
@@ -525,7 +534,7 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 										</select>
 										<span>주마다 반복</span>
 									</div>
-								</div>
+								</div> : null }
 								{isRepeat === 'T' ? (
 									<div className={styles.repeatDetails}>
 										<div className={styles.timeCollectInput}>

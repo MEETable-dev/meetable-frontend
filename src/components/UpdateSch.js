@@ -13,17 +13,19 @@ import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewSch from "../components/CalendarNewSch";
 import InputArea from '../components/InputArea';
 
-const AddSchModal = ({ onClose, defaultDate}, ref) => {
+const AddSchModal = (props, ref) => {
+	const {onClose, defaultDate, targetSch, targetSchDetail, idSch} = props;
     const accessToken = useSelector((state) => state.user.accessToken);
     const navigate = useNavigate();
   
-    const [isRepeat, setIsRepeat] = useState('F'); // F vs T
+    const [isRepeat, setIsRepeat] = useState(targetSchDetail.isReptition); // F vs T
     const [repeatDetail, setRepeatDetail] = useState('A');
 	const [daySelect, setDaySelect] = useState(false); // 달력 나와있는지 아닌지
 	const [endDaySelect, setEndDaySelect] = useState(false); // 종료날짜 달력 나와있는지 아닌지
-	const [selectedColor, setSelectedColor] = useState('red');
-
-	const [selectDate, setSelectDate] = useState(new Set());
+	// const [selectDate, setSelectDate] = useState(new Set());
+	const [selectDate, setSelectDate] = useState(new Set(
+        targetSchDetail.times.map(time => new Date(time.date))
+      ));
 	const [selectEndDate, setSelectEndDate] = useState(new Date());
 
 	useEffect(() => {
@@ -43,14 +45,14 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 	const [endTime, setEndTime] = useState(23);
 	const [endMinute, setEndMinute] = useState(55);
 
-	const [repeatTime, setRepeatTime] = useState(1);
-	const [repeatNum, setRepeatNum] = useState(1);
+	const [repeatTime, setRepeatTime] = useState(targetSchDetail.reptitionCycle);
+	const [repeatNum, setRepeatNum] = useState(targetSchDetail.reptitionTime);
 
-	const [amptName, setAmptName] = useState('');
-	const [placeName, setPlaceName] = useState('');
-	const [memo, setMemo] = useState('');
+	const [amptName, setAmptName] = useState(targetSchDetail.name);
+	const [placeName, setPlaceName] = useState(targetSchDetail.place);
+	const [memo, setMemo] = useState(targetSchDetail.memo);
 
-	const createSchedule = async () => {
+	const updateSchedule = async () => {
 		try {
 			const formattedDates = Array.from(selectDate).map((date) =>
 				format(date, 'yyyy-MM-dd'),
@@ -84,9 +86,10 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 					Authorization: '@',
 				},
 			};
-			const response = await axios.post(
-				`${process.env.REACT_APP_API_URL}/calendar/add`,
+			const response = await axios.patch(
+				`${process.env.REACT_APP_API_URL}/calendar/update`,
 				{
+					calendarId: idSch,
 					color: colorOption, // 0부터 시작? 1부터 시작?? - 일단은 0부터로..
 					name: amptName,
 					place: placeName,
@@ -100,7 +103,6 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 				},
 			); // config 객체를 요청과 함께 전달
 			console.log(response.data);
-			// 모달 닫히거나 생성되었다 알람 띄우기..?
 			onClose();
 		} catch (error) {
 			const errorResponse = error.response;
@@ -122,6 +124,8 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 		{ name: 'purple', backgroundColor: '#D29CE6' },
 		{ name: 'pink', backgroundColor: '#FDA7FF' },
 	];
+
+	const [selectedColor, setSelectedColor] = useState(colors[targetSchDetail.color].name);
 
 	// Render color selection divs with onClick handler
 	const renderColorSelection = () => {
@@ -159,9 +163,16 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 				// 새로운 날짜면 추가
 				updatedSelectDate.add(newDate);
 			}
+
+			// 선택된 날짜가 2개 이상인 경우 isRepeat을 'F'로 설정
+			if (updatedSelectDate.size > 1) {
+				setIsRepeat('F');
+			}
+
 			return updatedSelectDate;
 		});
 	};
+
 
 	const handleEndDateChange = (newDate) => {
 		setSelectEndDate(newDate);
@@ -501,6 +512,7 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 								<div>반복 없음</div>
 							</div>
 
+							{isRepeat === 'T'  || selectDate.size <= 1 ?
 							<div className={styles.timeCollectInput}>
 								<button
 									className={styles.selectBtn}
@@ -522,7 +534,8 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 									</select>
 									<span>주마다 반복</span>
 								</div>
-							</div>
+							</div> : null }
+
 							{isRepeat === 'T' ? (
 								<div className={styles.repeatDetails}>
 									<div className={styles.timeCollectInput}>
@@ -574,14 +587,14 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 									{/* 종료일 달력에서 지정 */}
 									{Array.isArray(selectEndDate) ? selectEndDate.map((date) => (
 										<div className={styles.timeCollectInput}>
-											<div className={styles.dateFont}>
+											<div className={styles.dateFontEnd}>
 												{format(date, 'yyyy년 MM월 dd일')}
 											</div>
 										</div>
 									)) : (
 										(repeatDetail === 'C') ?
 										<div className={styles.timeCollectInput}>
-											<div className={styles.dateFont}>
+											<div className={styles.dateFontEnd}>
 												{format(selectEndDate, 'yyyy년 MM월 dd일')}
 											</div>
 										</div> : null
@@ -651,7 +664,7 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 						/>
 						<SubmitBtn
 							text="완료"
-							onClick={createSchedule}
+							onClick={updateSchedule}
 							isActive={amptName && selectDate.size !== 0}
 							className={`${styles.createBtn}`}
 						/>

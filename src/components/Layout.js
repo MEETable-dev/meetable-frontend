@@ -25,6 +25,7 @@ import useCustomColor from 'hooks/CustomColor';
 import LayoutApmtItem from './layoutApmtItem';
 import LayoutApmtList from './layoutApmtList';
 import NotionModal from 'components/NotionModal';
+import { set } from 'date-fns';
 
 const Layout = (props) => {
 	const localStorage = window.localStorage;
@@ -525,6 +526,35 @@ const Layout = (props) => {
 	};
 	const c = useCustomColor(8, 8);
 
+	const [validLink, setValidLink] = useState(true);
+	const checkLink = async () => {
+		console.log('link', link);
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/verify`,
+				{
+					linkOrCode: link.toLowerCase().includes('https://')
+						? link.toLowerCase()
+						: 'https://' + link.toLowerCase(),
+				},
+			);
+			console.log(response.data);
+			if (response.data.isValid === 1000) {
+				// move to link
+				window.location.href = link.toLowerCase();
+			} else {
+				// wkfahtehls zhem
+				setValidLink(false);
+			}
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data);
+			if (errorResponse.data.statusCode === 4044) {
+				setValidLink(false);
+			}
+		}
+	};
+
 	return (
 		<div
 			className={resizing ? styles.containerResizing : styles.container}
@@ -876,6 +906,18 @@ const Layout = (props) => {
 							{svgList.loginIcon.delBtn}
 						</div>
 					</div>
+					{!validLink && (
+						<div
+							style={{
+								marginTop: 13,
+								color: '#FF0000',
+								fontSize: 13,
+								fontWeight: '400',
+							}}
+						>
+							올바른 링크/코드가 아니에요.
+						</div>
+					)}
 					<div
 						style={{
 							display: 'flex',
@@ -889,17 +931,10 @@ const Layout = (props) => {
 							fontSize: 15,
 							fontWeight: 400,
 							cursor: 'pointer',
-							marginTop: 42,
+							marginTop: validLink ? 42 : 22,
 						}}
 						onClick={() => {
-							if (link.toLowerCase().includes('tail/')) {
-								window.open(
-									':user/apmtdetail/:' +
-										link.split('tail/')[1].replace(':', ''),
-								);
-							} else {
-								window.open(':user/apmtdetail/:' + link);
-							}
+							checkLink();
 						}}
 					>
 						확인

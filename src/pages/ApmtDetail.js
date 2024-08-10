@@ -127,7 +127,7 @@ const ApmtDetail = () => {
 		setPromiseId(window.location.href.split('tail/')[1].replace(':', ''));
 		console.log(promiseId);
 		if (
-			/^[0-9]+_[a-zA-Z]{5}$/.test(
+			/^[0-9]+_[a-zA-Z0-9]{5}$/.test(
 				window.location.href.split('tail/')[1].replace(':', ''),
 			)
 		) {
@@ -366,6 +366,7 @@ const ApmtDetail = () => {
 			} else {
 				// navigate(`/`, {});
 				setWrongAddressModal(true);
+				console.log('thj');
 			}
 			//
 		} catch (error) {
@@ -434,6 +435,7 @@ const ApmtDetail = () => {
 			} else {
 				// navigate(`/`, {});
 				setWrongAddressModal(true);
+				console.log('sdfsdj');
 			}
 
 			getConfirmed(response.data.weekvsdate === 'W');

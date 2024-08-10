@@ -9,6 +9,9 @@ const CustomColor = (total_people, select_people, num_color = 7) => {
 		'4B1CBC',
 		'400099',
 	];
+  if (total_people === 0) {
+		return color[0];
+	}
 	let ratio = select_people / total_people;
 	let outputIdx = Math.floor(ratio * num_color + 0.5);
 

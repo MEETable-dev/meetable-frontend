@@ -7,7 +7,7 @@ import { AiFillStar } from "react-icons/ai";
 import { AiOutlineStar } from "react-icons/ai";
 
 const LayoutApmtItem = ({ name, fav, id, isSelected, selectedItemList, isTrash = false, modifyName, setModifyName, changeName, bookmark, unBookmark, openModal }) => {
-    console.log("selectedItemList: ", selectedItemList);
+    // console.log("selectedItemList: ", selectedItemList);
     console.log("modifyName, isSelected: ", modifyName, isSelected);
     const [value, setValue] = useState('');
     const inputRef = useRef();

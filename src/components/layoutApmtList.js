@@ -23,7 +23,7 @@ const LayoutApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedIte
   // const parsedList = selectedItemList.map(code => code.split('-')[0]);
 
   return (
-    <div className={styles.LayoutApmtListContainer}>
+    <div className={styles.LayoutApmtListContainer} >
       {!isTrash && !fav ? <SmallTrashCan onClick={handleShowTrash} openModal={openModal}></SmallTrashCan> : ''}
       {filteredApmts.map((item, index) => {
         const isSelected = selectedItemList.includes(item.promiseCode);

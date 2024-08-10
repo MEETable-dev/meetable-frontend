@@ -52,6 +52,7 @@
     align-items: flex-start;
     flex-direction: column;
     /* flex-flow: wrap; */
+    z-index: 0;
     margin: 3rem;
   }
 

@@ -20,16 +20,16 @@ const NotionModal = ({ selectedItemList, onClose, contextClose, type, setShowNot
     ( type ==='T' && (
       <div className={styles.notionModalBox}>
         <div className={styles.notionModal} style={{ width: 320, height: 198 }}>
-          <div className={styles.notionModalT1} style={{ width: 141, height: 23, marginBottom: 8 }}>휴지통을 비우시겠어요?</div>
-          <div className={styles.notionModalT2} style={{ width: 287, height: 23, marginBottom: 1, marginTop:8 }}>휴지통에 있는 모든 약속에서 내가 빠지게 됩니다.</div>
+          <div className={styles.notionModalT1} style={{ width: 141, height: 23, marginBottom: 8 }}>약속을 삭제하시겠어요?</div>
+          <div className={styles.notionModalT2} style={{ width: 287, height: 23, marginBottom: 1, marginTop:8, paddingLeft: 117 }}>약속이 휴지통으로 이동합니다.</div>
           <div className={styles.notionModalBtnBox}>
             <div className={styles.notionModalNo} onClick={() => { setShowNotionModal(''); contextClose(); }}>아니요.</div>
-            <div className={styles.notionModalYes} onClick={() => { moveApmtToTrash(selectedItemList); setShowNotionModal(''); }}>네,비울게요.</div>
+            <div className={styles.notionModalYes} onClick={() => { moveApmtToTrash(selectedItemList); setShowNotionModal(''); }}>네,삭제할게요.</div>
           </div>
         </div>
       </div>
     ))
-    ||
+    || //휴지통 전체 비우기
     (type==='BA' &&(
         <div className={styles.notionModalBox}>
           <div className={styles.notionModal} style={{ width: 320, height: 240 }}>

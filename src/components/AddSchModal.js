@@ -10,10 +10,10 @@ import { format } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 
 import SubmitBtn from "../components/SubmitBtn";
-import CalendarNewApmt from "../components/CalendarNewApmt";
+import CalendarNewSch from "../components/CalendarNewSch";
 import InputArea from '../components/InputArea';
 
-const AddSchModal = ({ onClose, changePW }, ref) => {
+const AddSchModal = ({ onClose, defaultDate}, ref) => {
     const accessToken = useSelector((state) => state.user.accessToken);
     const navigate = useNavigate();
   
@@ -25,6 +25,15 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 
 	const [selectDate, setSelectDate] = useState(new Set());
 	const [selectEndDate, setSelectEndDate] = useState(new Date());
+
+	useEffect(() => {
+		if (defaultDate) {
+			const date = new Date(defaultDate); // defaultDate를 Date 객체로 변환
+			setSelectDate(new Set([date])); // 선택된 날짜를 설정
+			setSelectEndDate(date); // 종료 날짜를 설정
+		}
+	}, [defaultDate]);	
+
 	const selectedDatesSet = new Set([selectEndDate]); // 날짜 객체를 원소로 갖는 새로운 Set 생성
 
 	const [timeByDate, setTimeByDate] = useState({}); // 날짜별 시간 상태 관리
@@ -40,6 +49,14 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 	const [amptName, setAmptName] = useState('');
 	const [placeName, setPlaceName] = useState('');
 	const [memo, setMemo] = useState('');
+
+	useEffect(() => {
+		if (selectDate.size > 1) {
+			setIsRepeat('F');
+			// 다른 반복 옵션들을 비활성화
+			setRepeatDetail('A');
+		}
+	}, [selectDate]);	
 
 	const createSchedule = async () => {
 		try {
@@ -317,12 +334,13 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 					className={`${styles.modalContent}`}
 					onClick={handleContentClick}
 				>
-					<h2>일정 추가하기</h2>
+					<div className={styles.modalContentScroll}>
+						<h2>일정 추가하기</h2>
 
-					{/* 색 고르기 */}
-					<div className={styles.colorBody}>{renderColorSelection()}</div>
+						{/* 색 고르기 */}
+						<div className={styles.colorBody}>{renderColorSelection()}</div>
 
-					<div className={styles.modalBody}>
+						<div className={styles.modalBody}>
 						{/* 약속 이름 */}
 						<div className={styles.contentArea}>
 							<div className={styles.contentName}>
@@ -375,7 +393,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 										className={styles.calendar}
 										onClick={handleCalendarClick}
 									>
-										<CalendarNewApmt
+										<CalendarNewSch
 											spaceX={4}
 											spaceY={4}
 											selectedDates={selectDate}
@@ -494,6 +512,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 									<div>반복 없음</div>
 								</div>
 
+								{isRepeat === 'T'  || selectDate.size <= 1 ?
 								<div className={styles.timeCollectInput}>
 									<button
 										className={styles.selectBtn}
@@ -515,7 +534,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 										</select>
 										<span>주마다 반복</span>
 									</div>
-								</div>
+								</div> : null }
 								{isRepeat === 'T' ? (
 									<div className={styles.repeatDetails}>
 										<div className={styles.timeCollectInput}>
@@ -584,7 +603,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 												className={styles.calendarEnd}
 												onClick={handleCalendarClick}
 											>
-												<CalendarNewApmt
+												<CalendarNewSch
 													spaceX={4}
 													spaceY={4}
 													selectedDates={selectedDatesSet} // Set을 전달
@@ -648,6 +667,7 @@ const AddSchModal = ({ onClose, changePW }, ref) => {
 								isActive={amptName && selectDate.size !== 0}
 								className={`${styles.createBtn}`}
 							/>
+						</div>
 						</div>
 					</div>
 				</div>

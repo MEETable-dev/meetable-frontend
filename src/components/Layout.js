@@ -347,6 +347,8 @@ const Layout = (props) => {
 			event.preventDefault();
 			setModalPosition({ x: event.pageX, y: event.pageY });
 			console.log('showModal: ', showModal);
+			setSelectedItemList([itemID]);
+			setModifyName(false);
 			// setSelectedItemList([itemID]);
 			
 			if (selectedItemList && selectedItemList.length > 0) {
@@ -518,7 +520,7 @@ const Layout = (props) => {
 			console.log(response.data);
 			// getData();
 			await getData();
-			getDataAll(setApmtData, setBookmarkData);
+			// getDataAll(setApmtData, setBookmarkData);
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);
@@ -623,6 +625,7 @@ const Layout = (props) => {
 				);
 				// console.log(response.data);
 				setBookmarkData(response.data.bookmark);
+				
 				setApmtData(response.data.promise);
 			} catch (error) {
 				const errorResponse = error.response;

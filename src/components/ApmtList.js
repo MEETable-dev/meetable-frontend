@@ -10,12 +10,18 @@ const ApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedItemList,
   // console.log("data:", data);
   // 필터링된 약속 리스트를 얻기 위한 함수
   const getFilteredApmts = () => {
+    let filteredData = data;
+
     if (searchApmtVal) {
       // 검색어가 있는 경우 검색어를 포함하는 약속만 필터링
-      return data.filter(item => item.promiseName.includes(searchApmtVal) &&  item.promiseName!==null);
+      filteredData = filteredData.filter(item => item.promiseName.includes(searchApmtVal) && item.promiseName !== null);
     }
-    // 검색어가 없는 경우 전체 약속 반환
-    return data;
+
+    if (!fav) {
+      // fav가 false인 경우, isBookmark가 false인 항목만 필터링
+      filteredData = filteredData.filter(item => item.isBookmark === 'F');
+    }
+    return filteredData;
   };
   // 필터링된 약속 리스트
   const filteredApmts = getFilteredApmts();

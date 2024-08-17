@@ -27,6 +27,7 @@ import LayoutApmtList from './layoutApmtList';
 import NotionModal from 'components/NotionModal';
 import styles2 from 'css/EnterInfo.module.css';
 import InputArea2 from 'components/InputArea2';
+import {getData as getDataAll} from 'pages/AllApmt.js';
 
 const Layout = (props) => {
 	const localStorage = window.localStorage;
@@ -346,6 +347,7 @@ const Layout = (props) => {
 			event.preventDefault();
 			setModalPosition({ x: event.pageX, y: event.pageY });
 			console.log('showModal: ', showModal);
+			// setSelectedItemList([itemID]);
 			
 			if (selectedItemList && selectedItemList.length > 0) {
 				//이미 아이템이 있는 경우에는 놔둔다.
@@ -514,7 +516,9 @@ const Layout = (props) => {
 				},
 			);
 			console.log(response.data);
+			// getData();
 			await getData();
+			getDataAll(setApmtData, setBookmarkData);
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);

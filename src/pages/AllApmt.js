@@ -553,5 +553,19 @@ const AllApmt = () => {
 		</div>
 	);
 };
+export const getData = async (setBookmarkData, setApmtData) => {
+  console.log("getData (Not in AllApmt) called");
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`, 
+    );
+    // console.log(response.data)
+    setBookmarkData(response.data.bookmark);
+    setApmtData(response.data.promise);
+    
+  } catch (error) {
+    const errorResponse = error.response;
+    console.log(errorResponse.data)
+  }
+};
 
 export default AllApmt;

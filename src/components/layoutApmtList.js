@@ -18,7 +18,7 @@ const LayoutApmtList = ({ data, fav, isTrash = false, searchApmtVal, selectedIte
       filteredData = filteredData.filter(item => item.promiseName.includes(searchApmtVal) && item.promiseName !== null);
     }
 
-    if (!fav) {
+    if (!fav && !isTrash) {
       // fav가 false인 경우, isBookmark가 false인 항목만 필터링
       filteredData = filteredData.filter(item => item.isBookmark === 'F');
     }

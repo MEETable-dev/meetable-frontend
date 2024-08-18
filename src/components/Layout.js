@@ -625,7 +625,7 @@ const Layout = (props) => {
 				);
 				// console.log(response.data);
 				setBookmarkData(response.data.bookmark);
-				
+
 				setApmtData(response.data.promise);
 			} catch (error) {
 				const errorResponse = error.response;
@@ -784,7 +784,8 @@ const Layout = (props) => {
 							<div
 								className={styles.btnArea}
 								onClick={() => {
-									window.location.href = '/:user/allapmt';
+									navigate('/:user/allapmt', { state: { showTrash: false} });
+									
 								}}
 							>
 								<div

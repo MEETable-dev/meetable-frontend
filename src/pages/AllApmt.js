@@ -12,6 +12,7 @@ import { TiDelete } from "react-icons/ti";
 import ApmtList from 'components/ApmtList';
 import NotionModal from 'components/NotionModal';
 import { useLocation } from 'react-router-dom';
+import Layout from 'components/Layout'
 
 const AllApmt = () => {
   const dispatch = useAppDispatch();
@@ -550,6 +551,7 @@ const AllApmt = () => {
 					)}
 				</div>
 			</div>
+      <Layout showTrash={showTrash}></Layout>
 		</div>
 	);
 };

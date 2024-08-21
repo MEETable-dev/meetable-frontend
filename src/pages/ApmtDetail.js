@@ -14,6 +14,7 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
 import { format } from 'date-fns';
+import { ThreeDot } from 'react-loading-indicators';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -72,6 +73,7 @@ const ApmtDetail = () => {
 
 	const [selectConfirmDate, setSelectConfirmDate] = useState([]);
 
+	const [indicator, setIndicator] = useState(true);
 	const [reset, setReset] = useState(true);
 
 	useEffect(() => {
@@ -361,6 +363,7 @@ const ApmtDetail = () => {
 					console.log('count edited', count);
 					setSelectedInfo(count);
 				} else setSelectedInfo(response.data.count);
+				setIndicator(false);
 
 				getConfirmed(response.data.weekvsdate === 'W');
 			} else {
@@ -555,7 +558,24 @@ const ApmtDetail = () => {
 		}
 	};
 
-	return (
+	return indicator ? (
+		<div
+			style={{
+				display: 'flex',
+				flex: 1,
+				backgroundColor: 'F2F2F2',
+				position: 'absolue',
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				justifyContent: 'center',
+				alignItems: 'center',
+			}}
+		>
+			<ThreeDot color="#8E66EE" size="medium" text="" textColor="" />
+		</div>
+	) : (
 		<div
 			style={{
 				display: 'flex',
@@ -931,7 +951,7 @@ const ApmtDetail = () => {
 								: '비회원 약속 참여하기'}
 							{!accessToken &&
 								(addDescription === 'hover' || addDescription === 'click') && (
-									<div style={{ position: 'absolute', top: -20, left: 42 }}>
+									<div style={{ position: 'absolute', top: -20, left: 55 }}>
 										<svg
 											width="154"
 											height="43"
@@ -1161,10 +1181,11 @@ const ApmtDetail = () => {
 							<div className={styles.inputContent}>
 								<div className={styles.icon}>{svgList.confirm.where}</div>
 								<div className={styles.modalInput}>
-									<textarea
+									<input
 										className={styles.inputItem}
 										style={{ marginBottom: 0 }}
 										placeholder="위치"
+										placeholderTextColor="#888888"
 										value={place}
 										onChange={(e) => {
 											setPlace(e.target.value);
@@ -1188,10 +1209,11 @@ const ApmtDetail = () => {
 							<div className={styles.inputContent}>
 								<div className={styles.icon}>{svgList.confirm.notion}</div>
 								<div className={styles.modalInput}>
-									<textarea
+									<input
 										className={styles.inputItem}
 										style={{ marginBottom: 0 }}
 										placeholder="공지 (ex. 매주 모입시다)"
+										placeholderTextColor="#888888"
 										value={notion}
 										onChange={(e) => {
 											setNotion(e.target.value);
@@ -1308,9 +1330,9 @@ const ApmtDetail = () => {
 																});
 															}}
 														>
-															{selectConfirmDate.includes(item)
+															{/* {selectConfirmDate.includes(item)
 																? svgList.confirm.checkboxChecked
-																: svgList.confirm.checkBoxNotChecked}
+																: svgList.confirm.checkBoxNotChecked} */}
 														</div>
 														{day}
 													</div>
@@ -1348,9 +1370,9 @@ const ApmtDetail = () => {
 															});
 														}}
 													>
-														{new Set(selectConfirmDate).has(item)
+														{/* {new Set(selectConfirmDate).has(item)
 															? svgList.confirm.checkboxChecked
-															: svgList.confirm.checkBoxNotChecked}
+															: svgList.confirm.checkBoxNotChecked} */}
 													</div>
 													{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}
 												</div>
@@ -1378,7 +1400,9 @@ const ApmtDetail = () => {
 								<div className={styles.whenText}>{place}</div>
 							</div>
 							<div className={styles.whenContent}>
-								<div className={styles.icon}>{svgList.confirm.notion}</div>
+								<div style={{ marginLeft: 2 }} className={styles.icon}>
+									{svgList.confirm.notion}
+								</div>
 								<div className={styles.whenText}>{notion}</div>
 							</div>
 						</div>
@@ -1411,7 +1435,7 @@ const ApmtDetail = () => {
 								취소하기
 							</div>
 						</div>
-						<div
+						{/* <div
 							className={styles.confirmModalBtn}
 							style={
 								selectConfirmDate.length === 0
@@ -1435,7 +1459,7 @@ const ApmtDetail = () => {
 							}
 						>
 							내 캘린더에 복사하기
-						</div>
+						</div> */}
 					</div>
 				)}
 				{cancelConfirmModal && (

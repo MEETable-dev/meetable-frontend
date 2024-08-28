@@ -97,6 +97,7 @@ const Home = () => {
         },
       );
       await getData();
+      await window.location.reload();
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data);

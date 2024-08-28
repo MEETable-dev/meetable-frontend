@@ -133,6 +133,7 @@ const AllApmt = () => {
       await getData();
       await getTrashData();
       await closeModal();
+      await window.location.reload();
       console.log(promiseCodes);
     } catch (error) {
       const errorResponse = error.response;
@@ -150,6 +151,7 @@ const AllApmt = () => {
         await getData();
         await getTrashData();
         await closeModal();
+        await window.location.reload();
         console.log(TrashData)
   
       } catch(error){
@@ -244,6 +246,7 @@ const AllApmt = () => {
       );
       console.log(response.data);
       await getData();
+      await window.location.reload();
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data)
@@ -259,6 +262,7 @@ const AllApmt = () => {
       );
       console.log(response.data);
       await getData();
+      await window.location.reload();
     } catch (error) {
       const errorResponse = error.response;
       console.log(errorResponse.data)
@@ -279,6 +283,7 @@ const AllApmt = () => {
     }
     await getData();
     await closeModal();
+    await window.location.reload();
   },[]);
 
   const handleClickOutside = (event) => {
@@ -551,7 +556,6 @@ const AllApmt = () => {
 					)}
 				</div>
 			</div>
-      <Layout showTrash={showTrash}></Layout>
 		</div>
 	);
 };

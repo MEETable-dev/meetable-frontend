@@ -343,12 +343,24 @@ const Home = () => {
             {/* 반복 */}
             <div className={styles.contentArea}>
               <div className={styles.contentName}> {svgList.addSchModal.retryIcon} </div>
-              <div className={styles.contentInput}>
-                <div className={styles.timeCollectInput}>
-                  {selectedSchedule.isreptition ? 'Yes' : '반복 없음'}
+              {selectedSchDetail ? (
+                <div className={styles.contentInput}>
+                  <div className={styles.timeCollectInput}>
+                    {selectedSchDetail.isReptition === 'T' ? (
+                      `${selectedSchDetail.reptitionCycle}주마다, 
+                      ${selectedSchDetail.isContinuous === 'T'
+                          ? '계속 반복'
+                          : `${
+                              selectedSchDetail.reptitionTime === 1
+                                ? `${selectedSchDetail.endDate.slice(2, 10).split('-')[0]}년 ${selectedSchDetail.endDate.slice(2, 10).split('-')[1]}월 ${selectedSchDetail.endDate.slice(2, 10).split('-')[2]}일까지 반복`
+                                : `${selectedSchDetail.reptitionTime}회 반복`
+                            }`
+                      }`) : ('반복 없음')}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
+
             {/* 장소 */}
             <div className={styles.contentArea}>
               <div className={styles.contentName}> {svgList.addSchModal.mapIcon} </div>

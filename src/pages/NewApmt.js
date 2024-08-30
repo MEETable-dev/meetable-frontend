@@ -240,12 +240,11 @@ const NewApmt = () => {
 					</div>
 
 					{/* 시간 선택 */}
-					<div className={styles.contentArea}>
+					{/* <div className={styles.contentArea}>
 						<div className={styles.contentName}>
 							<p>시간 선택</p>
 						</div>
 						<div className={styles.contentInput}>
-							{/* '날짜만 정하기' 라디오 버튼 */}
 							<div className={styles.timeCollectInput}>
 								<button
 									className={styles.selectBtn}
@@ -271,7 +270,6 @@ const NewApmt = () => {
 										<div>{svgList.newAmpt.btnNone}</div>
 									)}
 								</button>
-								{/* 시간 선택 드롭다운 */}
 								<div className={styles.timeSelectContainer}>
 									<select
 										className={styles.timeSelect}
@@ -292,7 +290,7 @@ const NewApmt = () => {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> */}
 
 					{/* 확정하기 권한 */}
 					<div className={styles.contentArea}>
@@ -359,7 +357,11 @@ const NewApmt = () => {
 					<SubmitBtn
 						text="만들기"
 						onClick={createAmpt}
-						isActive={amptName && !nickname === !accessToken}
+						isActive={
+							amptName && 
+							!nickname === !accessToken && 
+							(selectedElement1 === 'D' ? selectedDate.size > 0 : true)
+						  }						  
 						className={`${styles.createBtn} ${styles.btnLength}`}
 					/>
 				</div>

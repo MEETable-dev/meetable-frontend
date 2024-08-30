@@ -1,4 +1,5 @@
 import styles from '../css/ApmtDetail.module.css';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,7 +14,9 @@ import Filter from '../components/Filter';
 import { AiOutlineEdit } from 'react-icons/ai';
 import ApmtShareModal from 'components/ApmtShareModal';
 import OnlyShowModal from 'components/OnlyShowModal';
+import NotionModalBackout from 'components/NotionModalBackout';
 import { format } from 'date-fns';
+import { ThreeDot } from 'react-loading-indicators';
 
 const ApmtDetail = () => {
 	const navigate = useNavigate();
@@ -34,6 +37,7 @@ const ApmtDetail = () => {
 	const [promiseName, setPromiseName] = useState('');
 	const [promiseTotal, setPromiseTotal] = useState(0); // 참여중인 인원 수
 	const [promisePartis, setPromisePartis] = useState([]); // 참여중인 사람 목록
+	const [promiseIDList, setPromiseIDList] = useState([]);
 
 	const [editing, setEditing] = useState(false); // 편집 버전
 	const [selectedInfo, setSelectedInfo] = useState({});
@@ -58,6 +62,7 @@ const ApmtDetail = () => {
 	const [shareModal, setShareModal] = useState(false); // 공유모달 여부
 	const [copyModal, setCopyModal] = useState(false); // 복사 완료 모달 여부
 	const [wrongAddressModal, setWrongAddressModal] = useState(false); // 없는 주소 모달 여부
+	const [showNotionModal, setShowNotionModal] = useState(''); // 약속에서 빠지기 확인 모달
 
 	const [confirmModal, setConfirmModal] = useState(false); // 확정 모달 여부
 	const [showConfirmModal, setShowConfirmModal] = useState('no'); // 확정완료된 일정 모달 보여주기 여부 (no/hover/show)
@@ -72,6 +77,7 @@ const ApmtDetail = () => {
 
 	const [selectConfirmDate, setSelectConfirmDate] = useState([]);
 
+	const [indicator, setIndicator] = useState(true);
 	const [reset, setReset] = useState(true);
 
 	useEffect(() => {
@@ -150,6 +156,7 @@ const ApmtDetail = () => {
 		filterSelectionNum,
 		filterSelectionPartiIdNonmembers,
 		filterSelectionPartiIdMembers,
+		editing,
 	]);
 
 	// useEffect(() => {
@@ -181,7 +188,6 @@ const ApmtDetail = () => {
 	// 	console.log('확정된 약속 가져오기');
 	// 	getConfirm();
 	// }, [reset]);
-
 	const getConfirmed = async (week) => {
 		try {
 			const response = await axios.get(
@@ -326,7 +332,6 @@ const ApmtDetail = () => {
 			console.log(errorResponse.data.statusCode);
 		}
 	};
-
 	const getApmtInfo = async () => {
 		try {
 			const response = await axios.get(
@@ -361,6 +366,7 @@ const ApmtDetail = () => {
 					console.log('count edited', count);
 					setSelectedInfo(count);
 				} else setSelectedInfo(response.data.count);
+				setIndicator(false);
 
 				getConfirmed(response.data.weekvsdate === 'W');
 			} else {
@@ -372,6 +378,10 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+			if (errorResponse.data.statusCode == 1809) {
+				setIndicator(false);
+				setWrongAddressModal(true);
+			}
 		}
 	};
 
@@ -443,6 +453,10 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+			if (errorResponse.data.statusCode == 1809) {
+				setIndicator(false);
+				setWrongAddressModal(true);
+			}
 		}
 	};
 
@@ -492,6 +506,24 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const link = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/link`,
+				{
+					promiseId: promiseId.split('_')[0],
+					nickname: nonmemberNickname,
+					password: nonmemberPw,
+				},
+			);
+			getApmtInfo();
+			setPartiModal('no');
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.statusCode);
 		}
 	};
 
@@ -555,7 +587,61 @@ const ApmtDetail = () => {
 		}
 	};
 
-	return (
+	//약속에서 빠지기
+	const backoutApmt = async (promiseCodes) => {
+		// const promiseIds = promiseCodes.map((code) => parseInt(code.split('_')[0]));
+		console.log('promiseIds: ', promiseCodes);
+		try {
+			// await getApmtInfo();
+			const promiseId = promiseCodes.split('_')[0];
+			const headers = accessToken
+				? { Authorization: `Bearer ${accessToken}` }
+				: { Authorization: `@${nonmemberId}` };
+			// const promiseIds = promiseCodes.map((code) fA=>
+			// 	parseInt(code.split('_')[0]),
+			// );
+			// setPromiseIDList([promiseId]);
+
+			console.log('delete: ', [parseInt(promiseId)]);
+
+			const response = await axios.delete(
+				`${process.env.REACT_APP_API_URL}/home/backoutpromise`,
+				{
+					data: { promiseId: [parseInt(promiseId)] }, // promiseIds를 배열로 전달
+					headers,
+				},
+				// !accessToken && {headers : { Authorization:'@'}},
+			);
+			console.log(response.data);
+			// console.log(promiseCodes);
+			// await getApmtInfo();
+			await getApmtInfoReset();
+			window.location.href = `/:user`;
+			// await window.location.href("/:user");
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data);
+		}
+	};
+
+	return indicator ? (
+		<div
+			style={{
+				display: 'flex',
+				flex: 1,
+				backgroundColor: 'F2F2F2',
+				position: 'absolue',
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				justifyContent: 'center',
+				alignItems: 'center',
+			}}
+		>
+			<ThreeDot color="#8E66EE" size="medium" text="" textColor="" />
+		</div>
+	) : (
 		<div
 			style={{
 				display: 'flex',
@@ -664,7 +750,14 @@ const ApmtDetail = () => {
 						</div>
 						{((accessToken && imIn) || nonmemberId !== -1) && !confirming ? (
 							<div className={styles.header}>
-								<div className={`${styles.headerBtn} ${styles.white}`}>
+								<div
+									className={`${styles.headerBtn} ${styles.white}`}
+									onClick={() => {
+										getApmtInfoReset();
+										setShowNotionModal('T');
+										// backoutApmt(promiseCode);
+									}}
+								>
 									{windowWidth < 580
 										? '빠지기'
 										: windowWidth >= 580 && windowWidth <= 620
@@ -873,13 +966,13 @@ const ApmtDetail = () => {
 								className={styles.modalTxt}
 								onClick={() =>
 									handleCopyClipBoard(
-										`https://www.meetable.com/ApmtDetail/:${
+										`https://www.meetable.site/ApmtDetail/:${
 											promiseId.split('_')[0]
 										}_${promiseCode}`,
 									)
 								}
 							>
-								{`https://www.meetable.com/ApmtDetail/:${
+								{`https://www.meetable.site/ApmtDetail/:${
 									promiseId.split('_')[0]
 								}_${promiseCode}`}
 								{svgList.apmtDetail.copyIcon}
@@ -931,7 +1024,7 @@ const ApmtDetail = () => {
 								: '비회원 약속 참여하기'}
 							{!accessToken &&
 								(addDescription === 'hover' || addDescription === 'click') && (
-									<div style={{ position: 'absolute', top: -20, left: 42 }}>
+									<div style={{ position: 'absolute', top: -20, left: 55 }}>
 										<svg
 											width="154"
 											height="43"
@@ -1001,7 +1094,7 @@ const ApmtDetail = () => {
 								onChange={(e) => {
 									setNonmemberNickname(e.target.value.trim());
 								}}
-								onSubmit={() => participate()}
+								// onSubmit={() => participate()}
 							/>
 							<div
 								style={{
@@ -1049,6 +1142,7 @@ const ApmtDetail = () => {
 							onClick={() => {
 								if (partiModal === 'link') {
 									console.log('비회원 약속 불러오기');
+									link();
 								} else {
 									participate();
 								}
@@ -1161,10 +1255,11 @@ const ApmtDetail = () => {
 							<div className={styles.inputContent}>
 								<div className={styles.icon}>{svgList.confirm.where}</div>
 								<div className={styles.modalInput}>
-									<textarea
+									<input
 										className={styles.inputItem}
 										style={{ marginBottom: 0 }}
 										placeholder="위치"
+										placeholderTextColor="#888888"
 										value={place}
 										onChange={(e) => {
 											setPlace(e.target.value);
@@ -1188,10 +1283,11 @@ const ApmtDetail = () => {
 							<div className={styles.inputContent}>
 								<div className={styles.icon}>{svgList.confirm.notion}</div>
 								<div className={styles.modalInput}>
-									<textarea
+									<input
 										className={styles.inputItem}
 										style={{ marginBottom: 0 }}
 										placeholder="공지 (ex. 매주 모입시다)"
+										placeholderTextColor="#888888"
 										value={notion}
 										onChange={(e) => {
 											setNotion(e.target.value);
@@ -1308,9 +1404,9 @@ const ApmtDetail = () => {
 																});
 															}}
 														>
-															{selectConfirmDate.includes(item)
+															{/* {selectConfirmDate.includes(item)
 																? svgList.confirm.checkboxChecked
-																: svgList.confirm.checkBoxNotChecked}
+																: svgList.confirm.checkBoxNotChecked} */}
 														</div>
 														{day}
 													</div>
@@ -1348,9 +1444,9 @@ const ApmtDetail = () => {
 															});
 														}}
 													>
-														{new Set(selectConfirmDate).has(item)
+														{/* {new Set(selectConfirmDate).has(item)
 															? svgList.confirm.checkboxChecked
-															: svgList.confirm.checkBoxNotChecked}
+															: svgList.confirm.checkBoxNotChecked} */}
 													</div>
 													{`${year}년 ${month}월 ${day}일 ${dayOfWeek}\n`}
 												</div>
@@ -1378,7 +1474,9 @@ const ApmtDetail = () => {
 								<div className={styles.whenText}>{place}</div>
 							</div>
 							<div className={styles.whenContent}>
-								<div className={styles.icon}>{svgList.confirm.notion}</div>
+								<div style={{ marginLeft: 2 }} className={styles.icon}>
+									{svgList.confirm.notion}
+								</div>
 								<div className={styles.whenText}>{notion}</div>
 							</div>
 						</div>
@@ -1411,7 +1509,7 @@ const ApmtDetail = () => {
 								취소하기
 							</div>
 						</div>
-						<div
+						{/* <div
 							className={styles.confirmModalBtn}
 							style={
 								selectConfirmDate.length === 0
@@ -1435,7 +1533,7 @@ const ApmtDetail = () => {
 							}
 						>
 							내 캘린더에 복사하기
-						</div>
+						</div> */}
 					</div>
 				)}
 				{cancelConfirmModal && (
@@ -1492,6 +1590,14 @@ const ApmtDetail = () => {
 							미터블 홈으로 가기
 						</div>
 					</OnlyShowModal>
+				)}
+				{showNotionModal && (
+					<NotionModalBackout
+						selectedItemID={promiseId}
+						setShowNotionModal={setShowNotionModal}
+						backoutApmt={backoutApmt}
+						total={promiseTotal}
+					></NotionModalBackout>
 				)}
 			</div>
 		</div>

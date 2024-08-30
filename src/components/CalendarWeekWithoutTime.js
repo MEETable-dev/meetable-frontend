@@ -364,7 +364,7 @@ const CalendarWeekWithoutTime = (props) => {
 				}?weekday=${DaysOfWeek[getDay(date)]}`,
 				!accessToken && { headers: { Authorization: `@${nonmemberId}` } },
 			);
-			// console.log(response.data.participants);
+			console.log('canparty', response.data.participants);
 			setCanParti(response.data.participants);
 			// response.data.participants.map((item, index) => {
 			// 	setCanParti((prev) => [...prev, item.name]);

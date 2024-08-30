@@ -156,6 +156,7 @@ const ApmtDetail = () => {
 		filterSelectionNum,
 		filterSelectionPartiIdNonmembers,
 		filterSelectionPartiIdMembers,
+		editing,
 	]);
 
 	// useEffect(() => {
@@ -377,6 +378,10 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+			if (errorResponse.data.statusCode == 1809) {
+				setIndicator(false);
+				setWrongAddressModal(true);
+			}
 		}
 	};
 
@@ -448,6 +453,10 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+			if (errorResponse.data.statusCode == 1809) {
+				setIndicator(false);
+				setWrongAddressModal(true);
+			}
 		}
 	};
 
@@ -497,6 +506,24 @@ const ApmtDetail = () => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data.statusCode);
+		}
+	};
+
+	const link = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/link`,
+				{
+					promiseId: promiseId.split('_')[0],
+					nickname: nonmemberNickname,
+					password: nonmemberPw,
+				},
+			);
+			getApmtInfo();
+			setPartiModal('no');
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.statusCode);
 		}
 	};
 
@@ -560,28 +587,28 @@ const ApmtDetail = () => {
 		}
 	};
 
-		//약속에서 빠지기
+	//약속에서 빠지기
 	const backoutApmt = async (promiseCodes) => {
 		// const promiseIds = promiseCodes.map((code) => parseInt(code.split('_')[0]));
-		console.log('promiseIds: ', promiseCodes
-		);
+		console.log('promiseIds: ', promiseCodes);
 		try {
 			// await getApmtInfo();
-			const promiseId= promiseCodes.split('_')[0]
-			const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {Authorization:`@${nonmemberId}`
-};
+			const promiseId = promiseCodes.split('_')[0];
+			const headers = accessToken
+				? { Authorization: `Bearer ${accessToken}` }
+				: { Authorization: `@${nonmemberId}` };
 			// const promiseIds = promiseCodes.map((code) fA=>
 			// 	parseInt(code.split('_')[0]),
 			// );
 			// setPromiseIDList([promiseId]);
-			
+
 			console.log('delete: ', [parseInt(promiseId)]);
-			
+
 			const response = await axios.delete(
 				`${process.env.REACT_APP_API_URL}/home/backoutpromise`,
 				{
-					data: { promiseId: [parseInt(promiseId)]}, // promiseIds를 배열로 전달
-					headers
+					data: { promiseId: [parseInt(promiseId)] }, // promiseIds를 배열로 전달
+					headers,
 				},
 				// !accessToken && {headers : { Authorization:'@'}},
 			);
@@ -589,9 +616,8 @@ const ApmtDetail = () => {
 			// console.log(promiseCodes);
 			// await getApmtInfo();
 			await getApmtInfoReset();
-			window.location.href = `/:user` ;
+			window.location.href = `/:user`;
 			// await window.location.href("/:user");
-			
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);
@@ -724,11 +750,14 @@ const ApmtDetail = () => {
 						</div>
 						{((accessToken && imIn) || nonmemberId !== -1) && !confirming ? (
 							<div className={styles.header}>
-								<div className={`${styles.headerBtn} ${styles.white}`} onClick={()=>{
-									getApmtInfo();
-									setShowNotionModal('T');
-									// backoutApmt(promiseCode);
-								}}>
+								<div
+									className={`${styles.headerBtn} ${styles.white}`}
+									onClick={() => {
+										getApmtInfoReset();
+										setShowNotionModal('T');
+										// backoutApmt(promiseCode);
+									}}
+								>
 									{windowWidth < 580
 										? '빠지기'
 										: windowWidth >= 580 && windowWidth <= 620
@@ -739,7 +768,6 @@ const ApmtDetail = () => {
 									<div
 										className={`${styles.headerBtn} ${styles.purple}`}
 										onClick={() => {
-											
 											setConfirming(true);
 											console.log(confirmed);
 										}}
@@ -1066,7 +1094,7 @@ const ApmtDetail = () => {
 								onChange={(e) => {
 									setNonmemberNickname(e.target.value.trim());
 								}}
-								onSubmit={() => participate()}
+								// onSubmit={() => participate()}
 							/>
 							<div
 								style={{
@@ -1114,6 +1142,7 @@ const ApmtDetail = () => {
 							onClick={() => {
 								if (partiModal === 'link') {
 									console.log('비회원 약속 불러오기');
+									link();
 								} else {
 									participate();
 								}
@@ -1562,9 +1591,13 @@ const ApmtDetail = () => {
 						</div>
 					</OnlyShowModal>
 				)}
-				{showNotionModal&& (
-					<NotionModalBackout selectedItemID={promiseId}	setShowNotionModal={setShowNotionModal}
-					backoutApmt={backoutApmt} total={promiseTotal}></NotionModalBackout>
+				{showNotionModal && (
+					<NotionModalBackout
+						selectedItemID={promiseId}
+						setShowNotionModal={setShowNotionModal}
+						backoutApmt={backoutApmt}
+						total={promiseTotal}
+					></NotionModalBackout>
 				)}
 			</div>
 		</div>

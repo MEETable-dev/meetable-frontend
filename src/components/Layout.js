@@ -598,7 +598,7 @@ const Layout = (props) => {
 			const response = await axios.get(
 				`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`,
 			);
-			// console.log(response.data)
+			console.log('list', response.data);
 			setBookmarkData(response.data.bookmark);
 			setApmtData(response.data.promise);
 		} catch (error) {
@@ -613,6 +613,7 @@ const Layout = (props) => {
 			const response = await axios.get(
 				`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=name`,
 			);
+			console.log('list2', response.data);
 			// console.log(response.data)
 			setBookmarkData(response.data.bookmark);
 			setApmtData(response.data.promise);
@@ -629,7 +630,7 @@ const Layout = (props) => {
 				const response = await axios.get(
 					`${process.env.REACT_APP_API_URL}/home/totalpromise?sortBy=id`,
 				);
-				// console.log(response.data);
+				console.log('list3', response.data);
 				setBookmarkData(response.data.bookmark);
 
 				setApmtData(response.data.promise);
@@ -639,7 +640,6 @@ const Layout = (props) => {
 			}
 		};
 		if (accessToken) getData();
-		
 	}, []);
 
 	useEffect(() => {

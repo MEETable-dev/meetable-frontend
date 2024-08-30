@@ -893,13 +893,13 @@ const ApmtDetail = () => {
 								className={styles.modalTxt}
 								onClick={() =>
 									handleCopyClipBoard(
-										`https://www.meetable.com/ApmtDetail/:${
+										`https://www.meetable.site/ApmtDetail/:${
 											promiseId.split('_')[0]
 										}_${promiseCode}`,
 									)
 								}
 							>
-								{`https://www.meetable.com/ApmtDetail/:${
+								{`https://www.meetable.site/ApmtDetail/:${
 									promiseId.split('_')[0]
 								}_${promiseCode}`}
 								{svgList.apmtDetail.copyIcon}

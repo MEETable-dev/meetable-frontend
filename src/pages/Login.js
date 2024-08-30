@@ -114,7 +114,7 @@ return (
 					autoComplete="email"
 					name="email"
 					type="id"
-					placeholder="meetable2@meetable.com"
+					placeholder="meetable@meetable.com"
 					value={email}
 					onChange={onChangeEmail}
 					onClear={handleClearEmail}

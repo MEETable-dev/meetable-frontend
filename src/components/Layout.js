@@ -27,6 +27,7 @@ import LayoutApmtList from './layoutApmtList';
 import NotionModal from 'components/NotionModal';
 import styles2 from 'css/EnterInfo.module.css';
 import InputArea2 from 'components/InputArea2';
+import {getData as getDataAll} from 'pages/AllApmt.js';
 
 const Layout = (props) => {
 	const localStorage = window.localStorage;
@@ -57,6 +58,7 @@ const Layout = (props) => {
 	const [openBookmark, setOpenBookmark] = useState(true);
 	const [refresh, setRefresh] = useState(false);
 	const [sortItem, setSortItem] = useState('id');
+	const [promiseTotal, setPromiseTotal] = useState('');
 
 	//Joining Apmt
 	const[nonRegLink, setNonRegLink] = useState('');
@@ -155,7 +157,7 @@ const Layout = (props) => {
 		if (linkVerified===true ) {
 			console.log("link verified!");
 			setPullNonRegisteredModel(false);
-			getApmtName(nonRegLink);
+			getApmtInfo(nonRegLink);
 			setPullApmtModal(true);
 			setLinkVerified('-');
 
@@ -165,8 +167,9 @@ const Layout = (props) => {
 			
 		}
 	}
+	
 
-	const getApmtName = async (promiseCode) =>{
+	const getApmtInfo = async (promiseCode) =>{
 		try {
 			console.log("apmt get name called ");
 			const response = await axios.get(
@@ -177,11 +180,13 @@ const Layout = (props) => {
 			await getTrashData();
 			// await closeModal();
 			let truncatedName = response.data.promise_name;
+			
   
 			if (apmtName){
 			  truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
 			}
 			setApmtName(truncatedName)
+			setPromiseTotal(response.data.total);
 			console.log(truncatedName,"!!!!!!!!!!!!!!!!!!!!");
 		} catch (error) {
 			const errorResponse = error.response;
@@ -346,6 +351,9 @@ const Layout = (props) => {
 			event.preventDefault();
 			setModalPosition({ x: event.pageX, y: event.pageY });
 			console.log('showModal: ', showModal);
+			setSelectedItemList([itemID]);
+			setModifyName(false);
+			// setSelectedItemList([itemID]);
 			
 			if (selectedItemList && selectedItemList.length > 0) {
 				//이미 아이템이 있는 경우에는 놔둔다.
@@ -425,6 +433,7 @@ const Layout = (props) => {
 					<div
 						className={styles.modalBtn}
 						onClick={() => {
+							getApmtInfo();
 							setShowNotionModal('T');
 							setShowModal('');
 						}}
@@ -514,7 +523,10 @@ const Layout = (props) => {
 				},
 			);
 			console.log(response.data);
+			// getData();
 			await getData();
+			
+			// getDataAll(setApmtData, setBookmarkData);
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);
@@ -619,6 +631,7 @@ const Layout = (props) => {
 				);
 				// console.log(response.data);
 				setBookmarkData(response.data.bookmark);
+
 				setApmtData(response.data.promise);
 			} catch (error) {
 				const errorResponse = error.response;
@@ -626,6 +639,7 @@ const Layout = (props) => {
 			}
 		};
 		if (accessToken) getData();
+		
 	}, []);
 
 	useEffect(() => {
@@ -777,7 +791,8 @@ const Layout = (props) => {
 							<div
 								className={styles.btnArea}
 								onClick={() => {
-									window.location.href = '/:user/allapmt';
+									navigate('/:user/allapmt', { state: { showTrash: false} });
+									
 								}}
 							>
 								<div
@@ -967,6 +982,7 @@ const Layout = (props) => {
 						backoutApmt={backoutApmt}
 						moveApmtToTrash={moveApmtToTrash}
 						backoutAll={backoutAll}
+						total={promiseTotal}
 					/>
 				</div>
 			)}
@@ -1224,8 +1240,9 @@ const Layout = (props) => {
 							textAlign: 'center',
 							color: '#222222',
 							fontSize: 15,
-							fontWeight: 400,
+							fontWeight: 700,
 							marginTop: 10,
+							// fontWeight: 'bold',
 
 						}}>{apmtName}</div>
 					<div
@@ -1272,7 +1289,7 @@ const Layout = (props) => {
 
 						<input
 							// placeholdercolor 설정 : #888888
-							type="text"
+							type="password"
 							style={{
 								width: '100%',
 								marginTop: 20,

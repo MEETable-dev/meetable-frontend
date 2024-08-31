@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import EmailAuth from './pages/EmailAuth';
@@ -15,8 +15,15 @@ import PrivateRoute from 'components/PrivateRoute';
 import LayoutTest from 'components/Layout test';
 
 function App() {
-  useAxiosInterceptor();
-  return (
+	const dev = true ? 'production' : 'development';
+	if (dev === 'production') {
+		console = window.console || {};
+		console.log = function no_console() {}; // console log 막기
+		console.warn = function no_console() {}; // console warning 막기
+		console.error = function no_console() {}; // console error 막기
+	}
+	useAxiosInterceptor();
+	return (
 		<Routes>
 			<Route element={<Layout head={''} />}>
 				{/* <Route element={<LayoutTest head={false}/>}> */}

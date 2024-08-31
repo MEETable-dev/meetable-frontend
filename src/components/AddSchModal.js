@@ -81,9 +81,9 @@ const AddSchModal = ({ onClose, defaultDate}, ref) => {
 				// 날짜와 시작/종료 시간을 결합하여 최종 문자열을 만듦
 				return `${dateString} ${formattedStartTime} ${formattedEndTime}`;
 			});
-			const reptitionCycle = (isRepeat === 'T') ? repeatTime : 0;
+			const reptitionCycle = (isRepeat === 'T') ? repeatTime : 1;
 			const isContinuous = (isRepeat === 'T' && repeatDetail === 'A') ? 'T' : 'F';
-			const reptitionTime = (isRepeat === 'T' && repeatDetail === 'B') ? repeatNum : 0;
+			const reptitionTime = (isRepeat === 'T' && repeatDetail === 'B') ? repeatNum : 1;
 			const endDate = (isRepeat === 'T' && repeatDetail === 'C') ? format(selectEndDate, 'yyyy-MM-dd') : 0; // 아닐 경우엔 어떻게??
 
 			// header

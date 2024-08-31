@@ -63,6 +63,10 @@
   font-weight: 500;
 }
 
+.TodayBtn:hover {
+  cursor: pointer;
+}
+
 .bodyContainer {
   padding-top: 10px;
 }
@@ -111,6 +115,10 @@
   margin: 2px;
   height: 21px;
   width: 27px;
+}
+
+.valid:hover, .selected:hover {
+  cursor: pointer;
 }
 
 .txtDate {

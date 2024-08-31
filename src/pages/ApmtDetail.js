@@ -429,6 +429,7 @@ const ApmtDetail = () => {
 				response.data.promise_code.toLowerCase() ===
 				promiseId.split('_')[promiseId.split('_').length - 1].toLowerCase()
 			) {
+				getMyParti();
 				if (response.data.weekvsdate === 'W') setWeek(true);
 				else setWeek(false);
 				if (response.data.ampmvstime === 'F') setTime(false);

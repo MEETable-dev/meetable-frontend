@@ -8,8 +8,7 @@ import React from 'react';
 import { BsGrid } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { AiOutlineFileAdd } from 'react-icons/ai';
-import { AiFillStar } from 'react-icons/ai';
-import { AiOutlineStar } from 'react-icons/ai';
+import { IoHelpCircleOutline } from 'react-icons/io5';
 import { IoSyncOutline } from 'react-icons/io5';
 import { RiSearchLine } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
@@ -22,12 +21,9 @@ import ApmtShareModal from './ApmtShareModal';
 import MyInfoModal from '../components/MyInfoModal';
 import PWChangeModal from '../components/PWChangeModal';
 import useCustomColor from 'hooks/CustomColor';
-import LayoutApmtItem from './layoutApmtItem';
 import LayoutApmtList from './layoutApmtList';
 import NotionModal from 'components/NotionModal';
 import styles2 from 'css/EnterInfo.module.css';
-import InputArea2 from 'components/InputArea2';
-import {getData as getDataAll} from 'pages/AllApmt.js';
 
 const Layout = (props) => {
 	const localStorage = window.localStorage;
@@ -61,15 +57,15 @@ const Layout = (props) => {
 	const [promiseTotal, setPromiseTotal] = useState('');
 
 	//Joining Apmt
-	const[nonRegLink, setNonRegLink] = useState('');
+	const [nonRegLink, setNonRegLink] = useState('');
+	const [already, setAlready] = useState(false);
 	var [linkVerified, setLinkVerified] = useState('-');
-	const [apmtName, setApmtName] =useState('');
-	const [name, setName]= useState('');
+	const [apmtName, setApmtName] = useState('');
+	const [name, setName] = useState('');
 	const [pw, setPW] = useState('');
 	const [pullApmtModal, setPullApmtModal] = useState(false);
-	const[pullSuccessModal, setPullSuccessModal] = useState(false);
-	const[neverJoinModal, setNeverJoinModal] = useState(false);
-
+	const [pullSuccessModal, setPullSuccessModal] = useState(false);
+	const [neverJoinModal, setNeverJoinModal] = useState(false);
 
 	//Trash Area
 	const [TrashData, setTrashData] = useState([]);
@@ -137,121 +133,121 @@ const Layout = (props) => {
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_API_URL}/promise/verify`,
-				{linkOrCode: nonRegLink},
+				{ linkOrCode: nonRegLink },
 			);
 			// console.log(response.data)
 			await setLinkVerified(true);
 			// await console.log("Link Verified?: ", linkVerified);
 			return true;
-			
 		} catch (error) {
 			const errorResponse = error.response;
+			if (errorResponse.data.statusCode === 1812) {
+				setAlready(true);
+				return;
+			}
 			setNonRegLink('');
 			console.log(errorResponse.data);
 			return false;
 		}
 	};
-	const handleLinkVerified = async (nonRegLink) =>{
-		console.log("handleLinkVerifiedCalled");
+	const handleLinkVerified = async (nonRegLink) => {
+		console.log('handleLinkVerifiedCalled');
 		linkVerified = await checkValidCode(nonRegLink);
-		if (linkVerified===true ) {
-			console.log("link verified!");
+		if (linkVerified === true) {
+			console.log('link verified!');
 			setPullNonRegisteredModel(false);
 			getApmtInfo(nonRegLink);
 			setPullApmtModal(true);
 			setLinkVerified('-');
-
 		} else {
-			console.log("link not verified.");
+			console.log('link not verified.');
 			setLinkVerified(false);
-			
 		}
-	}
-	
+	};
 
-	const getApmtInfo = async (promiseCode) =>{
+	const getApmtInfo = async (promiseCode) => {
 		try {
-			console.log("apmt get name called ");
+			console.log('apmt get name called ');
 			const response = await axios.get(
-				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${promiseCode.split('_')[0]}`,
-				!accessToken && {headers : { Authorization:'@'}},
+				`${process.env.REACT_APP_API_URL}/promise/baseinfo/${
+					promiseCode.split('_')[0]
+				}`,
+				!accessToken && { headers: { Authorization: '@' } },
 			);
 			await getData();
 			await getTrashData();
 			// await closeModal();
 			let truncatedName = response.data.promise_name;
-			
-  
-			if (apmtName){
-			  truncatedName = name.length > 12 ? name.slice(0, 12) + "..." : name;
+
+			if (apmtName) {
+				truncatedName = name.length > 12 ? name.slice(0, 12) + '...' : name;
 			}
-			setApmtName(truncatedName)
+			setApmtName(truncatedName);
 			setPromiseTotal(response.data.total);
-			console.log(truncatedName,"!!!!!!!!!!!!!!!!!!!!");
+			console.log(truncatedName, '!!!!!!!!!!!!!!!!!!!!');
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);
 		}
-	}
+	};
 
-	const handlePostApmt = async (promiseCode) =>{
-		try{
-			console.log("handlePostApmt Called");
-			console.log("promise ID: ", promiseCode.split('_')[0]);
-			console.log("name: ", name);
-			console.log("pw", pw);
+	const handlePostApmt = async (promiseCode) => {
+		try {
+			console.log('handlePostApmt Called');
+			console.log('promise ID: ', promiseCode.split('_')[0]);
+			console.log('name: ', name);
+			console.log('pw', pw);
 			const response = await axios.post(
 				`${process.env.REACT_APP_API_URL}/promise/link`,
 				{
 					promiseId: promiseCode.split('_')[0],
 					nickname: name,
 					password: pw,
-				},)
+				},
+			);
 			await getData();
 			await getTrashData();
 			await setNonRegLink('');
 			setPullApmtModal(false);
 			// await closeModal();
 			setPullSuccessModal(true);
-		}
-		catch(error){
+		} catch (error) {
 			const errorResponse = error.response;
-			console.log(errorResponse.data);
+			console.log('link errorResponse', errorResponse.data);
 			// 이 경우에는 약속 valid 체크 했으니 무조건 비참여
 			setNeverJoinModal(true);
 			setPullApmtModal(false);
 		}
+	};
+	const handleJoinApmt = async (promiseCode) => {
+		try {
+			console.log('handleJoinApmt Called');
+			console.log('promise ID: ', promiseCode.split('_')[0]);
+			console.log('name: ', name);
+			console.log('pw', pw);
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/promise/participate`,
+				{
+					promiseId: promiseCode.split('_')[0],
+					nickname: name,
+					password: pw,
+				},
+			);
+			await getData();
+			await getTrashData();
+			await setNonRegLink('');
+			// setPullApmtModal(false);
+			closeModal();
+			setApmtName('');
+			setPullSuccessModal(true);
+			setNeverJoinModal(false);
+		} catch (error) {
+			const errorResponse = error.response;
+			console.log(errorResponse.data);
+			// 이 경우에는 약속 valid 체크 했으니 무조건 비참여
+			// setNeverJoinModal(true);
 		}
-		const handleJoinApmt = async (promiseCode) =>{
-			try{
-				console.log("handleJoinApmt Called");
-				console.log("promise ID: ", promiseCode.split('_')[0]);
-				console.log("name: ", name);
-				console.log("pw", pw);
-				const response = await axios.post(
-					`${process.env.REACT_APP_API_URL}/promise/participate`,
-					{
-						promiseId: promiseCode.split('_')[0],
-						nickname: name,
-						password: pw,
-					},)
-				await getData();
-				await getTrashData();
-				await setNonRegLink('');
-				// setPullApmtModal(false);
-				closeModal();
-				setApmtName('');
-				setPullSuccessModal(true);
-				setNeverJoinModal(false);
-			}
-			catch(error){
-				const errorResponse = error.response;
-				console.log(errorResponse.data);
-				// 이 경우에는 약속 valid 체크 했으니 무조건 비참여
-				// setNeverJoinModal(true);
-			}
-			}
-	
+	};
 
 	const closeNotionModal = (e) => {
 		setShowNotionModal('');
@@ -354,11 +350,11 @@ const Layout = (props) => {
 			setSelectedItemList([itemID]);
 			setModifyName(false);
 			// setSelectedItemList([itemID]);
-			
+
 			if (selectedItemList && selectedItemList.length > 0) {
 				//이미 아이템이 있는 경우에는 놔둔다.
 				if (selectedItemList.length > 1) {
-					console.log("!!!!!selectedItemList: ", selectedItemList);
+					console.log('!!!!!selectedItemList: ', selectedItemList);
 					console.log('multiple objects!!!!!');
 					setModifyName(false);
 					//multiple objects
@@ -393,6 +389,7 @@ const Layout = (props) => {
 		setPullNonRegisteredModel(false);
 		setPullSuccessModal(false);
 		setNeverJoinModal(false);
+		setAlready(false);
 	};
 
 	const modalStyle = {
@@ -442,9 +439,9 @@ const Layout = (props) => {
 					</div>
 				</div>
 			)) ||
-			( type === 'm'  && (
+			(type === 'm' && (
 				<div style={style}>
-										<div
+					<div
 						className={styles.modalBtn}
 						onClick={() => {
 							setModifyName(true);
@@ -453,7 +450,7 @@ const Layout = (props) => {
 					>
 						이름 변경하기
 					</div>
-					
+
 					<div
 						className={styles.modalBtn}
 						onClick={() => {
@@ -525,7 +522,7 @@ const Layout = (props) => {
 			console.log(response.data);
 			// getData();
 			await getData();
-			
+
 			// getDataAll(setApmtData, setBookmarkData);
 		} catch (error) {
 			const errorResponse = error.response;
@@ -590,7 +587,6 @@ const Layout = (props) => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	});
-
 
 	const getData = async () => {
 		console.log('getData (Not in useEffect) called');
@@ -699,9 +695,9 @@ const Layout = (props) => {
 			const response = await axios.post(
 				`${process.env.REACT_APP_API_URL}/promise/verify`,
 				{
-					linkOrCode: link.toLowerCase().includes('https://')
+					linkOrCode: link.toLowerCase().includes('meetable.site')
 						? link.toLowerCase()
-						: 'https://' + link.toLowerCase(),
+						: 'https://meetable.site/apmtdetail/:' + link.toLowerCase(),
 				},
 			);
 			console.log(response.data);
@@ -715,6 +711,10 @@ const Layout = (props) => {
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.data);
+			if (errorResponse.data.statusCode === 1812) {
+				setAlready(true);
+				return;
+			}
 			if (errorResponse.data.statusCode === 4044) {
 				setValidLink(false);
 			}
@@ -726,108 +726,141 @@ const Layout = (props) => {
 			className={resizing ? styles.containerResizing : styles.container}
 			onPointerMove={updateSize}
 			onPointerUp={stopResizing}
-			style={{overflowY: 'scroll' ,}}
+			style={{ overflowY: 'scroll' }}
 			// style={{backgroundColor:c}}
 		>
-			{accessToken && sidebarShown && (
-				<div className={styles.sidebarWrapper} style={{ flexBasis: size }}>
-					<div className={styles.sidebarContent}>
-						<div className={styles.sidebarHeader}>
-							<div onClick={() => setsidebarShown(false)}>
-								{svgList.headerIcon.headerHide}
-							</div>
-						</div>
-						<div className={styles.sidebarMain}>
-							<div
-								className={styles.newApmt}
-								onClick={() => (window.location.href = '/:user/newapmt')}
-							>
-								{<AiOutlineFileAdd size={20} />}
-								<div className={styles.btnText}>새 약속 잡기</div>
-							</div>
-							<div
-								className={size >= 300 ? styles.syncApmt : styles.syncApmtSmall}
-								onClick = {()=>setPullNonRegisteredModel(true)}
-							>
-								{<IoSyncOutline size={20} color="#888888" />}
-								<div className={styles.btnText}>
-									비회원으로 참여한 {size < 300 && <div></div>} 약속 불러오기
+			{accessToken &&
+				sidebarShown &&
+				!window.location.href.toLowerCase().includes('allapmt') && (
+					<div className={styles.sidebarWrapper} style={{ flexBasis: size }}>
+						<div className={styles.sidebarContent}>
+							<div className={styles.sidebarHeader}>
+								<div onClick={() => setsidebarShown(false)}>
+									{svgList.headerIcon.headerHide}
 								</div>
 							</div>
-
-							<div
-								// className={styles.smallBtn}
-								className={size >= 300 ? styles.syncApmt : styles.syncApmtSmall}
-								onClick={() => setOpenFindModal(true)}
-							>
-								{svgList.folder.link} <div style={{ width: 4 }} />
-								링크나 코드로 약속 참여하기
-							</div>
-							<div className={styles.searchContent}>
-								<RiSearchLine
-									size={18}
-									color="#888888"
-									className={styles.icon}
-								/>
-								<input
-									value={searchApmtVal}
-									name="searchApmt"
-									placeholder="찾기"
-									onChange={(e) => {
-										setSearchApmtVal(e.target.value);
-									}}
-								></input>
-								{searchApmtVal && (
-									<TiDelete
-										size={20}
-										color="#D9D9D9"
-										className={styles.x}
-										onClick={() => {
-											setSearchApmtVal('');
-										}}
-									/>
-								)}
-							</div>
-							<div
-								className={styles.btnArea}
-								onClick={() => {
-									navigate('/:user/allapmt', { state: { showTrash: false} });
-									
-								}}
-							>
+							<div className={styles.sidebarMain}>
 								<div
-									style={{
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center',
-									}}
+									className={styles.newApmt}
+									onClick={() => (window.location.href = '/:user/newapmt')}
 								>
-									<BsGrid size={20} color="#888888" />
+									{<AiOutlineFileAdd size={20} />}
+									<div className={styles.btnText}>새 약속 잡기</div>
 								</div>
-								<div>전체 약속 리스트</div>
-							</div>
-							<div className={styles.labels}>
-								즐겨찾기
-								<div onClick={() => setOpenBookmark(!openBookmark)}>
-									{openBookmark ? (
-										<IoMdArrowDropdown
-											color="#888888"
-											size={15}
-											style={{ marginTop: 3, marginLeft: 3 }}
-										/>
-									) : (
-										<IoMdArrowDropup
-											color="#888888"
-											size={15}
-											style={{ marginTop: 3, marginLeft: 3 }}
+								<div
+									className={
+										size >= 300 ? styles.syncApmt : styles.syncApmtSmall
+									}
+									onClick={() => setPullNonRegisteredModel(true)}
+								>
+									{<IoSyncOutline size={20} color="#888888" />}
+									<div className={styles.btnText}>
+										비회원으로 참여한 {size < 300 && <div></div>} 약속 불러오기
+									</div>
+								</div>
+
+								<div
+									// className={styles.smallBtn}
+									className={
+										size >= 300 ? styles.syncApmt : styles.syncApmtSmall
+									}
+									onClick={() => setOpenFindModal(true)}
+								>
+									{svgList.folder.link} <div style={{ width: 4 }} />
+									링크나 코드로 약속 참여하기
+								</div>
+								<div className={styles.searchContent}>
+									<RiSearchLine
+										size={18}
+										color="#888888"
+										className={styles.icon}
+									/>
+									<input
+										value={searchApmtVal}
+										name="searchApmt"
+										placeholder="찾기"
+										onChange={(e) => {
+											setSearchApmtVal(e.target.value);
+										}}
+									></input>
+									{searchApmtVal && (
+										<TiDelete
+											size={20}
+											color="#D9D9D9"
+											className={styles.x}
+											onClick={() => {
+												setSearchApmtVal('');
+											}}
 										/>
 									)}
 								</div>
-							</div>
-							{openBookmark && (
+								<div
+									className={styles.btnArea}
+									onClick={() => {
+										navigate('/:user/allapmt', { state: { showTrash: false } });
+									}}
+								>
+									<div
+										style={{
+											display: 'flex',
+											justifyContent: 'center',
+											alignItems: 'center',
+										}}
+									>
+										<BsGrid size={20} color="#888888" />
+									</div>
+									<div>전체 약속 리스트</div>
+								</div>
+								<div className={styles.labels}>
+									즐겨찾기
+									<div onClick={() => setOpenBookmark(!openBookmark)}>
+										{openBookmark ? (
+											<IoMdArrowDropdown
+												color="#888888"
+												size={15}
+												style={{ marginTop: 3, marginLeft: 3 }}
+											/>
+										) : (
+											<IoMdArrowDropup
+												color="#888888"
+												size={15}
+												style={{ marginTop: 3, marginLeft: 3 }}
+											/>
+										)}
+									</div>
+								</div>
+								{openBookmark && (
+									<LayoutApmtList
+										data={bookmarkData}
+										fav={true}
+										searchApmtVal={searchApmtVal}
+										isTrash={false}
+										selectedItemList={selectedItemList}
+										changeName={changeName}
+										modifyName={modifyName}
+										setModifyName={setModifyName}
+										bookmark={bookmark}
+										unBookmark={unBookmark}
+										openModal={openModal}
+										handleShowTrash={handleShowTrash}
+									/>
+								)}
+								<div className={styles.labelContainer}>
+									<div className={styles.labels2}>내 약속</div>
+									<div
+										className={styles.btnArea}
+										onClick={() => {
+											handleSortItem();
+										}}
+									>
+										{sortItem === 'name'
+											? svgList.headerIcon.sortbyName
+											: svgList.headerIcon.sortbyDay}
+									</div>
+								</div>
 								<LayoutApmtList
-									data={bookmarkData}
-									fav={true}
+									data={ApmtData}
+									fav={false}
 									searchApmtVal={searchApmtVal}
 									isTrash={false}
 									selectedItemList={selectedItemList}
@@ -839,44 +872,15 @@ const Layout = (props) => {
 									openModal={openModal}
 									handleShowTrash={handleShowTrash}
 								/>
-							)}
-							<div className={styles.labelContainer} >
-								<div className={styles.labels2}>내 약속</div>
-								<div
-									className={styles.btnArea}
-									onClick={() => {
-										handleSortItem();
-									}}
-								>
-									{sortItem === 'name'
-										? svgList.headerIcon.sortbyName
-										: svgList.headerIcon.sortbyDay}
-								</div>
 							</div>
-							<LayoutApmtList
-								data={ApmtData}
-								fav={false}
-								searchApmtVal={searchApmtVal}
-								isTrash={false}
-								selectedItemList={selectedItemList}
-								changeName={changeName}
-								modifyName={modifyName}
-								setModifyName={setModifyName}
-								bookmark={bookmark}
-								unBookmark={unBookmark}
-								openModal={openModal}
-								handleShowTrash={handleShowTrash}
-								
-							/>
 						</div>
+						<div
+							onPointerDown={startResizing}
+							className={styles.sidebarBorder}
+							onDoubleClick={reset}
+						></div>
 					</div>
-					<div
-						onPointerDown={startResizing}
-						className={styles.sidebarBorder}
-						onDoubleClick={reset}
-					></div>
-				</div>
-			)}
+				)}
 			<div className={styles.mainWrapper}>
 				{head && (
 					<header
@@ -909,6 +913,13 @@ const Layout = (props) => {
 						</div>
 						{accessToken && (
 							<div className={styles.headerBtnRight}>
+								<div
+									onClick={() => {
+										window.open('http://meetable-dev.notion.site');
+									}}
+								>
+									<IoHelpCircleOutline size={32} color="#888" />
+								</div>
 								<div
 									onClick={() => {
 										window.location.href = '/:user/allapmt';
@@ -954,6 +965,20 @@ const Layout = (props) => {
 									}}
 								>
 									가입하기
+								</div>
+								<div id={styles.bar}>|</div>
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'row',
+										alignItems: 'center',
+									}}
+									onClick={() => {
+										window.open('http://meetable-dev.notion.site');
+									}}
+								>
+									<IoHelpCircleOutline style={{ marginRight: 3 }} size={20} />
+									미터블 사용 가이드
 								</div>
 							</div>
 						)}
@@ -1018,6 +1043,7 @@ const Layout = (props) => {
 				<ApmtShareModal
 					onClose={() => {
 						setOpenFindModal(false);
+						setValidLink(true);
 					}}
 				>
 					<div
@@ -1077,7 +1103,7 @@ const Layout = (props) => {
 							{svgList.loginIcon.delBtn}
 						</div>
 					</div>
-					{!validLink && (
+					{!validLink && !already && (
 						<div
 							style={{
 								marginTop: 13,
@@ -1089,6 +1115,13 @@ const Layout = (props) => {
 							올바른 링크/코드가 아니에요.
 						</div>
 					)}
+					<div
+						className={`${styles2.errorMsg} ${already ? '' : styles2.hidden}`}
+					>
+						<div className={styles2.message}>
+							이미 회원으로서 참여한 약속이에요.
+						</div>
+					</div>
 					<div
 						style={{
 							display: 'flex',
@@ -1107,8 +1140,6 @@ const Layout = (props) => {
 						onClick={() => {
 							checkLink();
 						}}
-						
-
 					>
 						확인
 					</div>
@@ -1118,7 +1149,6 @@ const Layout = (props) => {
 				<ApmtShareModal
 					onClose={() => {
 						closeModal();
-						
 					}}
 				>
 					<div
@@ -1181,10 +1211,18 @@ const Layout = (props) => {
 					<div className={styles2.alertZone}>
 						<div
 							className={`${styles2.errorMsg} ${
-								linkVerified===false ? '' : styles2.hidden
-							}`}>
+								linkVerified === false && !already ? '' : styles2.hidden
+							}`}
+						>
 							<div className={styles2.message}>
 								올바른 링크/코드가 아니에요.
+							</div>
+						</div>
+						<div
+							className={`${styles2.errorMsg} ${already ? '' : styles2.hidden}`}
+						>
+							<div className={styles2.message}>
+								이미 회원으로서 참여한 약속이에요.
 							</div>
 						</div>
 					</div>
@@ -1212,13 +1250,14 @@ const Layout = (props) => {
 					</div>
 				</ApmtShareModal>
 			)}
-			{pullApmtModal &&(
+			{pullApmtModal && (
 				<ApmtShareModal
-				 onClose={() => {
-					closeModal();
-				}}
+					onClose={() => {
+						closeModal();
+					}}
 				>
-					<div style={{
+					<div
+						style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center',
@@ -1230,9 +1269,13 @@ const Layout = (props) => {
 							marginTop: 10,
 							padding: 10,
 							marginRight: 20,
-							marginLeft:20,
-						}} >비회원으로 참여한 약속 불러오기</div>
-						<div style={{
+							marginLeft: 20,
+						}}
+					>
+						비회원으로 참여한 약속 불러오기
+					</div>
+					<div
+						style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center',
@@ -1243,8 +1286,10 @@ const Layout = (props) => {
 							fontWeight: 700,
 							marginTop: 10,
 							// fontWeight: 'bold',
-
-						}}>{apmtName}</div>
+						}}
+					>
+						{apmtName}
+					</div>
 					<div
 						style={{
 							position: 'relative',
@@ -1318,8 +1363,8 @@ const Layout = (props) => {
 						>
 							{svgList.loginIcon.delBtn}
 						</div>
-						</div>
-						<div
+					</div>
+					<div
 						style={{
 							display: 'flex',
 							justifyContent: 'center',
@@ -1341,15 +1386,16 @@ const Layout = (props) => {
 					>
 						확인
 					</div>
-
 				</ApmtShareModal>
-				)}
-				{pullSuccessModal && (
-					<ApmtShareModal
-					 onClose={()=> {
+			)}
+			{pullSuccessModal && (
+				<ApmtShareModal
+					onClose={() => {
 						closeModal();
-					}}>
-					<div style={{
+					}}
+				>
+					<div
+						style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center',
@@ -1359,8 +1405,11 @@ const Layout = (props) => {
 							fontSize: 15,
 							fontWeight: 400,
 							marginTop: 10,
-						}}>내 약속 목록에 {apmtName}을(를) 불러왔어요.</div>
-												<div
+						}}
+					>
+						내 약속 목록에 {apmtName}을(를) 불러왔어요.
+					</div>
+					<div
 						style={{
 							display: 'flex',
 							justifyContent: 'center',
@@ -1382,16 +1431,18 @@ const Layout = (props) => {
 						}}
 					>
 						확인
-					</div></ApmtShareModal>
-				)}
-				{
-					neverJoinModal && (
-						<ApmtShareModal
-						 onClose={()=> {
-							closeModal();
-							setApmtName('');
-						}}>
-						<div style={{
+					</div>
+				</ApmtShareModal>
+			)}
+			{neverJoinModal && (
+				<ApmtShareModal
+					onClose={() => {
+						closeModal();
+						setApmtName('');
+					}}
+				>
+					<div
+						style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center',
@@ -1404,8 +1455,12 @@ const Layout = (props) => {
 							// marginLeft: 20,
 							paddingLeft: 50,
 							paddingRight: 50,
-						}}>참여한 적 없는 약속이에요.</div>
-						<div style={{
+						}}
+					>
+						참여한 적 없는 약속이에요.
+					</div>
+					<div
+						style={{
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'center',
@@ -1417,68 +1472,70 @@ const Layout = (props) => {
 							marginTop: 10,
 							paddingLeft: 50,
 							paddingRight: 50,
-						}}>{apmtName}에 참여하시겠어요?</div>
-						<div style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'center',
-							alignItems: 'center',
-						}}>
-												<div
-						style={{
-							display: 'flex',
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: 'white',
-							width: 100,
-							borderRadius: 5,
-							padding: 12,
-							border: "1px solid #8E66EE",
-							color: '#8E66EE',
-							fontSize: 15,
-							fontWeight: 400,
-							cursor: 'pointer',
-							marginTop: 42,
-							marginRight: 10,
-
-						}}
-						onClick={() => {
-							closeModal();
-							setApmtName('');
-							//valid 한 비회원으로 참여한 약속인 경우에
 						}}
 					>
-						아니요.
+						{apmtName}에 참여하시겠어요?
 					</div>
 					<div
 						style={{
 							display: 'flex',
+							flexDirection: 'row',
 							justifyContent: 'center',
 							alignItems: 'center',
-							backgroundColor: '#8E66EE',
-							width: 150,
-							borderRadius: 5,
-							padding: 12,
-							color: 'white',
-							fontSize: 15,
-							fontWeight: 400,
-							cursor: 'pointer',
-							marginTop: 42,
-						}}
-						onClick={() => {
-							handleJoinApmt(nonRegLink);
-							closeModal();
-							setApmtName('');
-							//valid 한 비회원으로 참여한 약속인 경우에
 						}}
 					>
-						네, 참여할게요.
-					</div>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: 'white',
+								width: 100,
+								borderRadius: 5,
+								padding: 12,
+								border: '1px solid #8E66EE',
+								color: '#8E66EE',
+								fontSize: 15,
+								fontWeight: 400,
+								cursor: 'pointer',
+								marginTop: 42,
+								marginRight: 10,
+							}}
+							onClick={() => {
+								closeModal();
+								setApmtName('');
+								//valid 한 비회원으로 참여한 약속인 경우에
+							}}
+						>
+							아니요.
 						</div>
-
-						</ApmtShareModal>
-					)
-				}
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#8E66EE',
+								width: 150,
+								borderRadius: 5,
+								padding: 12,
+								color: 'white',
+								fontSize: 15,
+								fontWeight: 400,
+								cursor: 'pointer',
+								marginTop: 42,
+							}}
+							onClick={() => {
+								handleJoinApmt(nonRegLink);
+								closeModal();
+								setApmtName('');
+								//valid 한 비회원으로 참여한 약속인 경우에
+							}}
+						>
+							네, 참여할게요.
+						</div>
+					</div>
+				</ApmtShareModal>
+			)}
 		</div>
 	);
 };

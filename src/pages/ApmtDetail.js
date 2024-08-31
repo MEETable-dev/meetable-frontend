@@ -522,6 +522,7 @@ const ApmtDetail = () => {
 			);
 			getApmtInfo();
 			setPartiModal('no');
+			window.location.reload();
 		} catch (error) {
 			const errorResponse = error.response;
 			console.log(errorResponse.statusCode);
@@ -1025,7 +1026,7 @@ const ApmtDetail = () => {
 								: '비회원 약속 참여하기'}
 							{!accessToken &&
 								(addDescription === 'hover' || addDescription === 'click') && (
-									<div style={{ position: 'absolute', top: -20, left: 55 }}>
+									<div style={{ position: 'absolute', top: -20, left: 65 }}>
 										<svg
 											width="154"
 											height="43"

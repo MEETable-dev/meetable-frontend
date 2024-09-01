@@ -194,7 +194,7 @@ const ApmtDetail = () => {
 				`${process.env.REACT_APP_API_URL}/confirm/confirminfo/${
 					promiseId.split('_')[0]
 				}`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 			);
 			if (week) {
 				setConfirmed(new Set(response.data.weekConfirmed));
@@ -239,7 +239,7 @@ const ApmtDetail = () => {
 								notice: notion,
 								weekAvailable: [...confirmSelected],
 							},
-							!accessToken && { headers: { Authorization: '@' } },
+							!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 						);
 						console.log(response.data);
 						setConfirmed(new Set(response.data.weekConfirmed));
@@ -254,7 +254,7 @@ const ApmtDetail = () => {
 								notice: notion,
 								weekAvailable: [...confirmSelected],
 							},
-							!accessToken && { headers: { Authorization: '@' } },
+							!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 						);
 						console.log('updated', response.data);
 						setConfirmed(new Set(response.data.weekConfirmed));
@@ -274,7 +274,7 @@ const ApmtDetail = () => {
 								notice: notion,
 								dateAvailable: [...confirmSelected],
 							},
-							!accessToken && { headers: { Authorization: '@' } },
+							!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 						);
 						console.log('확정하기 후 반응: ', response.data);
 						setConfirmed(new Set([...confirmSelected]));
@@ -288,7 +288,7 @@ const ApmtDetail = () => {
 								notice: notion,
 								dateAvailable: [...confirmSelected],
 							},
-							!accessToken && { headers: { Authorization: '@' } },
+							!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 						);
 						console.log('updated ', response.data);
 						setConfirmed(new Set([...confirmSelected]));
@@ -342,7 +342,7 @@ const ApmtDetail = () => {
 					: `${process.env.REACT_APP_API_URL}/promise/baseinfo/${
 							promiseId.split('_')[0]
 					  }?month=${format(selectWeek, 'yyyy-MM')}`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 			);
 			console.log(response.data);
 			setPromiseCode(response.data.promise_code);
@@ -421,7 +421,7 @@ const ApmtDetail = () => {
 								? '&nonMemberIds=' + filterSelectionPartiIdNonmembers.join(',')
 								: ''
 					  }`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 			);
 			console.log('baseinfo', response.data);
 			setPromiseCode(response.data.promise_code);
@@ -467,7 +467,7 @@ const ApmtDetail = () => {
 				`${process.env.REACT_APP_API_URL}/promise/participants/${
 					promiseId.split('_')[0]
 				}`,
-				!accessToken && { headers: { Authorization: '@' } },
+				!accessToken && { headers: { Authorization: '@' + nonmemberId } },
 			);
 			console.log(response.data);
 			setPromisePartis([]);
@@ -573,7 +573,7 @@ const ApmtDetail = () => {
 							promiseid: promiseId.split('_')[0],
 						},
 
-						headers: { Authorization: '@' },
+						headers: { Authorization: '@' + nonmemberId },
 					},
 				);
 				console.log(response.data);
@@ -1482,35 +1482,37 @@ const ApmtDetail = () => {
 								<div className={styles.whenText}>{notion}</div>
 							</div>
 						</div>
-						<div className={styles.modalBtnView} style={{ paddingTop: 20 }}>
-							<div
-								className={styles.confirmModalBtn}
-								style={{ color: '#8E66EE' }}
-								onClick={(e) => {
-									e.stopPropagation();
-									setShowConfirmModal('no');
-									setConfirmModal(true);
-								}}
-							>
-								세부사항
-								<br /> 수정하기
+						{(accessToken || nonmemberId != -1) && canConfirm && (
+							<div className={styles.modalBtnView} style={{ paddingTop: 20 }}>
+								<div
+									className={styles.confirmModalBtn}
+									style={{ color: '#8E66EE' }}
+									onClick={(e) => {
+										e.stopPropagation();
+										setShowConfirmModal('no');
+										setConfirmModal(true);
+									}}
+								>
+									세부사항
+									<br /> 수정하기
+								</div>
+								<div style={{ width: 10 }}></div>
+								<div
+									className={styles.confirmModalBtn}
+									style={{ color: '#8E66EE' }}
+									onClick={() => {
+										// confirm();
+										// setConfirmModal(false);
+										// 확정 취소 모달 띄우기
+										setCancelConfirmModal(true);
+									}}
+								>
+									확정
+									<br />
+									취소하기
+								</div>
 							</div>
-							<div style={{ width: 10 }}></div>
-							<div
-								className={styles.confirmModalBtn}
-								style={{ color: '#8E66EE' }}
-								onClick={() => {
-									// confirm();
-									// setConfirmModal(false);
-									// 확정 취소 모달 띄우기
-									setCancelConfirmModal(true);
-								}}
-							>
-								확정
-								<br />
-								취소하기
-							</div>
-						</div>
+						)}
 						{/* <div
 							className={styles.confirmModalBtn}
 							style={

@@ -8,6 +8,7 @@ import React from "react";
 import axios from "axios";
 import { format } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import SubmitBtn from "../components/SubmitBtn";
 import CalendarNewApmtDrag from "../components/CalendarNewApmtDrag";
@@ -163,6 +164,14 @@ const NewApmt = () => {
 
 	return (
 		<div className={styles.entire}>
+			<Helmet>
+				<title>Meetable | 미터블</title>
+				<meta
+				name="description"
+				content="Meetable(미터블)은 여러 사람들의 만남이 쉽게 이루어지도록 약속 조정 서비스를 제공하는 플랫폼입니다. 미터블을 이용하여 언제 어디서든 쉽게 약속을 잡고 일정을 관리해 보세요!"
+				/>
+				<meta name="keywords" content="meetable, 미터블, 미팅 플랫폼, 약속 잡기, 일정 조율, 한국" />
+			</Helmet>
 			<div className={`${styles.loginBox}`}>
 				<div className={styles.loginLogo}>
 					<p>
